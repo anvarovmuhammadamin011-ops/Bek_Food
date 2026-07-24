@@ -33,13 +33,22 @@ export default function LiveTrackingPage() {
 
   if (!currentOrder) {
     return (
-      <div className="h-full flex flex-col items-center justify-center px-8 text-center">
-        <div className="w-20 h-20 rounded-full bg-bg-card border border-border flex items-center justify-center mb-4">
-          <Navigation size={32} className="text-text-secondary" />
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px', textAlign: 'center', background: 'var(--bg-primary)' }}>
+        <div style={{
+          width: '80px', height: '80px', borderRadius: '50%',
+          background: 'var(--bg-card)', border: '1px solid var(--border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px',
+        }}>
+          <Navigation size={32} color="var(--text-secondary)" />
         </div>
-        <h2 className="text-xl font-bold mb-2">No Active Order</h2>
-        <p className="text-text-secondary text-sm mb-6">Place an order to track it here</p>
-        <button onClick={() => navigate('/')} className="btn-primary">Order Now</button>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px' }}>No Active Order</h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>Place an order to track it here</p>
+        <button onClick={() => navigate('/')} style={{
+          padding: '12px 32px', borderRadius: 'var(--radius-md)',
+          background: 'var(--color-primary)', color: 'white', border: 'none',
+          fontSize: '14px', fontWeight: 700, cursor: 'pointer',
+          boxShadow: 'var(--shadow-primary)', fontFamily: 'var(--font-family)',
+        }}>Order Now</button>
       </div>
     );
   }
@@ -48,50 +57,98 @@ export default function LiveTrackingPage() {
   const driver = currentOrder.driver;
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-20">
-      <div className="p-4 glass-strong sticky top-0 z-30">
-        <div className="max-w-lg mx-auto flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl bg-bg-card active:scale-95 transition-transform">
+    <div className="h-full overflow-y-auto scrollbar-hide" style={{ paddingBottom: '80px' }}>
+      {/* Header */}
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 30, padding: '12px 16px',
+        background: 'rgba(255, 248, 241, 0.88)', backdropFilter: 'blur(30px)',
+        borderBottom: '1px solid var(--border)',
+      }}>
+        <div style={{ maxWidth: '480px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button onClick={() => navigate(-1)} style={{
+            width: '38px', height: '38px', borderRadius: '12px',
+            background: 'var(--bg-card)', border: '1px solid var(--border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', color: 'var(--text-primary)', boxShadow: 'var(--shadow-sm)',
+          }}>
             <ChevronLeft size={20} />
           </button>
-          <h1 className="text-lg font-bold">Order #{String(currentOrder.id).slice(-4)}</h1>
+          <h1 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)' }}>
+            Order #{String(currentOrder.id).slice(-4)}
+          </h1>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto p-4 space-y-4">
+      <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Map placeholder */}
-        <div className="relative h-56 bg-bg-card rounded-2xl border border-border overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-orange/5 to-accent-red/5 flex items-center justify-center">
-            <div className="text-center">
-              <Navigation size={40} className="text-accent-orange mx-auto mb-2 animate-bounce" />
-              <p className="text-text-secondary text-xs">Live tracking map</p>
+        <div style={{
+          position: 'relative', height: '224px', background: 'var(--bg-card)',
+          borderRadius: '16px', border: '1px solid var(--border)', overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-danger-light) 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <Navigation size={40} color="var(--color-primary)" style={{ margin: '0 auto 8px', animation: 'float 2s ease-in-out infinite' }} />
+              <p style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Live tracking map</p>
             </div>
           </div>
-          <div className="absolute top-3 left-3 px-3 py-2 glass rounded-xl">
-            <p className="text-xs font-semibold">ETA: <span className="text-accent-orange">{eta} min</span></p>
+          <div style={{
+            position: 'absolute', top: '12px', left: '12px', padding: '8px 12px',
+            borderRadius: '12px', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)',
+            boxShadow: 'var(--shadow-sm)',
+          }}>
+            <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>
+              ETA: <span style={{ color: 'var(--color-primary)' }}>{eta} min</span>
+            </p>
           </div>
         </div>
 
         {/* Status Timeline */}
-        <div className="bg-bg-card rounded-2xl p-5 border border-border">
-          <h3 className="text-sm font-semibold mb-4">Order Status</h3>
-          <div className="space-y-0">
+        <div style={{
+          background: 'var(--bg-card)', borderRadius: '16px', padding: '20px',
+          border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
+        }}>
+          <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Order Status</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
             {statusSteps.map((step, i) => {
               const isCompleted = i <= currentStep;
               const isCurrent = i === currentStep;
+              const Icon = step.icon;
               return (
-                <div key={step.key} className="flex items-start gap-3">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${isCompleted ? (isCurrent ? 'bg-accent-orange animate-pulse-glow' : 'bg-accent-orange/20') : 'bg-bg-primary border border-border'}`}>
-                      <step.icon size={14} className={isCompleted ? 'text-white' : 'text-text-muted'} />
+                <div key={step.key} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{
+                      width: '32px', height: '32px', borderRadius: '50%',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      transition: 'all 0.3s ease',
+                      background: isCompleted ? (isCurrent ? 'var(--color-primary)' : 'var(--color-primary-light)') : 'var(--bg-secondary)',
+                      border: isCompleted ? 'none' : '1px solid var(--border)',
+                      boxShadow: isCurrent ? '0 0 0 4px var(--color-primary-glow)' : 'none',
+                    }}>
+                      <Icon size={14} color={isCompleted ? 'white' : 'var(--text-muted)'} />
                     </div>
-                    {i < statusSteps.length - 1 && <div className={`w-0.5 h-8 my-1 transition-all ${isCompleted ? 'bg-accent-orange' : 'bg-border'}`} />}
+                    {i < statusSteps.length - 1 && (
+                      <div style={{
+                        width: '2px', height: '32px', margin: '4px 0',
+                        background: isCompleted ? 'var(--color-primary)' : 'var(--border)',
+                        transition: 'all 0.3s ease',
+                      }} />
+                    )}
                   </div>
-                  <div className="pt-1.5">
-                    <p className={`text-sm font-semibold ${isCompleted ? 'text-white' : 'text-text-muted'}`}>{step.label}</p>
-                    <p className="text-[10px] text-text-muted">{step.time}</p>
+                  <div style={{ paddingTop: '6px' }}>
+                    <p style={{ fontSize: '13px', fontWeight: 600, color: isCompleted ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                      {step.label}
+                    </p>
+                    <p style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{step.time}</p>
                   </div>
-                  {isCurrent && <span className="ml-auto text-xs font-medium text-accent-orange animate-pulse">Current</span>}
+                  {isCurrent && (
+                    <span style={{ marginLeft: 'auto', fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)', animation: 'pulse 2s ease-in-out infinite' }}>
+                      Current
+                    </span>
+                  )}
                 </div>
               );
             })}
@@ -100,19 +157,38 @@ export default function LiveTrackingPage() {
 
         {/* Driver Info */}
         {driver && currentOrder.status !== 'delivered' && (
-          <div className="bg-bg-card rounded-2xl p-4 border border-border animate-slide-up">
-            <h3 className="text-sm font-semibold mb-3">Your Driver</h3>
-            <div className="flex items-center gap-3">
-              <img src={driver.photo} alt={driver.name} className="w-12 h-12 rounded-full border-2 border-accent-orange/30 object-cover" />
-              <div className="flex-1">
-                <h4 className="font-semibold text-sm">{driver.name}</h4>
-                <p className="text-text-secondary text-xs">{driver.vehicleType} • <span className="text-warning">{driver.rating}</span></p>
+          <div style={{
+            background: 'var(--bg-card)', borderRadius: '16px', padding: '16px',
+            border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
+            animation: 'slideUp 0.4s ease-out',
+          }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>Your Driver</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <img src={driver.photo} alt={driver.name} style={{
+                width: '48px', height: '48px', borderRadius: '50%',
+                border: '2px solid var(--color-primary-border)', objectFit: 'cover',
+              }} />
+              <div style={{ flex: 1 }}>
+                <h4 style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)' }}>{driver.name}</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>
+                  {driver.vehicleType} • <span style={{ color: 'var(--color-warning)' }}>{driver.rating}</span>
+                </p>
               </div>
-              <div className="flex gap-2">
-                <button className="p-3 rounded-xl bg-success/15 text-success active:scale-90 transition-transform">
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button style={{
+                  width: '40px', height: '40px', borderRadius: '12px',
+                  background: 'var(--color-success-light)', color: 'var(--color-success)',
+                  border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                }}>
                   <Phone size={16} />
                 </button>
-                <button className="p-3 rounded-xl bg-accent-orange/15 text-accent-orange active:scale-90 transition-transform">
+                <button style={{
+                  width: '40px', height: '40px', borderRadius: '12px',
+                  background: 'var(--color-primary-light)', color: 'var(--color-primary)',
+                  border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                }}>
                   <MessageCircle size={16} />
                 </button>
               </div>
@@ -121,18 +197,21 @@ export default function LiveTrackingPage() {
         )}
 
         {/* Order Summary */}
-        <div className="bg-bg-card rounded-2xl p-4 border border-border">
-          <h3 className="text-sm font-semibold mb-3">Order Summary</h3>
-          <div className="space-y-2">
+        <div style={{
+          background: 'var(--bg-card)', borderRadius: '16px', padding: '16px',
+          border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)',
+        }}>
+          <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>Order Summary</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {currentOrder.items.map(item => (
-              <div key={item.id} className="flex justify-between text-sm">
-                <span className="text-text-secondary">{item.quantity}x {item.food.name}</span>
-                <span>{(item.price * item.quantity).toLocaleString()} so'm</span>
+              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>{item.quantity}x {item.food.name}</span>
+                <span style={{ color: 'var(--text-primary)' }}>{(item.price * item.quantity).toLocaleString()} so'm</span>
               </div>
             ))}
-            <div className="border-t border-border pt-2 flex justify-between font-bold text-sm">
-              <span>Total</span>
-              <span className="text-accent-orange">{currentOrder.total.toLocaleString()} so'm</span>
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '14px' }}>
+              <span style={{ color: 'var(--text-primary)' }}>Total</span>
+              <span style={{ color: 'var(--color-primary)' }}>{currentOrder.total.toLocaleString()} so'm</span>
             </div>
           </div>
         </div>

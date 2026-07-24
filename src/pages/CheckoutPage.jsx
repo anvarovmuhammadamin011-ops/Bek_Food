@@ -35,12 +35,21 @@ export default function CheckoutPage() {
 
   if (success) {
     return (
-      <div className="h-full flex flex-col items-center justify-center px-8 text-center animate-scale-in">
-        <div className="w-24 h-24 rounded-full bg-success/20 flex items-center justify-center mb-6 animate-pulse-glow">
-          <Check size={48} className="text-success" />
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px', textAlign: 'center', background: 'var(--bg-primary)', animation: 'scaleIn 0.3s ease-out' }}>
+        <div style={{
+          width: '96px', height: '96px', borderRadius: '50%',
+          background: 'var(--color-success-light)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '24px', animation: 'pulseGlow 2s ease-in-out infinite',
+        }}>
+          <Check size={48} color="var(--color-success)" strokeWidth={2.5} />
         </div>
-        <h2 className="text-2xl font-bold mb-2">Order Placed!</h2>
-        <p className="text-text-secondary text-sm">Your order has been confirmed and is being prepared</p>
+        <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '8px' }}>
+          Order Placed!
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+          Your order has been confirmed and is being prepared
+        </p>
       </div>
     );
   }
@@ -51,95 +60,179 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
-      <div className="p-4 glass-strong sticky top-0 z-30">
-        <div className="max-w-lg mx-auto flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl bg-bg-card active:scale-95 transition-transform">
+    <div className="h-full overflow-y-auto scrollbar-hide" style={{ paddingBottom: '120px' }}>
+      {/* Header */}
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 30, padding: '12px 16px',
+        background: 'rgba(255, 248, 241, 0.88)', backdropFilter: 'blur(30px)',
+        borderBottom: '1px solid var(--border)',
+      }}>
+        <div style={{ maxWidth: '480px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button onClick={() => navigate(-1)} style={{
+            width: '38px', height: '38px', borderRadius: '12px',
+            background: 'var(--bg-card)', border: '1px solid var(--border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', color: 'var(--text-primary)', boxShadow: 'var(--shadow-sm)',
+          }}>
             <ChevronLeft size={20} />
           </button>
-          <h1 className="text-lg font-bold">Checkout</h1>
+          <h1 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)' }}>Checkout</h1>
         </div>
       </div>
 
-      <div className="p-4 max-w-lg mx-auto space-y-4">
+      <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Delivery Address */}
-        <div className="bg-bg-card rounded-2xl p-4 border border-border">
-          <div className="flex items-center gap-2 mb-3">
-            <MapPin size={16} className="text-accent-orange" />
-            <h3 className="text-sm font-semibold">Delivery Address</h3>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <MapPin size={16} color="var(--color-primary)" />
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Delivery Address</h3>
           </div>
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {addresses.map(addr => (
               <button key={addr.id} onClick={() => setSelectedAddress(addr.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${selectedAddress === addr.id ? 'border-accent-orange/40 bg-accent-orange/10' : 'border-border bg-bg-primary'}`}>
-                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr.id ? 'border-accent-orange' : 'border-text-muted'}`}>
-                  {selectedAddress === addr.id && <div className="w-2 h-2 rounded-full bg-accent-orange" />}
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
+                  padding: '12px', borderRadius: '12px', border: '1.5px solid',
+                  borderColor: selectedAddress === addr.id ? 'var(--color-primary-border)' : 'var(--border)',
+                  background: selectedAddress === addr.id ? 'var(--color-primary-light)' : 'var(--bg-secondary)',
+                  textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s ease',
+                  fontFamily: 'var(--font-family)',
+                }}>
+                <div style={{
+                  width: '16px', height: '16px', borderRadius: '50%',
+                  border: `2px solid ${selectedAddress === addr.id ? 'var(--color-primary)' : 'var(--text-muted)'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  {selectedAddress === addr.id && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-primary)' }} />}
                 </div>
-                <div className="flex-1">
-                  <span className="text-xs font-semibold text-accent-orange">{addr.label}</span>
-                  <p className="text-xs text-text-secondary mt-0.5">{addr.fullAddress}</p>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-primary)' }}>{addr.label}</span>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{addr.fullAddress}</p>
                 </div>
               </button>
             ))}
           </div>
-          <button className="w-full mt-3 py-2.5 rounded-xl border border-dashed border-border text-text-secondary text-xs font-medium active:scale-[0.98] transition-transform">
+          <button style={{
+            width: '100%', marginTop: '12px', padding: '10px',
+            borderRadius: '12px', border: '1.5px dashed var(--border)',
+            background: 'transparent', color: 'var(--text-secondary)',
+            fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+            fontFamily: 'var(--font-family)', transition: 'all 0.2s ease',
+          }}>
             + Add New Address
           </button>
         </div>
 
         {/* Delivery Time */}
-        <div className="bg-bg-card rounded-2xl p-4 border border-border">
-          <div className="flex items-center gap-2 mb-3">
-            <Clock size={16} className="text-accent-orange" />
-            <h3 className="text-sm font-semibold">Delivery Time</h3>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <Clock size={16} color="var(--color-primary)" />
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Delivery Time</h3>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex-1 p-3 rounded-xl border border-accent-orange/40 bg-accent-orange/10 text-center">
-              <span className="text-sm font-bold text-accent-orange">25-35 min</span>
-              <p className="text-[10px] text-text-secondary mt-0.5">Estimated</p>
-            </div>
+          <div style={{
+            padding: '12px', borderRadius: '12px',
+            border: '1.5px solid var(--color-primary-border)',
+            background: 'var(--color-primary-light)', textAlign: 'center',
+          }}>
+            <span style={{ fontSize: '14px', fontWeight: 800, color: 'var(--color-primary)' }}>25-35 min</span>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>Estimated</p>
           </div>
         </div>
 
         {/* Payment Method */}
-        <div className="bg-bg-card rounded-2xl p-4 border border-border">
-          <div className="flex items-center gap-2 mb-3">
-            <Wallet size={16} className="text-accent-orange" />
-            <h3 className="text-sm font-semibold">Payment Method</h3>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <Wallet size={16} color="var(--color-primary)" />
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Payment Method</h3>
           </div>
-          <div className="grid grid-cols-4 gap-2">
-            {paymentMethods.map(method => (
-              <button key={method.id} onClick={() => setPaymentMethod(method.id)}
-                className={`flex flex-col items-center gap-1 p-3 rounded-xl border transition-all ${selectedPaymentMethod === method.id ? 'border-accent-orange/40 bg-accent-orange/10' : 'border-border bg-bg-primary'}`}>
-                <method.icon size={20} className={selectedPaymentMethod === method.id ? 'text-accent-orange' : 'text-text-secondary'} />
-                <span className="text-[10px] font-medium text-text-secondary">{method.name}</span>
-              </button>
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+            {paymentMethods.map(method => {
+              const isActive = selectedPaymentMethod === method.id;
+              const Icon = method.icon;
+              return (
+                <button key={method.id} onClick={() => setPaymentMethod(method.id)}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+                    padding: '12px 8px', borderRadius: '12px', border: '1.5px solid',
+                    borderColor: isActive ? 'var(--color-primary-border)' : 'var(--border)',
+                    background: isActive ? 'var(--color-primary-light)' : 'var(--bg-secondary)',
+                    cursor: 'pointer', transition: 'all 0.2s ease', fontFamily: 'var(--font-family)',
+                  }}>
+                  <Icon size={18} color={isActive ? 'var(--color-primary)' : 'var(--text-secondary)'} />
+                  <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-secondary)' }}>{method.name}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Order Notes */}
-        <div className="bg-bg-card rounded-2xl p-4 border border-border">
-          <h3 className="text-sm font-semibold mb-2">Order Notes</h3>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
+          <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Order Notes</h3>
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Any special instructions..."
-            className="w-full bg-bg-primary border border-border rounded-xl p-3 text-sm focus:border-accent-orange focus:outline-none transition-colors placeholder:text-text-muted resize-none h-20" />
+            style={{
+              width: '100%', background: 'var(--bg-secondary)', border: '1.5px solid var(--border)',
+              borderRadius: '12px', padding: '12px', fontSize: '14px', color: 'var(--text-primary)',
+              resize: 'none', height: '80px', transition: 'all 0.2s ease', fontFamily: 'var(--font-family)',
+            }} />
         </div>
 
         {/* Order Summary */}
-        <div className="bg-bg-card rounded-2xl p-4 border border-border space-y-2">
-          <div className="flex justify-between text-sm"><span className="text-text-secondary">Items ({cart.reduce((s, i) => s + i.quantity, 0)})</span><span>{totals.subtotal.toLocaleString()} so'm</span></div>
-          <div className="flex justify-between text-sm"><span className="text-text-secondary">Delivery</span><span>{totals.deliveryFee === 0 ? 'Free' : `${totals.deliveryFee.toLocaleString()}`}</span></div>
-          <div className="flex justify-between text-sm"><span className="text-text-secondary">Service Fee</span><span>{totals.serviceFee.toLocaleString()} so'm</span></div>
-          {totals.discount > 0 && <div className="flex justify-between text-sm text-success"><span>Discount</span><span>-{totals.discount.toLocaleString()} so'm</span></div>}
-          <div className="border-t border-border pt-2 flex justify-between font-bold"><span>Total</span><span className="text-accent-orange">{totals.total.toLocaleString()} so'm</span></div>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>Items ({cart.reduce((s, i) => s + i.quantity, 0)})</span>
+            <span style={{ color: 'var(--text-primary)' }}>{totals.subtotal.toLocaleString()} so'm</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>Delivery</span>
+            <span style={{ color: 'var(--text-primary)' }}>{totals.deliveryFee === 0 ? 'Free' : `${totals.deliveryFee.toLocaleString()}`}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>Service Fee</span>
+            <span style={{ color: 'var(--text-primary)' }}>{totals.serviceFee.toLocaleString()} so'm</span>
+          </div>
+          {totals.discount > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--color-success)' }}>
+              <span>Discount</span>
+              <span>-{totals.discount.toLocaleString()} so'm</span>
+            </div>
+          )}
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '15px' }}>
+            <span style={{ color: 'var(--text-primary)' }}>Total</span>
+            <span style={{ color: 'var(--color-primary)' }}>{totals.total.toLocaleString()} so'm</span>
+          </div>
         </div>
       </div>
 
-      {/* Bottom */}
-      <div className="fixed bottom-16 left-0 right-0 p-4 glass-strong border-t border-border z-40">
-        <div className="max-w-lg mx-auto">
-          <button onClick={handlePlaceOrder} disabled={loading || !defaultAddress} className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-60">
-            {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : `Place Order — ${totals.total.toLocaleString()} so'm`}
+      {/* Sticky Place Order Button */}
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
+        padding: '0 12px', paddingBottom: 'env(safe-area-inset-bottom, 12px)',
+      }}>
+        <div style={{
+          maxWidth: '480px', margin: '0 auto', borderRadius: 'var(--radius-xl)',
+          background: 'rgba(255, 255, 255, 0.92)', backdropFilter: 'blur(24px)',
+          border: '1px solid var(--border)',
+          boxShadow: '0 -4px 32px rgba(45, 42, 38, 0.12)',
+          padding: '12px',
+        }}>
+          <button onClick={handlePlaceOrder} disabled={loading || !defaultAddress} style={{
+            width: '100%', padding: '16px', borderRadius: 'var(--radius-lg)',
+            background: loading ? 'var(--color-success)' : 'var(--color-primary)',
+            color: 'white', border: 'none', fontSize: '15px', fontWeight: 800,
+            cursor: loading ? 'default' : 'pointer', fontFamily: 'var(--font-family)',
+            boxShadow: loading ? '0 6px 24px rgba(43, 138, 62, 0.35)' : 'var(--shadow-primary)',
+            transition: 'all 0.3s ease', letterSpacing: '-0.01em',
+            opacity: !defaultAddress ? 0.5 : 1,
+          }}>
+            {loading ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff', animation: 'spin 0.8s linear infinite' }} />
+                Processing...
+              </div>
+            ) : (
+              `Place Order — ${totals.total.toLocaleString()} so'm`
+            )}
           </button>
         </div>
       </div>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- Primary Meta Tags -->
@@ -30,16 +30,53 @@
     <meta property="twitter:description" content="Order mini fast food online in Tashkent. Quick bites, big taste!" />
     <meta property="twitter:image" content="https://bekfood.uz/og-image.png" />
 
+    <!-- Mobile Web App / PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BEK FOOD" />
+    <meta name="application-name" content="BEK FOOD" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#FFF8F1" />
+    <meta name="msapplication-TileColor" content="#FFF8F1" />
+    <meta name="msapplication-TileImage" content="/apple-touch-icon.png" />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#09090B" />
-    <meta name="msapplication-TileColor" content="#09090B" />
+
+    <!-- Splash Screen -->
+    <link rel="apple-touch-startup-image" href="/apple-touch-icon.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Prevent iOS double-tap zoom -->
+    <style>
+      * { touch-action: manipulation; }
+      html { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overscroll-behavior: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
+      /* iOS safe area support */
+      @supports (padding: env(safe-area-inset-top)) {
+        .app-shell { padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom) 0; }
+      }
+      /* Prevent pull-to-refresh */
+      body { overscroll-behavior-y: contain; }
+      /* Smooth momentum scrolling on iOS */
+      .scrollbar-hide { -webkit-overflow-scrolling: touch; }
+      /* Status bar overlay prevention */
+      @viewport { viewport-fit: cover; }
+    </style>
 
     <!-- Structured Data -->
     <script type="application/ld+json">

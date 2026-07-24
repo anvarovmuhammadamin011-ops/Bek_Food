@@ -46,13 +46,48 @@ export default function FoodCard({ food, compact = false }) {
               -{Math.round((1 - food.discountPrice / food.price) * 100)}%
             </div>
           )}
-          <button onClick={handleFavorite} className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center z-10 active:scale-90 transition-transform">
-            <Heart size={12} className={fav ? 'text-danger' : 'text-white'} fill={fav ? 'currentColor' : 'none'} />
+          <button
+            onClick={handleFavorite}
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: fav ? 'rgba(224, 49, 49, 0.9)' : 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(8px)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 10,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+            }}
+          >
+            <Heart
+              size={12}
+              fill={fav ? 'white' : 'none'}
+              color={fav ? 'white' : 'var(--text-muted)'}
+            />
           </button>
           {food.prepTime && (
-            <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-sm flex items-center gap-1">
-              <Clock size={8} className="text-white" />
-              <span className="text-[9px] font-semibold text-white">{food.prepTime}m</span>
+            <div style={{
+              position: 'absolute',
+              bottom: '8px',
+              left: '8px',
+              padding: '3px 7px',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(0, 0, 0, 0.65)',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '3px',
+            }}>
+              <Clock size={8} color="white" />
+              <span style={{ fontSize: '9px', fontWeight: 600, color: 'white' }}>{food.prepTime}m</span>
             </div>
           )}
         </div>
@@ -74,7 +109,24 @@ export default function FoodCard({ food, compact = false }) {
                 </button>
               </div>
             ) : (
-              <button onClick={handleAdd} className="btn-icon btn-icon-primary" style={{ width: 28, height: 28 }}>
+              <button
+                onClick={handleAdd}
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '10px',
+                  background: 'var(--color-primary)',
+                  color: 'white',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(232, 89, 12, 0.3)',
+                  flexShrink: 0,
+                }}
+              >
                 <Plus size={14} />
               </button>
             )}
@@ -96,13 +148,48 @@ export default function FoodCard({ food, compact = false }) {
             -{Math.round((1 - food.discountPrice / food.price) * 100)}%
           </div>
         )}
-        <button onClick={handleFavorite} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center z-10 active:scale-90 transition-transform">
-          <Heart size={14} className={fav ? 'text-danger' : 'text-white'} fill={fav ? 'currentColor' : 'none'} />
+        <button
+          onClick={handleFavorite}
+          style={{
+            position: 'absolute',
+            top: '6px',
+            right: '6px',
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            background: fav ? 'rgba(224, 49, 49, 0.9)' : 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(8px)',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          }}
+        >
+          <Heart
+            size={13}
+            fill={fav ? 'white' : 'none'}
+            color={fav ? 'white' : 'var(--text-muted)'}
+          />
         </button>
         {food.prepTime && (
-          <div className="absolute bottom-2 left-2 px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm flex items-center gap-1">
-            <Clock size={10} className="text-white" />
-            <span className="text-[10px] font-semibold text-white">{food.prepTime} min</span>
+          <div style={{
+            position: 'absolute',
+            bottom: '6px',
+            left: '6px',
+            padding: '3px 8px',
+            borderRadius: 'var(--radius-full)',
+            background: 'rgba(0, 0, 0, 0.65)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}>
+            <Clock size={9} color="white" />
+            <span style={{ fontSize: '10px', fontWeight: 600, color: 'white' }}>{food.prepTime} min</span>
           </div>
         )}
       </div>
@@ -112,15 +199,14 @@ export default function FoodCard({ food, compact = false }) {
           {food.spiceLevel > 0 && (
             <div className="flex items-center gap-0.5">
               {Array.from({ length: Math.min(food.spiceLevel, 3) }).map((_, i) => (
-                <span key={i} className="text-[10px]">🌶️</span>
+                <span key={i} style={{ fontSize: '10px' }}>🌶️</span>
               ))}
             </div>
           )}
         </div>
         <p className="description">{food.description}</p>
 
-        {/* Meta row */}
-        <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted">
+        <div className="flex items-center gap-3 mt-1.5" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
           {food.calories && <span>{food.calories} kcal</span>}
           {food.ingredients && <span>{food.ingredients.length} ingredients</span>}
         </div>
@@ -141,7 +227,24 @@ export default function FoodCard({ food, compact = false }) {
               </button>
             </div>
           ) : (
-            <button onClick={handleAdd} className="btn-icon btn-icon-primary">
+            <button
+              onClick={handleAdd}
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '12px',
+                background: 'var(--color-primary)',
+                color: 'white',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 3px 12px rgba(232, 89, 12, 0.3)',
+                flexShrink: 0,
+              }}
+            >
               <Plus size={16} />
             </button>
           )}

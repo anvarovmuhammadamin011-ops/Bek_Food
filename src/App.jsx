@@ -22,13 +22,44 @@ const CouponsPage = lazy(() => import('./pages/CouponsPage'));
 const AddressesPage = lazy(() => import('./pages/AddressesPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
-// Loading fallback
+// Loading fallback — matches warm theme
 function PageLoader() {
   return (
-    <div className="h-full flex items-center justify-center bg-primary">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs text-muted">Loading...</span>
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'var(--bg-primary)',
+    }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '12px',
+      }}>
+        <div style={{
+          width: '42px',
+          height: '42px',
+          borderRadius: '14px',
+          background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 20px rgba(232, 89, 12, 0.3)',
+          animation: 'pulse 1.5s ease-in-out infinite',
+        }}>
+          <span style={{ fontWeight: 900, color: 'white', fontSize: '13px' }}>BF</span>
+        </div>
+        <span style={{
+          fontSize: '11px',
+          fontWeight: 600,
+          color: 'var(--text-muted)',
+          letterSpacing: '0.05em',
+        }}>
+          Loading...
+        </span>
       </div>
     </div>
   );

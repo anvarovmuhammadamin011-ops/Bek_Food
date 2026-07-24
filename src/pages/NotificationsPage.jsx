@@ -2,10 +2,10 @@ import useStore from '../store/useStore';
 import { Package, Tag, Gift, Info, Bell } from 'lucide-react';
 
 const typeConfig = {
-  order: { icon: <Package size={16} />, color: 'bg-accent-orange/15 text-accent-orange' },
-  offer: { icon: <Tag size={16} />, color: 'bg-success/15 text-success' },
-  coupon: { icon: <Gift size={16} />, color: 'bg-success/15 text-success' },
-  system: { icon: <Info size={16} />, color: 'bg-blue-500/15 text-blue-400' },
+  order: { icon: Package, bg: 'var(--color-primary-light)', color: 'var(--color-primary)' },
+  offer: { icon: Tag, bg: 'var(--color-success-light)', color: 'var(--color-success)' },
+  coupon: { icon: Gift, bg: 'var(--color-success-light)', color: 'var(--color-success)' },
+  system: { icon: Info, bg: 'var(--color-primary-light)', color: 'var(--color-primary)' },
 };
 
 export default function NotificationsPage() {
@@ -13,35 +13,56 @@ export default function NotificationsPage() {
 
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-24">
-      <div className="p-4 max-w-lg mx-auto">
-        <h1 className="text-lg font-bold mb-4">Notifications</h1>
+      <div style={{ padding: '16px', maxWidth: '480px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px', letterSpacing: '-0.02em' }}>
+          Notifications
+        </h1>
 
         {notifications.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-16 h-16 rounded-full bg-bg-card border border-border flex items-center justify-center mb-4">
-              <Bell size={24} className="text-text-secondary" />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 32px', textAlign: 'center' }}>
+            <div style={{
+              width: '64px', height: '64px', borderRadius: '50%',
+              background: 'var(--bg-card)', border: '1px solid var(--border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px',
+            }}>
+              <Bell size={24} color="var(--text-secondary)" />
             </div>
-            <h3 className="font-bold mb-1">No notifications</h3>
-            <p className="text-text-secondary text-sm">You're all caught up!</p>
+            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>No notifications</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>You're all caught up!</p>
           </div>
         )}
 
-        <div className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {notifications.map(notif => {
             const config = typeConfig[notif.type] || typeConfig.system;
+            const Icon = config.icon;
             return (
               <button key={notif.id} onClick={() => markNotificationRead(notif.id)}
-                className={`w-full flex items-start gap-3 p-4 rounded-2xl border text-left transition-all active:scale-[0.98] animate-slide-up ${notif.isRead ? 'bg-bg-card border-border' : 'bg-bg-card border-accent-orange/20'}`}>
-                <div className={`p-2.5 rounded-xl ${config.color}`}>
-                  {config.icon}
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'flex-start', gap: '12px',
+                  padding: '16px', borderRadius: '16px', border: '1px solid',
+                  borderColor: notif.isRead ? 'var(--border)' : 'var(--color-primary-border)',
+                  background: 'var(--bg-card)', textAlign: 'left',
+                  transition: 'all 0.2s ease', cursor: 'pointer', fontFamily: 'var(--font-family)',
+                  animation: 'slideUp 0.3s ease-out',
+                }}>
+                <div style={{
+                  padding: '10px', borderRadius: '12px',
+                  background: config.bg, color: config.color, flexShrink: 0,
+                }}>
+                  <Icon size={16} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-semibold">{notif.title}</h4>
-                    {!notif.isRead && <div className="w-2 h-2 rounded-full bg-accent-orange" />}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <h4 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{notif.title}</h4>
+                    {!notif.isRead && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-primary)', flexShrink: 0 }} />}
                   </div>
-                  <p className="text-text-secondary text-xs mt-1 line-clamp-2">{notif.body}</p>
-                  <p className="text-text-muted text-[10px] mt-1.5">{new Date(notif.createdAt).toLocaleString()}</p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px', lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    {notif.body}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '10px', marginTop: '6px' }}>
+                    {new Date(notif.createdAt).toLocaleString()}
+                  </p>
                 </div>
               </button>
             );

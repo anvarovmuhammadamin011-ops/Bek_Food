@@ -1,11 +1,114 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Zap, Clock, Star, ShieldCheck, Truck } from 'lucide-react';
+import { Search, Zap, Clock, Star, ShieldCheck, Truck, Phone, MapPin, Clock3, Send, Camera, ChevronRight, Flame, TrendingUp } from 'lucide-react';
 import useStore from '../store/useStore';
 import Header from '../components/Header';
 import BannerCarousel from '../components/BannerCarousel';
 import FoodCard from '../components/FoodCard';
 import RestaurantCard from '../components/RestaurantCard';
+
+/* ── Section wrapper with staggered animation ── */
+function Section({ children, delay = 0, style = {} }) {
+  return (
+    <div style={{
+      marginTop: '18px',
+      animation: 'slideUp 0.4s ease-out',
+      animationDelay: `${delay}s`,
+      animationFillMode: 'both',
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+/* ── Section header with icon ── */
+function SectionHeader({ icon, iconBg, title, seeAll, onSeeAll }) {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: '12px',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {icon && (
+          <div style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '10px',
+            background: iconBg || 'var(--color-primary-light)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {icon}
+          </div>
+        )}
+        <h2 style={{
+          fontSize: '17px',
+          fontWeight: 800,
+          color: 'var(--text-primary)',
+          letterSpacing: '-0.02em',
+        }}>
+          {title}
+        </h2>
+      </div>
+      {seeAll && (
+        <button
+          onClick={onSeeAll}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '2px',
+            background: 'none',
+            border: 'none',
+            color: 'var(--color-primary)',
+            fontSize: '12px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            padding: '4px 8px',
+            borderRadius: 'var(--radius-full)',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          See All
+          <ChevronRight size={14} />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ── Category pill ── */
+function CategoryPill({ cat, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '12px 16px',
+        borderRadius: 'var(--radius-lg)',
+        border: active ? '1.5px solid var(--color-primary)' : '1.5px solid var(--border)',
+        background: active ? 'var(--color-primary)' : 'var(--bg-card)',
+        color: active ? 'white' : 'var(--text-secondary)',
+        cursor: 'pointer',
+        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: active ? 'var(--shadow-primary)' : 'var(--shadow-sm)',
+        transform: active ? 'translateY(-2px)' : 'none',
+        minWidth: '76px',
+      }}
+    >
+      <span style={{ fontSize: '26px' }}>{cat.icon}</span>
+      <span style={{ fontSize: '10px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.name}</span>
+    </button>
+  );
+}
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -19,171 +122,621 @@ export default function HomePage() {
   const nearbyRestaurants = useMemo(() => restaurants.filter(r => r.isOpen), [restaurants]);
   const filteredFoods = useMemo(() => selectedCategory ? foods.filter(f => f.categoryId === selectedCategory) : null, [selectedCategory, foods]);
 
+  const maxDiscount = dealsFoods.length > 0
+    ? Math.round((1 - Math.min(...dealsFoods.map(f => f.discountPrice / f.price))) * 100)
+    : 0;
+
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-24">
+    <div className="h-full overflow-y-auto scrollbar-hide" style={{ paddingBottom: '100px' }}>
       <Header />
 
-      <div className="px-4 space-y-6 mt-2">
-        {/* Hero Section */}
-        <div className="hero-card" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
-          <div className="flex items-center gap-1.5 mb-3">
-            <ShieldCheck size={14} className="text-success" />
-            <span className="text-success text-[10px] font-semibold uppercase tracking-wider">Trusted by 5,000+ customers</span>
-          </div>
-          <h2 className="title" style={{ fontSize: '28px', lineHeight: '1.1' }}>
-            Mini snacks,<br />
-            <span className="text-primary">big taste.</span>
-          </h2>
-          <p className="subtitle">Fresh mini fast food delivered to your door in under 10 minutes. No minimum order.</p>
+      <div style={{ padding: '0 16px', paddingTop: '8px' }}>
 
-          {/* Stats Row */}
-          <div className="flex items-center gap-4 mt-4 py-3 px-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
-            <div className="flex items-center gap-1.5">
-              <Clock size={14} className="text-primary" />
-              <span className="text-xs font-bold">10 min</span>
+        {/* ═══════════════════════════════════════════
+            HERO — Warm, Emotional, Food-Forward
+            ═══════════════════════════════════════════ */}
+        <div style={{
+          borderRadius: 'var(--radius-xl)',
+          overflow: 'hidden',
+          position: 'relative',
+          background: 'linear-gradient(145deg, #FF6B35 0%, #E8590C 40%, #C75B39 100%)',
+          padding: '24px',
+          color: 'white',
+          animation: 'fadeIn 0.4s ease-out',
+        }}>
+          {/* Decorative circles */}
+          <div style={{
+            position: 'absolute',
+            top: '-50px',
+            right: '-40px',
+            width: '180px',
+            height: '180px',
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.07)',
+            pointerEvents: 'none',
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: '-60px',
+            left: '-30px',
+            width: '140px',
+            height: '140px',
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.04)',
+            pointerEvents: 'none',
+          }} />
+
+          {/* Tagline */}
+          <div style={{
+            fontSize: '10px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.2em',
+            fontWeight: 600,
+            opacity: 0.85,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+          }}>
+            <ShieldCheck size={12} />
+            Trusted by 5,000+ food lovers
+          </div>
+
+          {/* Title */}
+          <h1 style={{
+            marginTop: '10px',
+            fontSize: '30px',
+            fontWeight: 900,
+            lineHeight: 1.08,
+            letterSpacing: '-0.03em',
+          }}>
+            Mini bites,<br />
+            <span style={{ opacity: 0.9 }}>big flavour.</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p style={{
+            marginTop: '8px',
+            fontSize: '13px',
+            opacity: 0.8,
+            lineHeight: 1.5,
+            maxWidth: '280px',
+          }}>
+            Fresh mini fast food delivered to your door in under 10 minutes. No minimum order.
+          </p>
+
+          {/* Stats bar */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+            marginTop: '16px',
+            padding: '10px 14px',
+            background: 'rgba(255, 255, 255, 0.12)',
+            borderRadius: 'var(--radius-md)',
+            backdropFilter: 'blur(8px)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700 }}>
+              <Clock size={12} />
+              <span>10 min</span>
             </div>
-            <div className="w-px h-4 bg-white/10" />
-            <div className="flex items-center gap-1.5">
-              <Star size={14} className="text-warning" fill="currentColor" />
-              <span className="text-xs font-bold">4.8</span>
+            <div style={{ width: '1px', height: '14px', background: 'rgba(255,255,255,0.25)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700 }}>
+              <Star size={12} fill="currentColor" />
+              <span>4.8</span>
             </div>
-            <div className="w-px h-4 bg-white/10" />
-            <div className="flex items-center gap-1.5">
-              <Truck size={14} className="text-success" />
-              <span className="text-xs font-bold">Free delivery</span>
+            <div style={{ width: '1px', height: '14px', background: 'rgba(255,255,255,0.25)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700 }}>
+              <Truck size={12} />
+              <span>Free</span>
             </div>
           </div>
 
           {/* CTA Buttons */}
-          <div className="actions">
-            <button onClick={() => navigate('/search')} className="action-btn primary" style={{ background: 'var(--color-primary)', color: 'white' }}>
+          <div style={{
+            marginTop: '18px',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '10px',
+          }}>
+            <button
+              onClick={() => navigate('/search')}
+              style={{
+                padding: '13px 14px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '14px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                border: 'none',
+                textAlign: 'left',
+                background: 'white',
+                color: 'var(--color-primary)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+              }}
+            >
               Order Now
-              <span className="hint" style={{ color: 'rgba(255,255,255,0.7)' }}>Browse {restaurants.length} spots</span>
+              <span style={{ display: 'block', fontSize: '10px', fontWeight: 400, marginTop: '2px', opacity: 0.7 }}>
+                Browse {restaurants.length} spots
+              </span>
             </button>
-            <button onClick={() => navigate('/cart')} className="action-btn secondary">
+            <button
+              onClick={() => navigate('/cart')}
+              style={{
+                padding: '13px 14px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '14px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                border: '1px solid rgba(255,255,255,0.2)',
+                textAlign: 'left',
+                background: 'rgba(255,255,255,0.15)',
+                color: 'white',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
               View Cart
-              <span className="hint">{cart?.length ?? 0} item{(cart?.length ?? 0) !== 1 ? 's' : ''}</span>
+              <span style={{ display: 'block', fontSize: '10px', fontWeight: 400, marginTop: '2px', opacity: 0.7 }}>
+                {cart?.length ?? 0} item{(cart?.length ?? 0) !== 1 ? 's' : ''}
+              </span>
             </button>
-          </div>
-
-          {/* Trust Badges */}
-          <div className="flex items-center justify-center gap-4 mt-4">
-            <div className="flex items-center gap-1 text-[10px] text-muted">
-              <Zap size={10} className="text-primary" /> Quick Delivery
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-muted">
-              <ShieldCheck size={10} className="text-success" /> Secure Payment
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-muted">
-              <Star size={10} className="text-warning" /> Top Rated
-            </div>
           </div>
         </div>
 
-        {/* Search Button */}
-        <button onClick={() => navigate('/search')} className="w-full flex items-center gap-3 bg-card border rounded-xl py-3 px-4 transition-all duration-200 hover:border-primary active:scale-[0.98]">
-          <Search size={18} className="text-muted" />
-          <div className="flex flex-col items-start">
-            <span className="text-xs font-semibold text-white">Search mini bites...</span>
-            <span className="text-secondary text-[10px]">Try "Burger", "Pizza", or "Wrap"</span>
-          </div>
-        </button>
+        {/* ═══════════════════════════════════════════
+            SEARCH BAR — Premium with icon
+            ═══════════════════════════════════════════ */}
+        <Section delay={0.05}>
+          <button
+            onClick={() => navigate('/search')}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '14px 16px',
+              background: 'var(--bg-card)',
+              border: '1.5px solid var(--border)',
+              borderRadius: 'var(--radius-xl)',
+              cursor: 'pointer',
+              transition: 'all 0.25s ease',
+              boxShadow: 'var(--shadow-card)',
+            }}
+          >
+            <div style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '12px',
+              background: 'var(--color-primary-light)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <Search size={17} color="var(--color-primary)" />
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Search mini bites...
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '1px' }}>
+                Try "Burger", "Pizza", or "Wrap"
+              </div>
+            </div>
+          </button>
+        </Section>
 
-        <BannerCarousel banners={banners} />
+        {/* ═══════════════════════════════════════════
+            BANNER CAROUSEL
+            ═══════════════════════════════════════════ */}
+        <Section delay={0.10}>
+          <BannerCarousel banners={banners} />
+        </Section>
 
-        {/* Categories */}
-        <div>
-          <div className="section-header">
-            <h2>Categories</h2>
-          </div>
-          <div className="scroll-row">
+        {/* ═══════════════════════════════════════════
+            CATEGORIES — Warm pills with animation
+            ═══════════════════════════════════════════ */}
+        <Section delay={0.15}>
+          <SectionHeader title="Categories" />
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            overflowX: 'auto',
+            paddingBottom: '4px',
+            margin: '0 -16px',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            scrollSnapType: 'x mandatory',
+          }}>
             {categories.map(cat => (
-              <button
+              <CategoryPill
                 key={cat.id}
+                cat={cat}
+                active={selectedCategory === cat.id}
                 onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
-                className={`category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
-              >
-                <span className="icon">{cat.icon}</span>
-                <span className="label">{cat.name}</span>
-              </button>
+              />
             ))}
           </div>
-        </div>
+        </Section>
 
-        {/* Filtered by category */}
+        {/* ═══════════════════════════════════════════
+            FILTERED BY CATEGORY
+            ═══════════════════════════════════════════ */}
         {filteredFoods && (
-          <div>
-            <div className="section-header">
-              <h2>{categories.find(c => c.id === selectedCategory)?.name}</h2>
-            </div>
-            <div className="vertical-list">
+          <Section delay={0.05}>
+            <SectionHeader
+              title={categories.find(c => c.id === selectedCategory)?.name || 'Items'}
+              icon={<span style={{ fontSize: '14px' }}>{categories.find(c => c.id === selectedCategory)?.icon}</span>}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {filteredFoods.map(food => <FoodCard key={food.id} food={food} />)}
-              {filteredFoods.length === 0 && <p className="text-secondary text-sm text-center py-6">No items in this category</p>}
+              {filteredFoods.length === 0 && (
+                <div style={{
+                  padding: '40px 20px',
+                  textAlign: 'center',
+                  color: 'var(--text-muted)',
+                  fontSize: '13px',
+                  background: 'var(--bg-card)',
+                  borderRadius: 'var(--radius-xl)',
+                  border: '1px solid var(--border)',
+                }}>
+                  No items in this category
+                </div>
+              )}
             </div>
-          </div>
+          </Section>
         )}
 
-        {/* Today's Deals */}
+        {/* ═══════════════════════════════════════════
+            MAIN CONTENT (no category filter)
+            ═══════════════════════════════════════════ */}
         {!selectedCategory && (
           <>
-            <div>
-              <div className="section-header">
-                <h2>Today's Deals</h2>
-                <span className="see-all">See All</span>
-              </div>
-              <div className="scroll-row scroll-fade">
-                {dealsFoods.map(food => <FoodCard key={food.id} food={food} compact />)}
-              </div>
-            </div>
 
-            {/* Quick Delivery */}
-            {quickDeliveryFoods.length > 0 && (
-              <div>
-                <div className="section-header">
-                  <div className="icon-title">
-                    <Zap size={14} className="text-primary" />
-                    <h2>Under 5 min</h2>
+            {/* ─── TODAY'S DEALS — Premium promo ─── */}
+            {dealsFoods.length > 0 && (
+              <Section delay={0.05}>
+                {/* Promo banner */}
+                <div style={{
+                  borderRadius: 'var(--radius-xl)',
+                  padding: '22px',
+                  background: 'linear-gradient(135deg, #FF8A50 0%, #E8590C 100%)',
+                  color: 'white',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxShadow: '0 6px 24px rgba(232, 89, 12, 0.25)',
+                }}>
+                  {/* Decorative circle */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '-40px',
+                    right: '-20px',
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    pointerEvents: 'none',
+                  }} />
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    marginBottom: '6px',
+                  }}>
+                    <Flame size={14} />
+                    <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.85 }}>
+                      Hot Deals
+                    </span>
                   </div>
-                  <span className="see-all">See All</span>
+
+                  <div style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '-0.02em' }}>
+                    Save up to {maxDiscount}% Today
+                  </div>
+                  <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '3px' }}>
+                    On selected items — limited time only
+                  </div>
+
+                  <button
+                    onClick={() => navigate('/search')}
+                    style={{
+                      marginTop: '14px',
+                      padding: '10px 20px',
+                      borderRadius: 'var(--radius-full)',
+                      background: 'white',
+                      color: 'var(--color-primary)',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    Grab a deal
+                  </button>
                 </div>
-                <div className="scroll-row scroll-fade">
-                  {quickDeliveryFoods.map(food => <FoodCard key={food.id} food={food} compact />)}
+
+                {/* Deals horizontal scroll */}
+                <div style={{
+                  display: 'flex',
+                  gap: '10px',
+                  overflowX: 'auto',
+                  marginTop: '14px',
+                  paddingBottom: '4px',
+                  margin: '14px -16px 0',
+                  paddingLeft: '16px',
+                  paddingRight: '16px',
+                  scrollSnapType: 'x mandatory',
+                }}>
+                  {dealsFoods.map(food => (
+                    <div key={food.id} style={{ scrollSnapAlign: 'start' }}>
+                      <FoodCard food={food} compact />
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Popular Foods */}
-            <div>
-              <div className="section-header">
-                <h2>Popular Bites</h2>
-                <span className="see-all">See All</span>
-              </div>
-              <div className="scroll-row scroll-fade">
-                {popularFoods.map(food => <FoodCard key={food.id} food={food} compact />)}
-              </div>
-            </div>
+            {/* ─── QUICK DELIVERY ─── */}
+            {quickDeliveryFoods.length > 0 && (
+              <Section delay={0.10}>
+                <SectionHeader
+                  title="Under 5 min"
+                  icon={<Zap size={13} color="var(--color-primary)" />}
+                  iconBg="var(--color-primary-light)"
+                  seeAll
+                  onSeeAll={() => navigate('/search')}
+                />
+                <div style={{
+                  display: 'flex',
+                  gap: '10px',
+                  overflowX: 'auto',
+                  paddingBottom: '4px',
+                  margin: '0 -16px',
+                  paddingLeft: '16px',
+                  paddingRight: '16px',
+                  scrollSnapType: 'x mandatory',
+                }}>
+                  {quickDeliveryFoods.map(food => (
+                    <div key={food.id} style={{ scrollSnapAlign: 'start' }}>
+                      <FoodCard food={food} compact />
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
 
-            {/* Recommended */}
-            <div>
-              <div className="section-header">
-                <h2>Recommended for You</h2>
-                <span className="see-all">See All</span>
+            {/* ─── POPULAR BITES ─── */}
+            <Section delay={0.15}>
+              <SectionHeader
+                title="Popular Bites"
+                icon={<TrendingUp size={13} color="var(--color-warning)" />}
+                iconBg="var(--color-warning-light)"
+                seeAll
+                onSeeAll={() => navigate('/search')}
+              />
+              <div style={{
+                display: 'flex',
+                gap: '10px',
+                overflowX: 'auto',
+                paddingBottom: '4px',
+                margin: '0 -16px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+                scrollSnapType: 'x mandatory',
+              }}>
+                {popularFoods.map(food => (
+                  <div key={food.id} style={{ scrollSnapAlign: 'start' }}>
+                    <FoodCard food={food} compact />
+                  </div>
+                ))}
               </div>
-              <div className="scroll-row scroll-fade">
-                {recommendedFoods.map(food => <FoodCard key={food.id} food={food} compact />)}
-              </div>
-            </div>
+            </Section>
 
-            {/* Nearby Restaurants */}
-            <div>
-              <div className="section-header">
-                <h2>Nearby Spots</h2>
-                <span className="see-all">See All</span>
+            {/* ─── RECOMMENDED ─── */}
+            <Section delay={0.20}>
+              <SectionHeader
+                title="Recommended for You"
+                icon={<Star size={13} color="var(--color-success)" />}
+                iconBg="var(--color-success-light)"
+                seeAll
+                onSeeAll={() => navigate('/search')}
+              />
+              <div style={{
+                display: 'flex',
+                gap: '10px',
+                overflowX: 'auto',
+                paddingBottom: '4px',
+                margin: '0 -16px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+                scrollSnapType: 'x mandatory',
+              }}>
+                {recommendedFoods.map(food => (
+                  <div key={food.id} style={{ scrollSnapAlign: 'start' }}>
+                    <FoodCard food={food} compact />
+                  </div>
+                ))}
               </div>
-              <div className="vertical-list">
-                {nearbyRestaurants.map(r => <RestaurantCard key={r.id} restaurant={r} />)}
+            </Section>
+
+            {/* ─── NEARBY RESTAURANTS ─── */}
+            <Section delay={0.25}>
+              <SectionHeader
+                title="Nearby Spots"
+                icon={<MapPin size={13} color="var(--color-danger)" />}
+                iconBg="var(--color-danger-light)"
+                seeAll
+                onSeeAll={() => navigate('/search')}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {nearbyRestaurants.map(r => (
+                  <RestaurantCard key={r.id} restaurant={r} />
+                ))}
               </div>
-            </div>
+            </Section>
+
+            {/* ═══════════════════════════════════════════
+                FOOTER — Premium dark warm footer
+                ═══════════════════════════════════════════ */}
+            <Section delay={0.30}>
+              <footer style={{
+                background: 'var(--text-primary)',
+                color: 'rgba(255, 255, 255, 0.7)',
+                padding: '28px 20px',
+                borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
+              }}>
+                {/* Brand */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '20px',
+                }}>
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '10px',
+                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 10px rgba(232, 89, 12, 0.3)',
+                  }}>
+                    <span style={{ fontWeight: 900, color: 'white', fontSize: '11px', letterSpacing: '-0.02em' }}>BF</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>
+                      BEK FOOD
+                    </div>
+                    <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.45)', marginTop: '1px' }}>
+                      Mini Fast Food
+                    </div>
+                  </div>
+                </div>
+
+                {/* Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div>
+                    <div style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      color: 'white',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      marginBottom: '10px',
+                    }}>
+                      Quick Links
+                    </div>
+                    {[
+                      { label: 'Home', path: '/' },
+                      { label: 'Menu', path: '/search' },
+                      { label: 'My Orders', path: '/orders' },
+                      { label: 'Favorites', path: '/favorites' },
+                    ].map(link => (
+                      <button
+                        key={link.path}
+                        onClick={() => navigate(link.path)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontSize: '11px',
+                          color: 'rgba(255,255,255,0.5)',
+                          textDecoration: 'none',
+                          padding: '4px 0',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'color 0.2s ease',
+                          fontFamily: 'var(--font-family)',
+                        }}
+                      >
+                        {link.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div>
+                    <div style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      color: 'white',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      marginBottom: '10px',
+                    }}>
+                      Contact
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>
+                        <Phone size={11} /> +998 90 123 45 67
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>
+                        <MapPin size={11} /> Tashkent, Uzbekistan
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>
+                        <Clock3 size={11} /> 09:00 — 23:00
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Social */}
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <a
+                    href="https://t.me/bekfood"
+                    target="_blank"
+                    rel="noopener"
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'rgba(255,255,255,0.6)',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Send size={14} />
+                  </a>
+                  <a
+                    href="https://instagram.com/bekfood"
+                    target="_blank"
+                    rel="noopener"
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'rgba(255,255,255,0.6)',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Camera size={14} />
+                  </a>
+                </div>
+
+                {/* Divider */}
+                <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '18px 0' }} />
+
+                {/* Copyright */}
+                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', textAlign: 'center' }}>
+                  &copy; 2026 BEK FOOD. All rights reserved.
+                </div>
+              </footer>
+            </Section>
           </>
         )}
       </div>
