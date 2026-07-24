@@ -132,7 +132,7 @@ export default function LiveTrackingPage() {
             ))}
             <div className="border-t border-border pt-2 flex justify-between font-bold text-sm">
               <span>Total</span>
-              <span className="text-accent-orange">{currentOrder.total.toLocaleString()} so_m</span>
+              <span className="text-accent-orange">{currentOrder.total.toLocaleString()} so'm</span>
             </div>
           </div>
         </div>

@@ -64,7 +64,7 @@ export default function CartPage() {
       <div className="p-4 glass-strong sticky top-0 z-30">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-lg font-bold">My Cart ({cart.length})</h1>
-          <button onClick={() => { cart.forEach(i => removeFromCart(i.id)); }} className="text-danger text-xs font-medium">Clear All</button>
+          <button onClick={() => { cart.forEach(i => removeFromCart(i.foodId)); }} className="text-danger text-xs font-medium">Clear All</button>
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function CartPage() {
             <div className="info">
               <div className="header">
                 <h4 className="name">{item.food.name}</h4>
-                <button onClick={() => removeFromCart(item.id)} className="p-1 text-danger active:scale-90 transition-transform">
+                <button onClick={() => removeFromCart(item.foodId)} className="p-1 text-danger active:scale-90 transition-transform">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -84,11 +84,11 @@ export default function CartPage() {
               )}
               <div className="footer">
                 <div className="quantity-selector">
-                  <button onClick={() => updateCartItemQuantity(item.id, -1)} className="btn-qty">
+                  <button onClick={() => updateCartItemQuantity(item.foodId, -1)} className="btn-qty">
                     <Minus size={12} />
                   </button>
                   <span className="count">{item.quantity}</span>
-                  <button onClick={() => updateCartItemQuantity(item.id, 1)} className="btn-qty">
+                  <button onClick={() => updateCartItemQuantity(item.foodId, 1)} className="btn-qty">
                     <Plus size={12} />
                   </button>
                 </div>

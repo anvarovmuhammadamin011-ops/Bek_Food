@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Zap } from 'lucide-react';
+import { Search, Zap, Clock, Star, ShieldCheck, Truck } from 'lucide-react';
 import useStore from '../store/useStore';
 import Header from '../components/Header';
 import BannerCarousel from '../components/BannerCarousel';
@@ -12,32 +12,71 @@ export default function HomePage() {
   const { user, banners, foods, restaurants, categories, cart } = useStore();
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const popularFoods = foods.filter(f => f.isPopular);
-  const recommendedFoods = foods.filter(f => f.isRecommended);
-  const dealsFoods = foods.filter(f => f.discountPrice);
-  const quickDeliveryFoods = foods.filter(f => f.prepTime && f.prepTime <= 5);
-  const nearbyRestaurants = restaurants.filter(r => r.isOpen);
-  const filteredFoods = selectedCategory ? foods.filter(f => f.categoryId === selectedCategory) : null;
+  const popularFoods = useMemo(() => foods.filter(f => f.isPopular), [foods]);
+  const recommendedFoods = useMemo(() => foods.filter(f => f.isRecommended), [foods]);
+  const dealsFoods = useMemo(() => foods.filter(f => f.discountPrice), [foods]);
+  const quickDeliveryFoods = useMemo(() => foods.filter(f => f.prepTime && f.prepTime <= 5), [foods]);
+  const nearbyRestaurants = useMemo(() => restaurants.filter(r => r.isOpen), [restaurants]);
+  const filteredFoods = useMemo(() => selectedCategory ? foods.filter(f => f.categoryId === selectedCategory) : null, [selectedCategory, foods]);
 
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-24">
       <Header />
 
       <div className="px-4 space-y-6 mt-2">
-        {/* Hero Card */}
-        <div className="hero-card">
-          <p className="tagline">Quick bites, quick delivery</p>
-          <h2 className="title">Mini snacks, big taste.</h2>
-          <p className="subtitle">Order mini fast food delivered in under 10 minutes.</p>
+        {/* Hero Section */}
+        <div className="hero-card" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
+          <div className="flex items-center gap-1.5 mb-3">
+            <ShieldCheck size={14} className="text-success" />
+            <span className="text-success text-[10px] font-semibold uppercase tracking-wider">Trusted by 5,000+ customers</span>
+          </div>
+          <h2 className="title" style={{ fontSize: '28px', lineHeight: '1.1' }}>
+            Mini snacks,<br />
+            <span className="text-primary">big taste.</span>
+          </h2>
+          <p className="subtitle">Fresh mini fast food delivered to your door in under 10 minutes. No minimum order.</p>
+
+          {/* Stats Row */}
+          <div className="flex items-center gap-4 mt-4 py-3 px-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
+            <div className="flex items-center gap-1.5">
+              <Clock size={14} className="text-primary" />
+              <span className="text-xs font-bold">10 min</span>
+            </div>
+            <div className="w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-1.5">
+              <Star size={14} className="text-warning" fill="currentColor" />
+              <span className="text-xs font-bold">4.8</span>
+            </div>
+            <div className="w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-1.5">
+              <Truck size={14} className="text-success" />
+              <span className="text-xs font-bold">Free delivery</span>
+            </div>
+          </div>
+
+          {/* CTA Buttons */}
           <div className="actions">
+            <button onClick={() => navigate('/search')} className="action-btn primary" style={{ background: 'var(--color-primary)', color: 'white' }}>
+              Order Now
+              <span className="hint" style={{ color: 'rgba(255,255,255,0.7)' }}>Browse {restaurants.length} spots</span>
+            </button>
             <button onClick={() => navigate('/cart')} className="action-btn secondary">
-              View cart
-              <span className="hint">{cart?.length ?? 0} item{(cart?.length ?? 0) !== 1 ? 's' : ''} waiting</span>
+              View Cart
+              <span className="hint">{cart?.length ?? 0} item{(cart?.length ?? 0) !== 1 ? 's' : ''}</span>
             </button>
-            <button onClick={() => navigate('/search')} className="action-btn primary">
-              Quick Order
-              <span className="hint">Browse {restaurants.length} spots</span>
-            </button>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <div className="flex items-center gap-1 text-[10px] text-muted">
+              <Zap size={10} className="text-primary" /> Quick Delivery
+            </div>
+            <div className="flex items-center gap-1 text-[10px] text-muted">
+              <ShieldCheck size={10} className="text-success" /> Secure Payment
+            </div>
+            <div className="flex items-center gap-1 text-[10px] text-muted">
+              <Star size={10} className="text-warning" /> Top Rated
+            </div>
           </div>
         </div>
 

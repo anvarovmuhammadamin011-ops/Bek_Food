@@ -61,10 +61,10 @@ const useStore = create((set, get) => ({
     set((s) => ({ cart: [...s.cart, item] }));
   },
 
-  removeFromCart: (itemId) => set((s) => ({ cart: s.cart.filter((i) => i.id !== itemId) })),
+  removeFromCart: (foodId) => set((s) => ({ cart: s.cart.filter((i) => i.foodId !== foodId) })),
 
-  updateCartItemQuantity: (itemId, delta) => set((s) => ({
-    cart: s.cart.map((i) => i.id === itemId ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i),
+  updateCartItemQuantity: (foodId, delta) => set((s) => ({
+    cart: s.cart.map((i) => i.foodId === foodId ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i),
   })),
 
   clearCart: () => set({ cart: [] }),

@@ -16,7 +16,7 @@ export default function FavoritesPage() {
   ];
 
   const favRestaurants = restaurants.filter(r => favorites.some(f => f.type === 'restaurant' && f.id === r.id));
-  const favFoods = foods.filter(f => favorites.some(f => f.type === 'food' && f.id === f.id));
+  const favFoods = foods.filter(f => favorites.some(fav => fav.type === 'food' && fav.id === f.id));
   const displayed = activeTab === 'restaurants' ? favRestaurants : favFoods;
 
   return (

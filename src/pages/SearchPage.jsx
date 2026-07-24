@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, SlidersHorizontal, Zap, RotateCcw } from 'lucide-react';
 import useStore from '../store/useStore';
@@ -48,16 +48,16 @@ export default function SearchPage() {
     setSortBy('relevance');
   };
 
-  const applyFilters = () => {
-    let results = query ? [...searchResults] : [...foods.map(f => ({...f, type: 'food'})), ...restaurants.map(r => ({...r, type: 'restaurant'}))];
+  const results = useMemo(() => {
+    let filtered = query ? [...searchResults] : [...foods.map(f => ({...f, type: 'food'})), ...restaurants.map(r => ({...r, type: 'restaurant'}))];
 
-    if (selectedCategory) results = results.filter(r => r.categoryId === selectedCategory);
-    if (minPrice) results = results.filter(r => r.price >= Number(minPrice));
-    if (maxPrice) results = results.filter(r => r.price <= Number(maxPrice));
-    if (minRating > 0) results = results.filter(r => r.rating >= minRating);
+    if (selectedCategory) filtered = filtered.filter(r => r.categoryId === selectedCategory);
+    if (minPrice) filtered = filtered.filter(r => r.price >= Number(minPrice));
+    if (maxPrice) filtered = filtered.filter(r => r.price <= Number(maxPrice));
+    if (minRating > 0) filtered = filtered.filter(r => r.rating >= minRating);
 
     if (quickDelivery) {
-      results = results.filter(r => {
+      filtered = filtered.filter(r => {
         if (r.type === 'restaurant') {
           const maxTime = parseInt(r.deliveryTime?.split('-')[1] || '99');
           return maxTime <= 10;
@@ -69,7 +69,7 @@ export default function SearchPage() {
     if (selectedDeliveryTime) {
       const filter = deliveryTimeFilters.find(f => f.id === selectedDeliveryTime);
       if (filter) {
-        results = results.filter(r => {
+        filtered = filtered.filter(r => {
           if (r.type === 'restaurant') {
             const maxTime = parseInt(r.deliveryTime?.split('-')[1] || '99');
             return maxTime <= filter.maxMinutes;
@@ -82,7 +82,7 @@ export default function SearchPage() {
     if (selectedDistance) {
       const filter = distanceFilters.find(f => f.id === selectedDistance);
       if (filter) {
-        results = results.filter(r => {
+        filtered = filtered.filter(r => {
           if (r.type === 'restaurant') {
             const dist = parseFloat(r.distance) || 99;
             return dist <= filter.maxKm;
@@ -93,27 +93,25 @@ export default function SearchPage() {
     }
 
     if (onlyOpen) {
-      results = results.filter(r => {
+      filtered = filtered.filter(r => {
         if (r.type === 'restaurant') return r.isOpen;
         return true;
       });
     }
 
-    if (sortBy === 'price-low') results.sort((a, b) => (a.price || 0) - (b.price || 0));
-    if (sortBy === 'price-high') results.sort((a, b) => (b.price || 0) - (a.price || 0));
-    if (sortBy === 'rating') results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    if (sortBy === 'price-low') filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
+    if (sortBy === 'price-high') filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
+    if (sortBy === 'rating') filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     if (sortBy === 'delivery') {
-      results.sort((a, b) => {
+      filtered.sort((a, b) => {
         const aTime = parseInt(a.deliveryTime?.split('-')[1] || '99');
         const bTime = parseInt(b.deliveryTime?.split('-')[1] || '99');
         return aTime - bTime;
       });
     }
 
-    return results;
-  };
-
-  const results = applyFilters();
+    return filtered;
+  }, [query, searchResults, foods, restaurants, selectedCategory, minPrice, maxPrice, minRating, quickDelivery, selectedDeliveryTime, selectedDistance, onlyOpen, sortBy]);
 
   return (
     <div className="h-full flex flex-col bg-primary">

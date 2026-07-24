@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Clock, CreditCard, Wallet, Smartphone, Check, ChevronLeft, Banknote, Smartphone as Phone } from 'lucide-react';
+import { MapPin, Clock, CreditCard, Wallet, Smartphone, Check, ChevronLeft, Banknote } from 'lucide-react';
 import useStore from '../store/useStore';
 
 const paymentMethods = [
