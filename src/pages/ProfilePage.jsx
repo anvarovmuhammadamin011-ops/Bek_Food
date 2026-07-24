@@ -20,51 +20,123 @@ export default function ProfilePage() {
 
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-24">
-      <div className="p-4 max-w-lg mx-auto space-y-4 mt-4">
+      <div style={{ padding: '16px', maxWidth: '480px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
         {/* Profile Header */}
-        <div className="card p-5 text-center animate-fade-in">
-          <div className="relative inline-block mb-3">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-danger flex items-center justify-center text-3xl font-bold text-white shadow-lg">
+        <div style={{
+          background: 'var(--bg-card)', borderRadius: '20px',
+          padding: '24px', border: '1px solid var(--border)',
+          boxShadow: '0 2px 12px rgba(45,42,38,0.05)',
+          textAlign: 'center', animation: 'fadeIn 0.3s ease-out',
+        }}>
+          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '12px' }}>
+            <div style={{
+              width: '80px', height: '80px', borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--color-primary), var(--color-danger))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '28px', fontWeight: 900, color: 'white',
+              boxShadow: '0 4px 20px rgba(232, 89, 12, 0.3)',
+            }}>
               {user?.name?.charAt(0) || 'B'}
             </div>
-            <button className="absolute bottom-0 right-0 p-2 rounded-full bg-primary text-white shadow-lg active:scale-90 transition-transform">
+            <button style={{
+              position: 'absolute', bottom: '0', right: '0',
+              width: '32px', height: '32px', borderRadius: '50%',
+              background: 'var(--color-primary)', color: 'white',
+              border: '3px solid var(--bg-card)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', boxShadow: '0 2px 8px rgba(232, 89, 12, 0.3)',
+              transition: 'all 0.2s ease',
+            }}>
               <Camera size={12} />
             </button>
           </div>
-          <h2 className="text-lg font-bold">{user?.name || 'Bekzod'}</h2>
-          <p className="text-secondary text-sm">{user?.phone || '+998 90 123 45 67'}</p>
-          <p className="text-muted text-xs mt-0.5">{user?.email || 'bekzod@example.com'}</p>
+          <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+            {user?.name || 'Bekzod'}
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '2px' }}>
+            {user?.phone || '+998 90 123 45 67'}
+          </p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '2px' }}>
+            {user?.email || 'bekzod@example.com'}
+          </p>
 
           {/* Brand Badge */}
-          <div className="brand-badge">
+          <div style={{
+            marginTop: '16px', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', gap: '8px',
+            padding: '8px 16px', background: 'var(--bg-secondary)',
+            borderRadius: '12px',
+          }}>
             <Logo size="sm" />
-            <span>BEK FOOD Member</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)' }}>BEK FOOD Member</span>
           </div>
         </div>
 
         {/* Menu Items */}
-        <div className="profile-menu">
+        <div style={{
+          background: 'var(--bg-card)', borderRadius: '20px',
+          border: '1px solid var(--border)', overflow: 'hidden',
+          boxShadow: '0 2px 12px rgba(45,42,38,0.05)',
+        }}>
           {menuItems.map((item, i) => (
-            <button key={i} onClick={() => item.path && navigate(item.path)} className="item">
-              <span className={`icon ${item.muted ? 'muted' : ''}`}>{item.icon}</span>
-              <span className="label">{item.label}</span>
-              {item.value && <span className="value">{item.value}</span>}
+            <button
+              key={i}
+              onClick={() => item.path && navigate(item.path)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center',
+                gap: '14px', padding: '16px 20px',
+                background: 'none', border: 'none',
+                cursor: item.path ? 'pointer' : 'default',
+                transition: 'background 0.15s ease',
+                textAlign: 'left', color: 'var(--text-primary)',
+                fontFamily: 'var(--font-family)',
+                borderTop: i > 0 ? '1px solid var(--border)' : 'none',
+              }}
+            >
+              <span style={{ color: item.muted ? 'var(--text-secondary)' : 'var(--color-primary)' }}>
+                {item.icon}
+              </span>
+              <span style={{ flex: 1, fontSize: '14px', fontWeight: 500 }}>{item.label}</span>
+              {item.value && <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginRight: '4px' }}>{item.value}</span>}
               {item.toggle ? (
-                <div className="toggle" />
+                <div style={{
+                  width: '40px', height: '24px', borderRadius: '9999px',
+                  background: 'var(--color-primary)', position: 'relative',
+                }}>
+                  <div style={{
+                    position: 'absolute', right: '2px', top: '2px',
+                    width: '20px', height: '20px', borderRadius: '50%',
+                    background: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                  }} />
+                </div>
               ) : (
-                <ChevronRight size={16} className="text-muted" />
+                <ChevronRight size={16} color="var(--text-muted)" />
               )}
             </button>
           ))}
         </div>
 
         {/* Logout */}
-        <button onClick={() => { logout(); navigate('/login'); }} className="logout-btn">
+        <button
+          onClick={() => { logout(); navigate('/login'); }}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', gap: '8px',
+            background: 'var(--color-danger-light)',
+            color: 'var(--color-danger)', fontWeight: 700,
+            padding: '16px', borderRadius: '20px',
+            border: '1.5px solid rgba(224, 49, 49, 0.15)',
+            cursor: 'pointer', transition: 'all 0.2s ease',
+            fontSize: '14px', fontFamily: 'var(--font-family)',
+          }}
+        >
           <LogOut size={18} />
           Sign Out
         </button>
 
-        <p className="text-center text-muted text-[10px] pb-4">BEK FOOD v1.0.0</p>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '10px', paddingBottom: '16px' }}>
+          BEK FOOD v1.0.0
+        </p>
       </div>
     </div>
   );

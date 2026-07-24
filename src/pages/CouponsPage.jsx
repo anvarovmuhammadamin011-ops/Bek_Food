@@ -63,14 +63,14 @@ export default function CouponsPage() {
         </div>
 
         {/* Referral */}
-        <div className="bg-gradient-to-br from-accent-orange/20 to-accent-red/20 rounded-2xl p-5 border border-accent-orange/20">
+        <div className="rounded-2xl p-5 border border-accent-orange/20" style={{ background: 'linear-gradient(135deg, rgba(232,89,12,0.12) 0%, rgba(224,49,49,0.12) 100%)' }}>
           <div className="flex items-center gap-3 mb-3">
             <div className="p-3 rounded-xl bg-accent-orange/20">
               <Users size={20} className="text-accent-orange" />
             </div>
             <div>
               <h3 className="font-bold text-sm">Refer a Friend</h3>
-              <p className="text-text-secondary text-xs">Earn 10,000 so_m for each referral</p>
+              <p className="text-text-secondary text-xs">Earn 10,000 so'm for each referral</p>
             </div>
           </div>
           <div className="flex items-center gap-2 bg-bg-primary rounded-xl p-3">
@@ -88,7 +88,7 @@ export default function CouponsPage() {
           <p className="text-3xl font-black text-accent-orange mt-2">2,450</p>
           <p className="text-text-secondary text-xs mt-1">Points available</p>
           <div className="mt-3 bg-bg-primary rounded-full h-2 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-accent-orange to-accent-red rounded-full" style={{ width: '65%' }} />
+            <div className="h-full rounded-full" style={{ width: '65%', background: 'linear-gradient(90deg, var(--color-primary), var(--color-danger))' }} />
           </div>
           <p className="text-text-muted text-[10px] mt-2">550 points to next reward</p>
         </div>

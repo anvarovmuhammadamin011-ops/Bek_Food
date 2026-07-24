@@ -114,7 +114,7 @@ export default function SearchPage() {
   }, [query, searchResults, foods, restaurants, selectedCategory, minPrice, maxPrice, minRating, quickDelivery, selectedDeliveryTime, selectedDistance, onlyOpen, sortBy]);
 
   return (
-    <div className="h-full flex flex-col bg-primary">
+    <div className="h-full flex flex-col" style={{ background: 'var(--bg-primary)' }}>
       <div className="p-4 glass-strong">
         <div className="flex items-center gap-3 max-w-lg mx-auto">
           <div className="search-input-wrapper">
