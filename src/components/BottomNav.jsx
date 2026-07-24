@@ -18,9 +18,9 @@ export default function BottomNav() {
   if (hide) return null;
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-50 px-4">
-      <div className="max-w-lg mx-auto rounded-[32px] glass-strong border border-border shadow-card">
-        <div className="flex items-center justify-around h-[72px] px-2">
+    <div className="bottom-nav">
+      <div className="inner">
+        <div className="tabs">
           {tabs.map((tab) => {
             const active = location.pathname === tab.path;
             const Icon = tab.icon;
@@ -28,19 +28,15 @@ export default function BottomNav() {
               <button
                 key={tab.path}
                 onClick={() => navigate(tab.path)}
-                className="relative flex flex-col items-center gap-0.5 py-1 px-3 ripple rounded-xl transition-all duration-200"
+                className={`tab ${active ? 'active' : ''}`}
               >
-                <div className="relative p-1.5 transition-all duration-200">
-                  <Icon size={20} className={`transition-all duration-200 ${active ? 'text-accent-orange' : 'text-text-secondary'}`} strokeWidth={active ? 2.2 : 1.8} />
-                  {tab.label === 'Cart' && cart.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-accent-red text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center" style={{ minWidth: 18 }}>
-                      {cart.length}
-                    </span>
-                  )}
+                <div className="icon-wrap">
+                  <Icon size={active ? 18 : 20} strokeWidth={active ? 2.2 : 1.8} />
                 </div>
-                <span className={`text-[10px] font-medium transition-all duration-200 ${active ? 'text-accent-orange' : 'text-text-secondary'}`}>
-                  {tab.label}
-                </span>
+                {tab.label === 'Cart' && cart.length > 0 && (
+                  <span className="cart-badge">{cart.length}</span>
+                )}
+                <span className="label">{tab.label}</span>
               </button>
             );
           })}

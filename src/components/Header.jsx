@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Bell, MapPin } from 'lucide-react';
 import useStore from '../store/useStore';
+import Logo from './Logo';
 
 export default function Header({ title, showBack = false, showNotifications = true, transparent = false }) {
   const navigate = useNavigate();
@@ -9,33 +10,37 @@ export default function Header({ title, showBack = false, showNotifications = tr
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className={`sticky top-0 z-40 px-4 pt-3 pb-3 ${transparent ? '' : 'glass-strong border-b border-border'}`}>
-      <div className="max-w-lg mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className={`header ${transparent ? '' : 'glass-header'}`}>
+      <div className="inner">
+        <div className="brand">
           {showBack && (
-            <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl bg-bg-card border border-border ripple active:scale-95 transition-transform">
+            <button onClick={() => navigate(-1)} className="btn-icon ripple">
               <ChevronLeft size={20} />
             </button>
           )}
           {title ? (
-            <h1 className="text-lg font-bold tracking-tight">{title}</h1>
+            <>
+              <Logo size="sm" />
+              <h1 className="text-lg font-bold tracking-tight">{title}</h1>
+            </>
           ) : (
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5 text-text-secondary text-xs">
-                <MapPin size={12} className="text-accent-orange" />
-                <span>Tashkent, Uzbekistan</span>
+            <>
+              <Logo size="sm" />
+              <div className="flex flex-col">
+                <div className="location">
+                  <MapPin size={10} className="text-primary" />
+                  <span>Tashkent, Uzbekistan</span>
+                </div>
+                <span className="greeting">{user?.name || 'Welcome'}</span>
               </div>
-              <span className="text-sm font-semibold">{user?.name || 'Welcome'}</span>
-            </div>
+            </>
           )}
         </div>
         {showNotifications && (
-          <button onClick={() => navigate('/notifications')} className="relative p-2.5 rounded-xl bg-bg-card border border-border ripple active:scale-95 transition-transform">
+          <button onClick={() => navigate('/notifications')} className="btn-icon ripple">
             <Bell size={20} />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-accent-red text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                {unreadCount}
-              </span>
+              <span className="cart-badge">{unreadCount}</span>
             )}
           </button>
         )}

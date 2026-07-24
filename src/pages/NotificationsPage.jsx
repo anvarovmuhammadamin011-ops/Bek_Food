@@ -3,7 +3,7 @@ import { Package, Tag, Gift, Info, Bell } from 'lucide-react';
 
 const typeConfig = {
   order: { icon: <Package size={16} />, color: 'bg-accent-orange/15 text-accent-orange' },
-  offer: { icon: <Tag size={16} />, color: 'bg-accent-red/15 text-accent-red' },
+  offer: { icon: <Tag size={16} />, color: 'bg-success/15 text-success' },
   coupon: { icon: <Gift size={16} />, color: 'bg-success/15 text-success' },
   system: { icon: <Info size={16} />, color: 'bg-blue-500/15 text-blue-400' },
 };
