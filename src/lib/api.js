@@ -3,42 +3,25 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 class ApiClient {
   constructor() {
     this.baseUrl = API_URL;
-    this.token = localStorage.getItem('accessToken') || null;
-  }
-
-  setToken(token) {
-    this.token = token;
-    if (token) localStorage.setItem('accessToken', token);
-    else localStorage.removeItem('accessToken');
   }
 
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}/api${endpoint}`;
-    const headers = { 'Content-Type': 'application/json' };
-    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
-
     const config = {
-      headers,
-      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // Important: sends cookies cross-origin
       ...options,
-      headers: { ...headers, ...options.headers },
+      headers: { 'Content-Type': 'application/json', ...options.headers },
     };
 
     try {
       const response = await fetch(url, config);
       const data = await response.json();
 
-      // Token expired — try refresh
-      if (response.status === 401 && data.message === 'Token expired') {
-        const refreshed = await this.refreshToken();
-        if (refreshed) {
-          headers['Authorization'] = `Bearer ${this.token}`;
-          const retryResponse = await fetch(url, { ...config, headers });
-          return retryResponse.json();
-        }
+      if (!response.ok) {
+        throw new Error(data.message || `HTTP ${response.status}`);
       }
 
-      if (!response.ok) throw new Error(data.message || 'Request failed');
       return data;
     } catch (err) {
       if (err.name === 'TypeError' && err.message.includes('fetch')) {
@@ -56,14 +39,8 @@ class ApiClient {
   // ── Auth ──
   login(email, password) { return this.post('/auth/login', { email, password }); }
   register(data) { return this.post('/auth/register', data); }
-  logout() { this.setToken(null); return this.post('/auth/logout'); }
-  async refreshToken() {
-    try {
-      const res = await this.post('/auth/refresh');
-      if (res.data?.accessToken) { this.setToken(res.data.accessToken); return true; }
-      return false;
-    } catch { return false; }
-  }
+  logout() { return this.post('/auth/logout'); }
+  refreshToken() { return this.post('/auth/refresh'); }
 
   // ── Products ──
   getProducts(params) { return this.get(`/products?${new URLSearchParams(params)}`); }
@@ -104,9 +81,11 @@ class ApiClient {
     formData.append('image', file);
     formData.append('folder', folder);
     const url = `${this.baseUrl}/api/upload/image`;
-    const headers = {};
-    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
-    const response = await fetch(url, { method: 'POST', body: formData, credentials: 'include', headers });
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
     return response.json();
   }
 }

@@ -38,10 +38,20 @@ export const generateTokens = (userId) => {
 
 export const setTokenCookies = (res, accessToken, refreshToken) => {
   const isProd = process.env.NODE_ENV === 'production';
+  const origin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+
   res.cookie('accessToken', accessToken, {
-    httpOnly: true, secure: isProd, sameSite: 'lax', maxAge: 15 * 60 * 1000,
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    maxAge: 15 * 60 * 1000,
+    path: '/',
   });
   res.cookie('refreshToken', refreshToken, {
-    httpOnly: true, secure: isProd, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/',
   });
 };
