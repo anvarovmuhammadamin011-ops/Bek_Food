@@ -2399,3 +2399,207 @@ select:focus {
     display: none !important;
   }
 }
+
+/* ============================================================
+   MENU PAGE — Grid card with hover & image zoom
+   ============================================================ */
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 360px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Category filter scrollbar hide */
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cart FAB pulse */
+@keyframes cartPulse {
+  0%, 100% { box-shadow: 0 8px 32px rgba(232, 89, 12, 0.35); }
+  50% { box-shadow: 0 8px 32px rgba(232, 89, 12, 0.55); }
+}
+
+.cart-fab {
+  animation: cartPulse 2s ease-in-out infinite;
+}
+
+/* Toast notification */
+@keyframes toastIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes toastOut {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-20px); opacity: 0; }
+}
+
+.toast {
+  animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 2.7s;
+  animation-fill-mode: forwards;
+}
+
+/* Skeleton loading for menu cards */
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.skeleton-card .skeleton-image {
+  height: 140px;
+  background: linear-gradient(90deg, #F5EDE6 25%, #FDF6EE 50%, #F5EDE6 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+}
+
+.skeleton-card .skeleton-text {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #F5EDE6 25%, #FDF6EE 50%, #F5EDE6 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  margin: 8px 12px;
+}
+
+/* ============================================================
+   ADMIN DASHBOARD — Responsive Styles
+   ============================================================ */
+
+/* Admin Sidebar */
+.admin-sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-sidebar-close {
+  display: none;
+}
+
+.admin-menu-btn {
+  display: none !important;
+}
+
+.admin-search-wrapper {
+  display: flex;
+}
+
+.admin-sidebar-overlay {
+  display: none !important;
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .admin-main {
+    margin-left: 260px;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (max-width: 1023px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+    z-index: 100;
+  }
+
+  .admin-sidebar.open,
+  .admin-sidebar[style*="transform: translateX(0)"] {
+    transform: translateX(0);
+  }
+
+  .admin-main {
+    margin-left: 0 !important;
+  }
+
+  .admin-menu-btn {
+    display: flex !important;
+  }
+
+  .admin-sidebar-close {
+    display: flex !important;
+  }
+
+  .admin-sidebar-overlay {
+    display: block !important;
+  }
+
+  .admin-search-wrapper {
+    display: none;
+  }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+  .admin-sidebar {
+    width: 280px;
+    transform: translateX(-100%);
+  }
+
+  .admin-main {
+    margin-left: 0 !important;
+  }
+
+  .admin-menu-btn {
+    display: flex !important;
+  }
+
+  .admin-sidebar-close {
+    display: flex !important;
+  }
+
+  .admin-sidebar-overlay {
+    display: block !important;
+  }
+
+  .admin-search-wrapper {
+    display: none;
+  }
+
+  /* Stack stat cards */
+  .admin-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Stack order cards */
+  .admin-orders-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Responsive tables */
+  .admin-table {
+    font-size: 12px;
+  }
+
+  .admin-table-header,
+  .admin-table-row {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px;
+  }
+
+  .admin-table-header > *:nth-child(n+3),
+  .admin-table-row > *:nth-child(n+3) {
+    display: none;
+  }
+}
+
+/* Small Mobile (max-width: 375px) */
+@media (max-width: 375px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+  }
+}

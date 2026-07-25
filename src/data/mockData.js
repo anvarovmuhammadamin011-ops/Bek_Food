@@ -1,12 +1,13 @@
 export const categories = [
-  { id: 1, name: 'Mini Burgers', icon: '🍔', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
-  { id: 2, name: 'Snack Pizza', icon: '🍕', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200' },
-  { id: 3, name: 'Chicken Bites', icon: '🍗', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=200' },
+  { id: 1, name: 'Burgers', icon: '🍔', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
+  { id: 2, name: 'Pizza', icon: '🍕', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200' },
+  { id: 3, name: 'Chicken', icon: '🍗', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=200' },
   { id: 4, name: 'Hot Dogs', icon: '🌭', image: 'https://images.unsplash.com/photo-1612392062120-e5a0e2e4f5b4?w=200' },
-  { id: 5, name: 'Wraps & Lavash', icon: '🫓', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=200' },
-  { id: 6, name: 'Sides', icon: '🍟', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200' },
+  { id: 5, name: 'Lavash', icon: '🌯', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=200' },
+  { id: 6, name: 'Fries', icon: '🍟', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200' },
   { id: 7, name: 'Drinks', icon: '🥤', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=200' },
-  { id: 8, name: 'Desserts', icon: '🍦', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=200' },
+  { id: 8, name: 'Desserts', icon: '🍰', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=200' },
+  { id: 9, name: 'Combos', icon: '🍽', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
 ];
 
 export const restaurants = [

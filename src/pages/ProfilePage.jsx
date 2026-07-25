@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, MapPin, CreditCard, Bell, Globe, Moon, HelpCircle, Shield, FileText, LogOut, Camera } from 'lucide-react';
+import { ChevronRight, MapPin, CreditCard, Bell, Globe, Moon, HelpCircle, Shield, FileText, LogOut, Camera, LayoutDashboard } from 'lucide-react';
 import useStore from '../store/useStore';
 import Logo from '../components/Logo';
 
@@ -8,14 +8,14 @@ export default function ProfilePage() {
   const { user, logout } = useStore();
 
   const menuItems = [
-    { icon: <MapPin size={18} />, label: 'My Addresses', path: '/addresses' },
-    { icon: <CreditCard size={18} />, label: 'Saved Cards', path: '/coupons' },
-    { icon: <Bell size={18} />, label: 'Notifications', path: '/notifications' },
-    { icon: <Globe size={18} />, label: 'Language', value: 'Uzbek' },
-    { icon: <Moon size={18} />, label: 'Dark Theme', value: 'On', toggle: true },
-    { icon: <HelpCircle size={18} />, label: 'Help Center', muted: true },
-    { icon: <Shield size={18} />, label: 'Privacy Policy', muted: true },
-    { icon: <FileText size={18} />, label: 'Terms of Service', muted: true },
+    { icon: <MapPin size={18} />, label: 'Manzillarim', path: '/addresses' },
+    { icon: <CreditCard size={18} />, label: 'Saqlangan kartalar', path: '/coupons' },
+    { icon: <Bell size={18} />, label: 'Bildirishnomalar', path: '/notifications' },
+    { icon: <Globe size={18} />, label: 'Til', value: "O'zbek" },
+    { icon: <Moon size={18} />, label: 'Qorong\'u rejim', value: 'Yoqilgan', toggle: true },
+    { icon: <HelpCircle size={18} />, label: 'Yordam markazi', muted: true },
+    { icon: <Shield size={18} />, label: 'Maxfiylik siyosati', muted: true },
+    { icon: <FileText size={18} />, label: 'Foydalanish shartlari', muted: true },
   ];
 
   return (
@@ -131,7 +131,35 @@ export default function ProfilePage() {
           }}
         >
           <LogOut size={18} />
-          Sign Out
+          Chiqish
+        </button>
+
+        {/* Admin Panel Link */}
+        <button
+          onClick={() => window.location.href = '/admin'}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center',
+            gap: '12px', padding: '14px 20px',
+            background: 'var(--bg-card)', borderRadius: '16px',
+            border: '1.5px solid var(--border)',
+            cursor: 'pointer', transition: 'all 0.2s ease',
+            fontFamily: 'var(--font-family)',
+            boxShadow: '0 2px 8px rgba(45,42,38,0.04)',
+          }}
+        >
+          <div style={{
+            width: '36px', height: '36px', borderRadius: '10px',
+            background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <LayoutDashboard size={16} color="white" />
+          </div>
+          <div style={{ flex: 1, textAlign: 'left' }}>
+            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Admin Paneli</div>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Restoran va buyurtmalarni boshqarish</div>
+          </div>
+          <ChevronRight size={16} color="var(--text-muted)" />
         </button>
 
         <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '10px', paddingBottom: '16px' }}>

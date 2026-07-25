@@ -1,0 +1,448 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ───
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  ORDER_MANAGER
+  DRIVER
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  PREPARING
+  READY
+  DRIVER_ASSIGNED
+  PICKED_UP
+  DELIVERING
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  UZCARD
+  HUMO
+  ONLINE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+enum DriverStatus {
+  OFFLINE
+  ONLINE
+  ON_DELIVERY
+}
+
+enum PromoType {
+  PERCENT
+  FIXED
+  CATEGORY
+}
+
+enum NotificationType {
+  ORDER
+  PROMOTION
+  SYSTEM
+  DELIVERY
+  DRIVER
+}
+
+// ─── USERS ───
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  name          String
+  phone         String?
+  role          Role      @default(CUSTOMER)
+  avatar        String?
+  isBlocked     Boolean   @default(false)
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  addresses     Address[]
+  orders        Order[]
+  cart          Cart?
+  favorites     Favorite[]
+  reviews       Review[]
+  notifications Notification[]
+  driverProfile Driver?
+
+  @@index([email])
+  @@index([phone])
+  @@index([role])
+  @@map("users")
+}
+
+// ─── CATEGORIES ───
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  icon        String?
+  image       String?
+  sortOrder   Int       @default(0)
+  isVisible   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  products    Product[]
+
+  @@index([isVisible])
+  @@index([sortOrder])
+  @@map("categories")
+}
+
+// ─── PRODUCTS ───
+
+model Product {
+  id              String    @id @default(uuid())
+  name            String
+  description     String?
+  price           Int
+  discountPrice   Int?
+  image           String
+  images          String[]
+  calories        Int?
+  ingredients     String[]
+  spiceLevel      Int       @default(0)
+  prepTime        Int?
+  isAvailable     Boolean   @default(true)
+  isPopular       Boolean   @default(false)
+  isRecommended   Boolean   @default(false)
+  sortOrder       Int       @default(0)
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  orderItems      OrderItem[]
+  favorites       Favorite[]
+  reviews         Review[]
+  cartItems       CartItem[]
+
+  @@index([categoryId])
+  @@index([isAvailable])
+  @@index([isPopular])
+  @@index([isRecommended])
+  @@index([price])
+  @@map("products")
+}
+
+// ─── ADDRESSES ───
+
+model Address {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String
+  fullAddress String
+  latitude    Float?
+  longitude   Float?
+  apartment   String?
+  entrance    String?
+  floor       String?
+  doorNumber  String?
+  notes       String?
+  isDefault   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  orders      Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+// ─── ORDERS ───
+
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  status          OrderStatus @default(PENDING)
+  deliveryType    DeliveryType @default(DELIVERY)
+  deliveryAddress String?
+  deliveryLat     Float?
+  deliveryLng     Float?
+  notes           String?
+  paymentMethod   PaymentMethod @default(CASH)
+  subtotal        Int
+  deliveryFee     Int         @default(0)
+  serviceFee      Int         @default(0)
+  tax             Int         @default(0)
+  discount        Int         @default(0)
+  total           Int
+  estimatedDelivery String?
+  actualDeliveryTime Int?
+  cancelledAt     DateTime?
+  cancelReason    String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  items           OrderItem[]
+  payment         Payment?
+  driver          Driver?     @relation(fields: [driverId], references: [id])
+  driverId        String?
+  addressId       String?
+  address         Address?    @relation(fields: [addressId], references: [id])
+
+  timeline        OrderTimeline[]
+
+  @@index([userId])
+  @@index([driverId])
+  @@index([status])
+  @@index([orderNumber])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+// ─── ORDER ITEMS ───
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  price     Int
+  quantity  Int
+  notes     String?
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+// ─── ORDER TIMELINE ───
+
+model OrderTimeline {
+  id        String      @id @default(uuid())
+  orderId   String
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+
+  @@index([orderId])
+  @@map("order_timeline")
+}
+
+// ─── DRIVERS ───
+
+model Driver {
+  id              String      @id @default(uuid())
+  userId          String      @unique
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleType     String?
+  vehiclePlate    String?
+  status          DriverStatus @default(OFFLINE)
+  currentLat      Float?
+  currentLng      Float?
+  rating          Float       @default(5.0)
+  totalDeliveries Int         @default(0)
+  isVerified      Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  orders          Order[]
+  locations       DriverLocation[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("drivers")
+}
+
+// ─── DRIVER LOCATIONS ───
+
+model DriverLocation {
+  id        String   @id @default(uuid())
+  driverId  String
+  driver    Driver   @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+
+  @@index([driverId])
+  @@index([createdAt])
+  @@map("driver_locations")
+}
+
+// ─── PAYMENTS ───
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String        @unique
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  amount        Int
+  transactionId String?
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([status])
+  @@map("payments")
+}
+
+// ─── PROMOTIONS ───
+
+model Promotion {
+  id            String    @id @default(uuid())
+  code          String    @unique
+  description   String?
+  discount      Int
+  promoType     PromoType @default(PERCENT)
+  minOrder      Int       @default(0)
+  maxDiscount   Int?
+  usageLimit    Int?
+  usedCount     Int       @default(0)
+  categoryId    String?
+  isActive      Boolean   @default(true)
+  startDate     DateTime
+  endDate       DateTime
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  usages        PromoUsage[]
+
+  @@index([code])
+  @@index([isActive])
+  @@map("promotions")
+}
+
+// ─── PROMO USAGE ───
+
+model PromoUsage {
+  id            String    @id @default(uuid())
+  promotionId   String
+  promotion     Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  userId        String
+  orderId       String?
+  createdAt     DateTime  @default(now())
+
+  @@index([promotionId])
+  @@index([userId])
+  @@map("promo_usage")
+}
+
+// ─── CART ───
+
+model Cart {
+  id        String    @id @default(uuid())
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  items     CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String  @id @default(uuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+  notes     String?
+
+  @@unique([cartId, productId])
+  @@index([cartId])
+  @@map("cart_items")
+}
+
+// ─── FAVORITES ───
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("favorites")
+}
+
+// ─── REVIEWS ───
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("reviews")
+}
+
+// ─── NOTIFICATIONS ───
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  type      NotificationType @default(SYSTEM)
+  data      Json?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+// ─── RESTAURANT SETTINGS ───
+
+model RestaurantSetting {
+  id            String   @id @default(uuid())
+  key           String   @unique
+  value         String
+  description   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("restaurant_settings")
+}

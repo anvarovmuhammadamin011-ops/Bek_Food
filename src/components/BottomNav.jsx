@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Search, ShoppingCart, ClipboardList, User } from 'lucide-react';
+import { UtensilsCrossed, ShoppingCart, ClipboardList, User, Heart } from 'lucide-react';
 import useStore from '../store/useStore';
 
 const tabs = [
-  { path: '/', icon: Home, label: 'Home' },
-  { path: '/search', icon: Search, label: 'Search' },
+  { path: '/', icon: UtensilsCrossed, label: 'Menu' },
+  { path: '/favorites', icon: Heart, label: 'Favorites' },
   { path: '/cart', icon: ShoppingCart, label: 'Cart' },
   { path: '/orders', icon: ClipboardList, label: 'Orders' },
   { path: '/profile', icon: User, label: 'Profile' },
@@ -14,12 +14,14 @@ export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const cart = useStore((s) => s.cart);
-  const hide = ['/splash', '/login', '/register', '/otp', '/forgot', '/food/'].some(p => location.pathname.startsWith(p));
+  const hide = ['/splash', '/login', '/register', '/otp', '/forgot', '/food/', '/checkout'].some(p => location.pathname.startsWith(p));
   if (hide) return null;
+
+  const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
 
   return (
     <div style={{
-      position: 'fixed',
+      position: 'absolute',
       bottom: 0,
       left: 0,
       right: 0,
@@ -74,30 +76,32 @@ export default function BottomNav() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  position: 'relative',
                 }}>
                   <Icon size={active ? 19 : 21} strokeWidth={active ? 2.3 : 1.8} />
+                  {tab.label === 'Cart' && totalItems > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '-4px',
+                      right: '-6px',
+                      background: 'var(--color-danger)',
+                      color: 'white',
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      borderRadius: 'var(--radius-full)',
+                      minWidth: '18px',
+                      height: '18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 6px rgba(224, 49, 49, 0.3)',
+                      padding: '0 4px',
+                      animation: 'scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    }}>
+                      {totalItems}
+                    </span>
+                  )}
                 </div>
-                {tab.label === 'Cart' && cart.length > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '0px',
-                    right: '6px',
-                    background: 'var(--color-danger)',
-                    color: 'white',
-                    fontSize: '9px',
-                    fontWeight: 700,
-                    borderRadius: 'var(--radius-full)',
-                    minWidth: '18px',
-                    height: '18px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 2px 6px rgba(224, 49, 49, 0.3)',
-                    padding: '0 4px',
-                  }}>
-                    {cart.length}
-                  </span>
-                )}
                 <span style={{
                   fontSize: '10px',
                   fontWeight: active ? 600 : 500,

@@ -277,7 +277,7 @@ export default function SearchPage() {
           <div className="vertical-list animate-fade-in">
             <p className="text-secondary text-xs">{results.length} results found</p>
             {results.map(item => (
-              item.type === 'restaurant' ? <RestaurantCard key={item.id} restaurant={item} /> : <FoodCard key={item.id} food={item} />
+              item.type === 'restaurant' ? <RestaurantCard key={`r-${item.id}`} restaurant={item} /> : <FoodCard key={`f-${item.id}`} food={item} />
             ))}
           </div>
         )}

@@ -2,12 +2,14 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import BottomNav from './components/BottomNav';
+import AdminApp from './admin/AdminApp';
+import DriverApp from './driver/DriverApp';
+import OrderManagerApp from './order-manager/OrderManagerApp';
 
 // Lazy load pages for code splitting
 const SplashScreen = lazy(() => import('./pages/SplashScreen'));
 const AuthScreen = lazy(() => import('./pages/AuthScreen'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const SearchPage = lazy(() => import('./pages/SearchPage'));
 const RestaurantPage = lazy(() => import('./pages/RestaurantPage'));
 const FoodDetailPage = lazy(() => import('./pages/FoodDetailPage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
@@ -68,31 +70,44 @@ function PageLoader() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <div className="app-shell">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/splash" element={<SplashScreen />} />
-              <Route path="/login" element={<AuthScreen />} />
-              <Route path="/" element={<HomePage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/restaurant/:id" element={<RestaurantPage />} />
-              <Route path="/food/:id" element={<FoodDetailPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/tracking" element={<LiveTrackingPage />} />
-              <Route path="/orders" element={<OrdersPage />} />
-              <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/reviews" element={<ReviewsPage />} />
-              <Route path="/coupons" element={<CouponsPage />} />
-              <Route path="/addresses" element={<AddressesPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
-          <BottomNav />
-        </div>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Routes>
+          {/* Admin Routes - No app shell */}
+          <Route path="/admin/*" element={<AdminApp />} />
+
+          {/* Driver Routes - No app shell */}
+          <Route path="/driver/*" element={<DriverApp />} />
+
+          {/* Order Manager Routes - No app shell */}
+          <Route path="/order-manager/*" element={<OrderManagerApp />} />
+
+          {/* Customer App Routes */}
+          <Route path="*" element={
+            <div className="app-shell">
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route path="/splash" element={<SplashScreen />} />
+                  <Route path="/login" element={<AuthScreen />} />
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/restaurant/:id" element={<RestaurantPage />} />
+                  <Route path="/food/:id" element={<FoodDetailPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/tracking" element={<LiveTrackingPage />} />
+                  <Route path="/orders" element={<OrdersPage />} />
+                  <Route path="/favorites" element={<FavoritesPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/notifications" element={<NotificationsPage />} />
+                  <Route path="/reviews" element={<ReviewsPage />} />
+                  <Route path="/coupons" element={<CouponsPage />} />
+                  <Route path="/addresses" element={<AddressesPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Suspense>
+              <BottomNav />
+            </div>
+          } />
+        </Routes>
       </BrowserRouter>
     </ErrorBoundary>
   );

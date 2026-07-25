@@ -24,6 +24,12 @@ const useStore = create((set, get) => ({
   appliedCoupon: null,
   currentOrder: null,
 
+  // Delivery state
+  deliveryType: 'delivery', // 'delivery' | 'pickup'
+  selectedAddressId: addrData.find(a => a.isDefault)?.id || addrData[0]?.id || null,
+  deliveryLocation: null, // { lat, lng, address }
+  estimatedDeliveryTime: '25-35 min',
+
   login: (userData) => set({ user: userData, isAuthenticated: true }),
   logout: () => set({ user: null, isAuthenticated: false, cart: [], orders: [], favorites: [] }),
 
@@ -146,6 +152,10 @@ const useStore = create((set, get) => ({
   })),
 
   setPaymentMethod: (method) => set({ selectedPaymentMethod: method }),
+
+  setDeliveryType: (type) => set({ deliveryType: type }),
+  setSelectedAddress: (id) => set({ selectedAddressId: id }),
+  setDeliveryLocation: (loc) => set({ deliveryLocation: loc }),
 }));
 
 export default useStore;
