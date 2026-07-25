@@ -1,51 +1,49 @@
 /* ============================================================
-   AJIF — Premium Shashlik / Fastfood Design System
-   Dark, minimal, steakhouse-inspired aesthetic
+   ALIF CAFE — Soft, Minimalist Cafe Design System
+   Warm, clean, modern aesthetic
    ============================================================ */
 
 /* --- CSS Variables (Design Tokens) --- */
 :root {
-  /* AJIF Brand Colors */
-  --ajif-black: #0a0a0a;
-  --ajif-black-soft: #141414;
-  --ajif-white: #ffffff;
-  --ajif-white-muted: #b8b8b8;
-  --ajif-red: #e51e1e;
-  --ajif-red-dark: #a3140f;
-  --ajif-red-glow: rgba(229, 30, 30, 0.35);
-  --ajif-border: rgba(255, 255, 255, 0.08);
+  /* Alif Cafe Brand Colors */
+  --alif-primary: #6B8F71;
+  --alif-primary-dark: #4A6B50;
+  --alif-primary-light: rgba(107, 143, 113, 0.10);
+  --alif-primary-glow: rgba(107, 143, 113, 0.25);
+  --alif-cream: #FAF8F5;
+  --alif-warm: #F5F0EB;
 
-  /* Semantic aliases (mapped to AJIF tokens) */
-  --color-primary: var(--ajif-red);
-  --color-primary-dark: var(--ajif-red-dark);
-  --color-primary-light: rgba(229, 30, 30, 0.10);
-  --color-primary-border: rgba(229, 30, 30, 0.30);
-  --color-primary-glow: var(--ajif-red-glow);
-  --color-accent: var(--ajif-red-dark);
-  --color-success: #2B8A3E;
-  --color-success-light: rgba(43, 138, 62, 0.10);
-  --color-warning: #E67700;
-  --color-warning-light: rgba(230, 119, 0, 0.10);
-  --color-danger: var(--ajif-red);
-  --color-danger-light: rgba(229, 30, 30, 0.10);
-  --color-terracotta: var(--ajif-red-dark);
+  /* Semantic aliases */
+  --color-primary: var(--alif-primary);
+  --color-primary-dark: var(--alif-primary-dark);
+  --color-primary-light: var(--alif-primary-light);
+  --color-primary-border: rgba(107, 143, 113, 0.25);
+  --color-primary-glow: var(--alif-primary-glow);
+  --color-accent: var(--alif-primary-dark);
+  --color-success: #5B8A5B;
+  --color-success-light: rgba(91, 138, 91, 0.10);
+  --color-warning: #C49A3C;
+  --color-warning-light: rgba(196, 154, 60, 0.10);
+  --color-danger: #C75B5B;
+  --color-danger-light: rgba(199, 91, 91, 0.10);
+  --color-terracotta: #A67C5B;
 
-  /* Background — Dark */
-  --bg-primary: var(--ajif-black);
-  --bg-secondary: var(--ajif-black-soft);
-  --bg-card: var(--ajif-black-soft);
-  --bg-card-hover: #1a1a1a;
+  /* Background — Warm Cream */
+  --bg-primary: var(--alif-cream);
+  --bg-secondary: var(--alif-warm);
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8F6F3;
 
-  /* Text — White / Muted */
-  --color-white: var(--ajif-white);
-  --color-black: var(--ajif-black);
-  --text-primary: var(--ajif-white);
-  --text-secondary: var(--ajif-white-muted);
-  --text-muted: #7a7a7a;
+  /* Text */
+  --color-white: #FFFFFF;
+  --color-black: #2D2A26;
+  --text-primary: #2D2A26;
+  --text-secondary: #6B6560;
+  --text-muted: #9C9590;
 
   /* Border */
-  --border: var(--ajif-border);
-  --border-strong: rgba(255, 255, 255, 0.12);
+  --border: #EDE8E3;
+  --border-strong: #DDD6CF;
 
   /* Spacing */
   --space-xs: 4px;
@@ -56,11 +54,11 @@
   --space-2xl: 24px;
   --space-3xl: 32px;
 
-  /* Radius — Angular, premium feel */
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
-  --radius-xl: 14px;
+  /* Radius — Soft, rounded */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
   --radius-full: 9999px;
 
   /* Typography */
@@ -76,14 +74,14 @@
   --font-size-4xl: 38px;
   --font-size-hero: 46px;
 
-  /* Shadows — Dark theme */
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.05);
-  --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(229, 30, 30, 0.2);
-  --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.6);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-primary: 0 4px 20px var(--ajif-red-glow);
-  --shadow-primary-lg: 0 8px 32px var(--ajif-red-glow);
-  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  /* Shadows — Soft, minimal */
+  --shadow-card: 0 1px 8px rgba(45, 42, 38, 0.04);
+  --shadow-card-hover: 0 4px 20px rgba(45, 42, 38, 0.08);
+  --shadow-elevated: 0 8px 32px rgba(45, 42, 38, 0.10);
+  --shadow-sm: 0 1px 3px rgba(45, 42, 38, 0.04);
+  --shadow-primary: 0 4px 16px var(--alif-primary-glow);
+  --shadow-primary-lg: 0 6px 24px var(--alif-primary-glow);
+  --shadow-inset: inset 0 1px 2px rgba(45, 42, 38, 0.04);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);

@@ -100,17 +100,23 @@ export default function AuthScreen() {
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{
             width: '56px', height: '56px', borderRadius: '16px',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
+            background: 'var(--color-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 20px rgba(232, 89, 12, 0.3)', margin: '0 auto 12px',
+            boxShadow: 'var(--shadow-primary)', margin: '0 auto 12px',
           }}>
-            <span style={{ fontWeight: 900, color: 'white', fontSize: '18px' }}>BF</span>
+            <span style={{ fontWeight: 800, color: 'white', fontSize: '18px', letterSpacing: '-0.02em' }}>AC</span>
           </div>
-          <p style={{
-            fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)',
-            textTransform: 'uppercase', letterSpacing: '0.3em', marginTop: '4px',
+          <h1 style={{
+            fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)',
+            letterSpacing: '-0.02em', marginBottom: '2px',
           }}>
-            Tez va Mazali
+            Alif Cafe
+          </h1>
+          <p style={{
+            fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)',
+            letterSpacing: '0.05em',
+          }}>
+            Premium Coffee & Fast Food
           </p>
         </div>
 

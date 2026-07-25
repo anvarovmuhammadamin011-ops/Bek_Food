@@ -4,13 +4,13 @@
 
 /* Dark Mode */
 .driver-layout.driver-dark {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #141414;
-  --bg-card: #141414;
-  --bg-card-hover: #1a1a1a;
-  --text-primary: #ffffff;
-  --text-secondary: #b8b8b8;
-  --text-muted: #7a7a7a;
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-card: #242424;
+  --bg-card-hover: #2a2a2a;
+  --text-primary: #f0f0f0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #707070;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.12);
 }

@@ -11,17 +11,17 @@
 
 /* --- Dark Mode --- */
 .admin-dark {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #141414;
-  --bg-card: #141414;
-  --bg-card-hover: #1a1a1a;
-  --text-primary: #ffffff;
-  --text-secondary: #b8b8b8;
-  --text-muted: #7a7a7a;
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-card: #242424;
+  --bg-card-hover: #2a2a2a;
+  --text-primary: #f0f0f0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #707070;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.12);
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.05);
-  --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(229, 30, 30, 0.2);
+  --shadow-card: 0 1px 6px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 /* --- Admin Layout --- */

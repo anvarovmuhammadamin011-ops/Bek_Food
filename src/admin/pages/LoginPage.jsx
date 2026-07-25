@@ -37,17 +37,17 @@ export default function LoginPage() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '18px',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
+            background: 'var(--color-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 32px rgba(232, 89, 12, 0.3)', margin: '0 auto 16px',
+            boxShadow: 'var(--shadow-primary)', margin: '0 auto 16px',
           }}>
-            <span style={{ fontWeight: 900, color: 'white', fontSize: '22px' }}>BF</span>
+            <span style={{ fontWeight: 800, color: 'white', fontSize: '22px', letterSpacing: '-0.02em' }}>AC</span>
           </div>
           <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-            Admin Paneli
+            Alif Cafe
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            AJIF Boshqaruv Tizimi
+            Admin Panel
           </p>
         </div>
 

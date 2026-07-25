@@ -1,8 +1,8 @@
 // Admin Dashboard Mock Data
 export const adminUser = {
   id: 1,
-  name: 'Bekzod Admin',
-  email: 'admin@bekfood.uz',
+  name: 'Alif Admin',
+  email: 'admin@alifcafe.uz',
   role: 'super_admin',
   photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
 };
@@ -180,10 +180,10 @@ export const systemHealth = {
 };
 
 export const settings = {
-  restaurantName: 'BEK FOOD',
+  restaurantName: 'Alif Cafe',
   address: 'Tashkent, Amir Temur street 78',
   phone: '+998 90 123 45 67',
-  email: 'info@bekfood.uz',
+  email: 'info@alifcafe.uz',
   openingHours: '09:00 - 23:00',
   deliveryRadius: 5,
   deliveryFee: 10000,
@@ -194,7 +194,7 @@ export const settings = {
   languages: ['uz', 'ru', 'en'],
   theme: 'light',
   socialMedia: {
-    telegram: 'https://t.me/bekfood',
-    instagram: 'https://instagram.com/bekfood',
+    telegram: 'https://t.me/alifcafe',
+    instagram: 'https://instagram.com/alifcafe',
   },
 };

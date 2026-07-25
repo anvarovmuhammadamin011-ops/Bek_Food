@@ -36,17 +36,17 @@ export default function DriverLoginPage() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '18px',
-            background: 'linear-gradient(135deg, var(--color-success), #1a9a4a)',
+            background: 'var(--color-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 32px rgba(43, 138, 62, 0.3)', margin: '0 auto 16px',
+            boxShadow: 'var(--shadow-primary)', margin: '0 auto 16px',
           }}>
-            <span style={{ fontWeight: 900, color: 'white', fontSize: '22px' }}>BF</span>
+            <span style={{ fontWeight: 800, color: 'white', fontSize: '22px', letterSpacing: '-0.02em' }}>AC</span>
           </div>
           <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-            Yetkazish Xizmati
+            Alif Cafe
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            AJIF Haydovchi Paneli
+            Delivery Driver Panel
           </p>
         </div>
 

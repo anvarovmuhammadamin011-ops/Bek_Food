@@ -22,11 +22,11 @@ export default function SplashScreen() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'var(--ajif-black)',
+      background: 'var(--bg-primary)',
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Subtle red glow */}
+      {/* Subtle green glow */}
       <div style={{
         position: 'absolute',
         top: '50%',
@@ -35,7 +35,7 @@ export default function SplashScreen() {
         width: '300px',
         height: '300px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(229,30,30,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(107,143,113,0.12) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
@@ -48,30 +48,34 @@ export default function SplashScreen() {
         opacity: phase >= 0 ? 1 : 0,
         transform: phase >= 0 ? 'scale(1)' : 'scale(0.95)',
       }}>
-        {/* Logo image */}
-        <img
-          src="/favicon.jpg"
-          alt="AJIF"
-          style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '12px',
-            objectFit: 'cover',
-            marginBottom: '20px',
-            boxShadow: '0 8px 32px rgba(229, 30, 30, 0.3)',
-          }}
-        />
+        {/* Logo */}
+        <div style={{
+          width: '80px',
+          height: '80px',
+          borderRadius: '20px',
+          background: 'var(--color-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '20px',
+          boxShadow: 'var(--shadow-primary)',
+        }}>
+          <span style={{
+            fontWeight: 800,
+            color: 'white',
+            fontSize: '28px',
+            letterSpacing: '-0.02em',
+          }}>AC</span>
+        </div>
 
         {/* Brand name */}
         <h1 style={{
-          fontFamily: 'var(--font-family-display)',
-          fontStyle: 'italic',
-          fontSize: '36px',
-          fontWeight: 700,
-          color: 'var(--ajif-white)',
-          letterSpacing: '0.02em',
+          fontSize: '32px',
+          fontWeight: 800,
+          color: 'var(--text-primary)',
+          letterSpacing: '-0.02em',
         }}>
-          AJif
+          Alif Cafe
         </h1>
 
         {/* Tagline */}
@@ -82,13 +86,12 @@ export default function SplashScreen() {
           transform: phase >= 1 ? 'translateY(0)' : 'translateY(8px)',
         }}>
           <p style={{
-            fontSize: '11px',
+            fontSize: '12px',
             fontWeight: 500,
-            color: 'var(--ajif-white-muted)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.25em',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.05em',
           }}>
-            Shashlik & Fastfood
+            Premium Coffee & Fast Food
           </p>
         </div>
 
@@ -97,7 +100,7 @@ export default function SplashScreen() {
           marginTop: '32px',
           width: '140px',
           height: '2px',
-          background: 'rgba(255,255,255,0.08)',
+          background: 'var(--border)',
           borderRadius: '1px',
           overflow: 'hidden',
           opacity: phase >= 1 ? 1 : 0,
@@ -105,7 +108,7 @@ export default function SplashScreen() {
         }}>
           <div style={{
             height: '100%',
-            background: 'var(--ajif-red)',
+            background: 'var(--color-primary)',
             borderRadius: '1px',
             transition: 'width 1s ease-out',
             width: phase === 1 ? '50%' : phase >= 2 ? '100%' : '15%',

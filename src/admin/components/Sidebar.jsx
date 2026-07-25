@@ -48,12 +48,12 @@ export default function Sidebar() {
         <div className="admin-sidebar-header">
           <div className="admin-sidebar-brand">
             <div className="admin-sidebar-logo">
-              <span style={{ fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>AJif</span>
+              <span>AC</span>
             </div>
             {!collapsed && (
               <div className="admin-sidebar-brand-text">
-                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic', letterSpacing: '-0.02em' }}>
-                  AJIF
+                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                  Alif Cafe
                 </div>
                 <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 500 }}>
                   Admin Panel
@@ -157,7 +157,7 @@ export default function Sidebar() {
             </div>
             {!collapsed && (
               <div className="admin-sidebar-user-info">
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>Bekzod Admin</div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>Alif Admin</div>
                 <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Super Admin</div>
               </div>
             )}
