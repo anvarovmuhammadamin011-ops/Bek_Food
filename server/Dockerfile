@@ -5,10 +5,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# Install all dependencies (including dev for prisma)
 RUN npm install
 
-# Copy prisma schema
+# Copy prisma schema and migrations
 COPY prisma ./prisma
 
 # Generate Prisma client
@@ -20,5 +20,5 @@ COPY . .
 # Expose port
 EXPOSE 5000
 
-# Start the app
-CMD ["sh", "-c", "npx prisma db push --skip-generate && node src/index.js"]
+# Run migrations and start the app
+CMD ["sh", "-c", "npx prisma migrate deploy && node src/index.js"]
