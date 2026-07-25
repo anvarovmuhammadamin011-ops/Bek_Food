@@ -3,15 +3,40 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 class ApiClient {
   constructor() {
     this.baseUrl = API_URL;
+    // Load token from localStorage on init
+    this.token = localStorage.getItem('accessToken') || null;
+  }
+
+  setToken(token) {
+    this.token = token;
+    if (token) {
+      localStorage.setItem('accessToken', token);
+    } else {
+      localStorage.removeItem('accessToken');
+    }
+  }
+
+  getToken() {
+    return this.token || localStorage.getItem('accessToken');
   }
 
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}/api${endpoint}`;
+    const token = this.getToken();
+
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const config = {
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // Important: sends cookies cross-origin
       ...options,
-      headers: { 'Content-Type': 'application/json', ...options.headers },
+      headers,
+      credentials: 'include',
     };
 
     try {
@@ -39,7 +64,11 @@ class ApiClient {
   // ── Auth ──
   login(email, password) { return this.post('/auth/login', { email, password }); }
   register(data) { return this.post('/auth/register', data); }
-  logout() { return this.post('/auth/logout'); }
+  logout() {
+    this.setToken(null);
+    localStorage.removeItem('refreshToken');
+    return this.post('/auth/logout');
+  }
   refreshToken() { return this.post('/auth/refresh'); }
 
   // ── Products ──
@@ -81,10 +110,14 @@ class ApiClient {
     formData.append('image', file);
     formData.append('folder', folder);
     const url = `${this.baseUrl}/api/upload/image`;
+    const token = this.getToken();
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
     const response = await fetch(url, {
       method: 'POST',
       body: formData,
       credentials: 'include',
+      headers,
     });
     return response.json();
   }

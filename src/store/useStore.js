@@ -44,17 +44,38 @@ const useStore = create((set, get) => ({
     set({ authLoading: true, authError: null });
     try {
       const res = await api.login(email, password);
-      const user = res.data?.user;
-      const token = res.data?.accessToken;
-      // Save token if returned in body (fallback for non-cookie setups)
-      if (token) localStorage.setItem('accessToken', token);
-      set({ user: user || { id: 1, email, name: 'User' }, isAuthenticated: true, authLoading: false });
+      // Response: { success: true, data: { user, accessToken, refreshToken } }
+      const userData = res.data?.user;
+      const accessToken = res.data?.accessToken;
+      const refreshToken = res.data?.refreshToken;
+
+      // Save tokens to localStorage
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        api.setToken && api.setToken(accessToken);
+      }
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+      }
+
+      set({
+        user: userData || { id: 1, email, name: email.split('@')[0] },
+        isAuthenticated: true,
+        authLoading: false,
+      });
+
+      // Load additional user data
       get().loadUserData();
       return true;
     } catch (err) {
+      console.error('Login error:', err);
       // Fallback to mock login if backend unavailable
       if (err.message.includes('fetch') || err.message.includes('Network') || err.message.includes('backend')) {
-        set({ user: { id: 1, name: 'Guest', email, role: 'CUSTOMER' }, isAuthenticated: true, authLoading: false });
+        set({
+          user: { id: 1, name: email.split('@')[0], email, role: 'CUSTOMER' },
+          isAuthenticated: true,
+          authLoading: false,
+        });
         return true;
       }
       set({ authError: err.message, authLoading: false });
@@ -66,10 +87,21 @@ const useStore = create((set, get) => ({
     set({ authLoading: true, authError: null });
     try {
       const res = await api.register(data);
-      const user = res.data?.user;
-      const token = res.data?.accessToken;
-      if (token) localStorage.setItem('accessToken', token);
-      set({ user: user || { id: 1, ...data, role: 'CUSTOMER' }, isAuthenticated: true, authLoading: false });
+      const userData = res.data?.user;
+      const accessToken = res.data?.accessToken;
+      const refreshToken = res.data?.refreshToken;
+
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        api.setToken && api.setToken(accessToken);
+      }
+      if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+
+      set({
+        user: userData || { id: 1, ...data, role: 'CUSTOMER' },
+        isAuthenticated: true,
+        authLoading: false,
+      });
       return true;
     } catch (err) {
       if (err.message.includes('fetch') || err.message.includes('Network') || err.message.includes('backend')) {
@@ -84,6 +116,7 @@ const useStore = create((set, get) => ({
   logout: async () => {
     try { await api.logout(); } catch {}
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     set({
       user: null, isAuthenticated: false, cart: [], orders: [], favorites: [],
       appliedCoupon: null, currentOrder: null,

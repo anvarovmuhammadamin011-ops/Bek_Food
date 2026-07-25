@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Eye, EyeOff, ChevronRight, Camera, Phone, LayoutDashboard, Package, Truck, User } from 'lucide-react';
 import useStore from '../store/useStore';
-import api from '../lib/api';
 
 const staffAccounts = {
   'admin@bekfood.uz': { password: 'admin123', route: '/admin', label: 'Admin Paneli' },
@@ -34,26 +33,14 @@ export default function AuthScreen() {
       return;
     }
 
-    // Try real backend login
-    try {
-      const res = await api.login(email, password);
-      if (res.data?.accessToken) api.setToken(res.data.accessToken);
-      const user = res.data?.user;
-      if (user?.role === 'ADMIN') { window.location.href = '/admin'; return; }
-      if (user?.role === 'DRIVER') { window.location.href = '/driver'; return; }
-      login(user || { id: 1, email, name: 'User' });
-      setLoading(false);
+    // Use store login (handles backend + fallback)
+    const success = await login(email, password);
+    setLoading(false);
+
+    if (success) {
       navigate('/');
-    } catch (err) {
-      // Fallback to mock login if backend unavailable
-      if (email && password) {
-        login({ id: 1, name: name || 'Bekzod', phone: phone || '+998901234567', email, photo: null, language: 'uz' });
-        setLoading(false);
-        navigate('/');
-      } else {
-        setError('Email va parolni kiriting');
-        setLoading(false);
-      }
+    } else {
+      setError('Login failed. Check your credentials.');
     }
   };
 
