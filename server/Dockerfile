@@ -2,14 +2,23 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
-RUN npm ci --only=production
 
+# Install dependencies
+RUN npm install
+
+# Copy prisma schema
 COPY prisma ./prisma
+
+# Generate Prisma client
 RUN npx prisma generate
 
+# Copy rest of the app
 COPY . .
 
+# Expose port
 EXPOSE 5000
 
-CMD ["node", "src/index.js"]
+# Start the app
+CMD ["sh", "-c", "npx prisma db push --skip-generate && node src/index.js"]

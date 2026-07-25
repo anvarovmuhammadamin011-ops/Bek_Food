@@ -12,7 +12,7 @@ const pageTitles = {
 
 export default function DriverTopBar() {
   const {
-    toggleSidebar, darkMode, toggleDarkMode, logout,
+    activePage, toggleSidebar, darkMode, toggleDarkMode, logout,
     setActivePage, isOnline, toggleOnline, profile,
   } = useDriverStore();
   const [time, setTime] = useState(new Date());
