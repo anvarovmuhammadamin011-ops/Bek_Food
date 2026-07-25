@@ -22,10 +22,10 @@ export default function DriverSidebar() {
       <aside className={`driver-sidebar${sidebarCollapsed ? ' driver-collapsed' : ''}${sidebarOpen ? ' driver-open' : ''}`}>
         <div className="driver-sidebar-header">
           <div className="driver-sidebar-brand">
-            <div className="driver-sidebar-logo"><span>BF</span></div>
+            <div className="driver-sidebar-logo"><span style={{ fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>AJif</span></div>
             {!sidebarCollapsed && (
               <div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>BEK FOOD</div>
+                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>AJIF</div>
                 <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Yetkazish xizmati</div>
               </div>
             )}

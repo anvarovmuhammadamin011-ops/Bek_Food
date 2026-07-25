@@ -68,7 +68,7 @@ export default function ProfilePage() {
             borderRadius: '12px',
           }}>
             <Logo size="sm" />
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)' }}>BEK FOOD Member</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)' }}>AJIF Member</span>
           </div>
         </div>
 
@@ -163,7 +163,7 @@ export default function ProfilePage() {
         </button>
 
         <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '10px', paddingBottom: '16px' }}>
-          BEK FOOD v1.0.0
+          AJIF v1.0.0
         </p>
       </div>
     </div>

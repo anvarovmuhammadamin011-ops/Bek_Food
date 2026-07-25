@@ -48,12 +48,12 @@ export default function Sidebar() {
         <div className="admin-sidebar-header">
           <div className="admin-sidebar-brand">
             <div className="admin-sidebar-logo">
-              <span>BF</span>
+              <span style={{ fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>AJif</span>
             </div>
             {!collapsed && (
               <div className="admin-sidebar-brand-text">
-                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                  BEK FOOD
+                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic', letterSpacing: '-0.02em' }}>
+                  AJIF
                 </div>
                 <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 500 }}>
                   Admin Panel

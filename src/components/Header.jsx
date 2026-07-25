@@ -16,10 +16,10 @@ export default function Header({ title, showBack = false, showNotifications = tr
       zIndex: 40,
       padding: '12px 16px',
       paddingTop: 'env(safe-area-inset-top, 12px)',
-      background: transparent ? 'transparent' : 'rgba(255, 248, 241, 0.88)',
+      background: transparent ? 'transparent' : 'rgba(10, 10, 10, 0.88)',
       backdropFilter: transparent ? 'none' : 'blur(30px)',
       WebkitBackdropFilter: transparent ? 'none' : 'blur(30px)',
-      borderBottom: transparent ? 'none' : '1px solid var(--border)',
+      borderBottom: transparent ? 'none' : '1px solid var(--ajif-border)',
     }}>
       <div style={{
         maxWidth: '480px',
@@ -35,15 +35,15 @@ export default function Header({ title, showBack = false, showNotifications = tr
               style={{
                 width: '38px',
                 height: '38px',
-                borderRadius: '12px',
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--ajif-black-soft)',
+                border: '1px solid var(--ajif-border)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                color: 'var(--text-primary)',
+                color: 'var(--ajif-white)',
                 boxShadow: 'var(--shadow-sm)',
               }}
             >
@@ -57,27 +57,19 @@ export default function Header({ title, showBack = false, showNotifications = tr
                 fontSize: 'var(--font-size-lg)',
                 fontWeight: 800,
                 letterSpacing: '-0.02em',
-                color: 'var(--text-primary)',
+                color: 'var(--ajif-white)',
               }}>{title}</h1>
             </>
           ) : (
             <>
               <Logo size="sm" />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  color: 'var(--text-secondary)',
-                  fontSize: '10px',
-                }}>
-                  <MapPin size={10} color="var(--color-primary)" />
-                  <span>Tashkent, Uzbekistan</span>
-                </div>
                 <span style={{
                   fontSize: 'var(--font-size-sm)',
                   fontWeight: 700,
-                  color: 'var(--text-primary)',
+                  color: 'var(--ajif-white)',
+                  fontFamily: 'var(--font-family-display)',
+                  fontStyle: 'italic',
                 }}>{user?.name || 'Welcome'}</span>
               </div>
             </>
@@ -89,15 +81,15 @@ export default function Header({ title, showBack = false, showNotifications = tr
             style={{
               width: '40px',
               height: '40px',
-              borderRadius: '12px',
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-sm)',
+              background: 'var(--ajif-black-soft)',
+              border: '1px solid var(--ajif-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
-              color: 'var(--text-secondary)',
+              color: 'var(--ajif-white-muted)',
               boxShadow: 'var(--shadow-sm)',
               position: 'relative',
             }}
@@ -108,7 +100,7 @@ export default function Header({ title, showBack = false, showNotifications = tr
                 position: 'absolute',
                 top: '-3px',
                 right: '-3px',
-                background: 'var(--color-danger)',
+                background: 'var(--ajif-red)',
                 color: 'white',
                 fontSize: '9px',
                 fontWeight: 700,
@@ -118,7 +110,7 @@ export default function Header({ title, showBack = false, showNotifications = tr
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 2px 6px rgba(224, 49, 49, 0.3)',
+                boxShadow: '0 2px 6px var(--ajif-red-glow)',
                 padding: '0 4px',
               }}>
                 {unreadCount}

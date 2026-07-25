@@ -4,8 +4,8 @@ import { Mail, Eye, EyeOff, ChevronRight, Camera, Phone, LayoutDashboard, Packag
 import useStore from '../store/useStore';
 
 const staffAccounts = {
-  'admin@bekfood.uz': { password: 'admin123', route: '/admin', label: 'Admin Paneli' },
-  'driver@bekfood.uz': { password: 'driver123', route: '/driver', label: 'Yetkazish Paneli' },
+  'admin@ajif.uz': { password: 'admin123', route: '/admin', label: 'Admin Paneli' },
+  'driver@ajif.uz': { password: 'driver123', route: '/driver', label: 'Yetkazish Paneli' },
 };
 
 export default function AuthScreen() {
@@ -212,7 +212,7 @@ export default function AuthScreen() {
                 </div>
                 <div style={{ flex: 1, textAlign: 'left' }}>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Admin Paneli</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>admin@bekfood.uz</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>admin@ajif.uz</div>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted)" />
               </button>
@@ -223,7 +223,7 @@ export default function AuthScreen() {
                 </div>
                 <div style={{ flex: 1, textAlign: 'left' }}>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Buyurtma Boshqaruvi</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>nodira@bekfood.uz</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>nodira@ajif.uz</div>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted)" />
               </button>
@@ -234,7 +234,7 @@ export default function AuthScreen() {
                 </div>
                 <div style={{ flex: 1, textAlign: 'left' }}>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Yetkazish Paneli</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>driver@bekfood.uz</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>driver@ajif.uz</div>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted)" />
               </button>
@@ -244,7 +244,7 @@ export default function AuthScreen() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px', animation: 'fadeIn 0.3s ease-out' }}>
             <div>
               <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Hisob yaratish</h2>
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px' }}>BEK FOOD ga qo'shiling</p>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px' }}>AJIF ga qo'shiling</p>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px' }}>

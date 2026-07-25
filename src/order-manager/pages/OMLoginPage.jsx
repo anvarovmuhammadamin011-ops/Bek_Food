@@ -6,7 +6,7 @@ import useOrderManagerStore from '../store/useOrderManagerStore';
 export default function OMLoginPage() {
   const navigate = useNavigate();
   const { login } = useOrderManagerStore();
-  const [email, setEmail] = useState('nodira@bekfood.uz');
+  const [email, setEmail] = useState('nodira@ajif.uz');
   const [password, setPassword] = useState('order123');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function OMLoginPage() {
     setLoading(true);
     setError('');
     setTimeout(() => {
-      if (email === 'nodira@bekfood.uz' && password === 'order123') {
+      if (email === 'nodira@ajif.uz' && password === 'order123') {
         login();
         navigate('/order-manager');
       } else {
@@ -49,7 +49,7 @@ export default function OMLoginPage() {
             <span style={{ fontWeight: 900, color: 'white', fontSize: '22px' }}>BF</span>
           </div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)' }}>Buyurtma Boshqaruvi</h1>
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>BEK FOOD Operator Paneli</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>AJIF Operator Paneli</p>
         </div>
 
         <div style={{
@@ -90,7 +90,7 @@ export default function OMLoginPage() {
             </button>
 
             <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--bg-secondary)', fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
-              <div style={{ fontWeight: 600, marginBottom: '4px' }}>Demo: nodira@bekfood.uz</div>
+              <div style={{ fontWeight: 600, marginBottom: '4px' }}>Demo: nodira@ajif.uz</div>
               <div>Parol: order123</div>
             </div>
           </form>

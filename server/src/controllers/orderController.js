@@ -6,6 +6,7 @@ import { validateCreateOrder } from '../validators/orderValidator.js';
 export const createOrder = async (req, res, next) => {
   try {
     const data = validateCreateOrder.parse(req.body);
+    if (!data.branchId) return ApiResponse.badRequest(res, 'branchId is required');
     const cart = await prisma.cart.findUnique({
       where: { userId: req.user.id },
       include: { items: { include: { product: true } } },
@@ -39,6 +40,7 @@ export const createOrder = async (req, res, next) => {
       data: {
         orderNumber: generateOrderNumber(),
         userId: req.user.id,
+        branchId: data.branchId,
         deliveryType: data.deliveryType,
         deliveryAddress: address?.fullAddress,
         deliveryLat: address?.latitude,
@@ -95,10 +97,11 @@ export const getOrderById = async (req, res, next) => {
 
 export const getAllOrders = async (req, res, next) => {
   try {
-    const { page, limit, status, search } = req.query;
+    const { page, limit, status, search, branchId } = req.query;
     const { skip, take, page: p, limit: l } = paginate(page, limit);
     const where = {};
     if (status) where.status = status;
+    if (branchId) where.branchId = branchId;
     if (search) where.OR = [{ orderNumber: { contains: search, mode: 'insensitive' } }, { user: { name: { contains: search, mode: 'insensitive' } } }];
 
     const [orders, total] = await Promise.all([

@@ -18,7 +18,7 @@ export const register = async (req, res, next) => {
 
     const { accessToken, refreshToken } = generateTokens(user.id);
     setTokenCookies(res, accessToken, refreshToken);
-    return ApiResponse.created(res, { user, accessToken, refreshToken }, 'Registration successful');
+    return ApiResponse.created(res, { user }, 'Registration successful');
   } catch (err) {
     if (err.name === 'ZodError') return ApiResponse.badRequest(res, 'Validation failed', err.errors);
     next(err);
@@ -40,7 +40,7 @@ export const login = async (req, res, next) => {
     const { accessToken, refreshToken } = generateTokens(user.id);
     setTokenCookies(res, accessToken, refreshToken);
     const { password, ...userData } = user;
-    return ApiResponse.success(res, { user: userData, accessToken, refreshToken }, 'Login successful');
+    return ApiResponse.success(res, { user: userData }, 'Login successful');
   } catch (err) {
     if (err.name === 'ZodError') return ApiResponse.badRequest(res, 'Validation failed', err.errors);
     next(err);
@@ -59,7 +59,7 @@ export const refreshToken = async (req, res, next) => {
 
     const tokens = generateTokens(user.id);
     setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
-    return ApiResponse.success(res, tokens, 'Token refreshed');
+    return ApiResponse.success(res, null, 'Token refreshed');
   } catch (err) {
     return ApiResponse.unauthorized(res, 'Invalid refresh token');
   }

@@ -12,15 +12,15 @@
 }
 
 .om-layout.om-dark {
-  --bg-primary: #0F0F12;
-  --bg-secondary: #1A1A21;
-  --bg-card: #1E1E26;
-  --bg-card-hover: #25252E;
-  --text-primary: #F0EDE8;
-  --text-secondary: #A8A29E;
-  --text-muted: #6B6560;
-  --border: #2A2A32;
-  --border-strong: #3A3A42;
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --bg-card: #141414;
+  --bg-card-hover: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8b8;
+  --text-muted: #7a7a7a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
 }
 
 .om-main {
@@ -89,7 +89,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(232, 89, 12, 0.3);
+  box-shadow: 0 4px 16px rgba(229, 30, 30, 0.3);
 }
 
 .om-sidebar-logo span { font-weight: 900; color: white; font-size: 14px; }
@@ -598,7 +598,7 @@
 
 .om-search input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(232, 89, 12, 0.1);
+  box-shadow: 0 0 0 3px rgba(229, 30, 30, 0.1);
   width: 320px;
 }
 
@@ -655,8 +655,8 @@
 }
 
 @keyframes omPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 89, 12, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(232, 89, 12, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 30, 30, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(229, 30, 30, 0); }
 }
 
 .om-animate-in {

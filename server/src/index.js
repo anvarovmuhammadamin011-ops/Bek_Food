@@ -23,6 +23,7 @@ import promotionRoutes from './routes/promotionRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import branchRoutes from './routes/branchRoutes.js';
 
 dotenv.config();
 
@@ -86,11 +87,12 @@ app.use('/api/promotions', promotionRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/branches', branchRoutes);
 
 // ─── API Documentation ───
 app.get('/api', (req, res) => {
   res.json({
-    name: 'BEK FOOD API',
+    name: 'AJIF API',
     version: '1.0.0',
     endpoints: {
       auth: '/api/auth',
@@ -104,6 +106,7 @@ app.get('/api', (req, res) => {
       analytics: '/api/analytics',
       notifications: '/api/notifications',
       upload: '/api/upload',
+      branches: '/api/branches',
     },
   });
 });

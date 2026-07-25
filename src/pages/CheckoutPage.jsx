@@ -607,7 +607,7 @@ export default function CheckoutPage() {
               background: 'var(--color-primary-light)',
               border: '1px solid var(--color-primary-border)',
             }}>
-              <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-primary)' }}>BEK FOOD — Main Branch</p>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-primary)' }}>AJIF — Asosiy filial</p>
               <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                 Tashkent, Amir Temur street 78
               </p>

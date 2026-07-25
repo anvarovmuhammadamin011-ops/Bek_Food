@@ -22,10 +22,10 @@ export default function OMSidebar() {
       <aside className={`om-sidebar${sidebarCollapsed ? ' om-collapsed' : ''}${sidebarOpen ? ' om-open' : ''}`}>
         <div className="om-sidebar-header">
           <div className="om-sidebar-brand">
-            <div className="om-sidebar-logo"><span>BF</span></div>
+            <div className="om-sidebar-logo"><span style={{ fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>AJif</span></div>
             {!sidebarCollapsed && (
               <div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>BEK FOOD</div>
+                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>AJIF</div>
                 <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Order Manager</div>
               </div>
             )}

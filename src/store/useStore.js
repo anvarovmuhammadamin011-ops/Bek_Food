@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import api from '../lib/api';
-import { restaurants, foods, categories, banners, coupons as couponData, notifications as notifData, addresses as addrData } from '../data/mockData';
 
 const useStore = create((set, get) => ({
   // Auth
@@ -9,14 +8,19 @@ const useStore = create((set, get) => ({
   authLoading: false,
   authError: null,
 
-  // Data (mock fallback + real API)
-  restaurants,
-  foods,
-  categories,
-  banners,
-  coupons: couponData,
-  notifications: notifData,
-  addresses: addrData,
+  // Branch
+  selectedBranchId: localStorage.getItem('selectedBranchId') || null,
+  selectedBranch: null,
+  branches: [],
+
+  // Data
+  restaurants: [],
+  foods: [],
+  categories: [],
+  banners: [],
+  coupons: [],
+  notifications: [],
+  addresses: [],
   favorites: [],
   orders: [],
   cart: [],
@@ -24,14 +28,14 @@ const useStore = create((set, get) => ({
   selectedFood: null,
   searchQuery: '',
   searchResults: [],
-  recentSearches: ['Burger', 'Pizza', 'Chicken'],
+  recentSearches: [],
   selectedPaymentMethod: 'cash',
   appliedCoupon: null,
   currentOrder: null,
 
   // Delivery state
   deliveryType: 'delivery',
-  selectedAddressId: addrData.find(a => a.isDefault)?.id || addrData[0]?.id || null,
+  selectedAddressId: null,
   deliveryLocation: null,
   estimatedDeliveryTime: '25-35 min',
 
@@ -39,46 +43,41 @@ const useStore = create((set, get) => ({
   loading: false,
   cartLoading: false,
 
+  // ── BRANCH ──
+  fetchBranches: async () => {
+    try {
+      const res = await api.getBranches();
+      if (res.data) set({ branches: res.data });
+    } catch {}
+  },
+
+  setSelectedBranch: (branch) => {
+    localStorage.setItem('selectedBranchId', branch.id);
+    set({ selectedBranchId: branch.id, selectedBranch: branch });
+  },
+
+  fetchNearestBranch: async (lat, lng) => {
+    try {
+      const res = await api.getNearestBranch(lat, lng);
+      return res.data;
+    } catch { return null; }
+  },
+
   // ── AUTH ──
   login: async (email, password) => {
     set({ authLoading: true, authError: null });
     try {
       const res = await api.login(email, password);
-      // Response: { success: true, data: { user, accessToken, refreshToken } }
       const userData = res.data?.user;
-      const accessToken = res.data?.accessToken;
-      const refreshToken = res.data?.refreshToken;
-
-      // Save tokens to localStorage
-      if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        api.setToken && api.setToken(accessToken);
-      }
-      if (refreshToken) {
-        localStorage.setItem('refreshToken', refreshToken);
-      }
-
       set({
         user: userData || { id: 1, email, name: email.split('@')[0] },
         isAuthenticated: true,
         authLoading: false,
       });
-
-      // Load additional user data
       get().loadUserData();
       return true;
     } catch (err) {
-      console.error('Login error:', err);
-      // Fallback to mock login if backend unavailable
-      if (err.message.includes('fetch') || err.message.includes('Network') || err.message.includes('backend')) {
-        set({
-          user: { id: 1, name: email.split('@')[0], email, role: 'CUSTOMER' },
-          isAuthenticated: true,
-          authLoading: false,
-        });
-        return true;
-      }
-      set({ authError: err.message, authLoading: false });
+      set({ authError: err.message || 'Server bilan bog\'lanib bo\'lmadi', authLoading: false });
       return false;
     }
   },
@@ -88,15 +87,6 @@ const useStore = create((set, get) => ({
     try {
       const res = await api.register(data);
       const userData = res.data?.user;
-      const accessToken = res.data?.accessToken;
-      const refreshToken = res.data?.refreshToken;
-
-      if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        api.setToken && api.setToken(accessToken);
-      }
-      if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
-
       set({
         user: userData || { id: 1, ...data, role: 'CUSTOMER' },
         isAuthenticated: true,
@@ -104,33 +94,29 @@ const useStore = create((set, get) => ({
       });
       return true;
     } catch (err) {
-      if (err.message.includes('fetch') || err.message.includes('Network') || err.message.includes('backend')) {
-        set({ user: { id: 1, ...data, role: 'CUSTOMER' }, isAuthenticated: true, authLoading: false });
-        return true;
-      }
-      set({ authError: err.message, authLoading: false });
+      set({ authError: err.message || 'Server bilan bog\'lanib bo\'lmadi', authLoading: false });
       return false;
     }
   },
 
   logout: async () => {
     try { await api.logout(); } catch {}
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('selectedBranchId');
     set({
       user: null, isAuthenticated: false, cart: [], orders: [], favorites: [],
-      appliedCoupon: null, currentOrder: null,
+      appliedCoupon: null, currentOrder: null, selectedBranchId: null, selectedBranch: null,
     });
   },
 
   // ── LOAD DATA FROM API ──
   loadUserData: async () => {
     try {
-      const [profileRes, cartRes, ordersRes, addressesRes] = await Promise.allSettled([
+      const [profileRes, cartRes, ordersRes, addressesRes, notifsRes] = await Promise.allSettled([
         api.getProfile(),
         api.getCart(),
         api.getOrders(),
         api.getAddresses(),
+        api.getNotifications(),
       ]);
 
       const updates = {};
@@ -148,14 +134,18 @@ const useStore = create((set, get) => ({
       }
       if (ordersRes.status === 'fulfilled') updates.orders = ordersRes.value.data || [];
       if (addressesRes.status === 'fulfilled') updates.addresses = addressesRes.value.data || [];
+      if (notifsRes.status === 'fulfilled') updates.notifications = notifsRes.value.data || [];
 
       set(updates);
     } catch {}
   },
 
   loadProducts: async () => {
+    const branchId = get().selectedBranchId;
     try {
-      const res = await api.getProducts({ page: 1, limit: 100 });
+      const params = { page: 1, limit: 100 };
+      if (branchId) params.branchId = branchId;
+      const res = await api.getProducts(params);
       if (res.data) set({ foods: res.data });
     } catch {}
   },
@@ -168,11 +158,6 @@ const useStore = create((set, get) => ({
   },
 
   // ── SELECTORS ──
-  selectRestaurant: (id) => {
-    const r = get().restaurants.find((r) => r.id === id);
-    set({ selectedRestaurant: r });
-  },
-
   selectFood: (id) => {
     const f = get().foods.find((f) => f.id === id);
     set({ selectedFood: f });
@@ -180,8 +165,7 @@ const useStore = create((set, get) => ({
 
   search: (q) => {
     const foods = get().foods.filter((f) => f.name.toLowerCase().includes(q.toLowerCase()));
-    const restaurants = get().restaurants.filter((r) => r.name.toLowerCase().includes(q.toLowerCase()));
-    set({ searchQuery: q, searchResults: [...restaurants.map(r => ({...r, type: 'restaurant'})), ...foods.map(f => ({...f, type: 'food'}))] });
+    set({ searchQuery: q, searchResults: foods.map(f => ({...f, type: 'food'})) });
     if (q && !get().recentSearches.includes(q)) {
       set((s) => ({ recentSearches: [q, ...s.recentSearches.slice(0, 9)] }));
     }
@@ -199,8 +183,6 @@ const useStore = create((set, get) => ({
       price: (food.discountPrice || food.price) + extras.reduce((s, e) => s + (e.price || 0), 0),
     };
     set((s) => ({ cart: [...s.cart, item] }));
-
-    // Try to sync with backend
     try { await api.addToCart(food.id, quantity); } catch {}
   },
 
@@ -217,9 +199,7 @@ const useStore = create((set, get) => ({
       if (delta < 0 && item.quantity <= 1) {
         return { cart: s.cart.filter(i => i.foodId !== foodId) };
       }
-      return {
-        cart: s.cart.map(i => i.foodId === foodId ? { ...i, quantity: newQty } : i),
-      };
+      return { cart: s.cart.map(i => i.foodId === foodId ? { ...i, quantity: newQty } : i) };
     });
     const item = get().cart.find(i => i.foodId === foodId);
     if (item) { try { await api.updateCartItem(foodId, item.quantity); } catch {} }
@@ -246,7 +226,6 @@ const useStore = create((set, get) => ({
 
   // ── PROMO ──
   applyPromoCode: async (code) => {
-    // Try backend first
     try {
       const totals = get().getCartTotal();
       const res = await api.validatePromo(code, totals.subtotal);
@@ -255,12 +234,8 @@ const useStore = create((set, get) => ({
         return true;
       }
     } catch {}
-    // Fallback to local coupons
     const coupon = get().coupons.find((c) => c.code === code.toUpperCase() && c.isActive);
-    if (coupon) {
-      set({ appliedCoupon: coupon });
-      return true;
-    }
+    if (coupon) { set({ appliedCoupon: coupon }); return true; }
     return false;
   },
 
@@ -279,10 +254,11 @@ const useStore = create((set, get) => ({
   placeOrder: async (paymentMethod, address, notes) => {
     const cart = get().cart;
     const totals = get().getCartTotal();
+    const branchId = get().selectedBranchId;
 
-    // Try backend
     try {
       const res = await api.createOrder({
+        branchId,
         deliveryType: get().deliveryType,
         addressId: get().selectedAddressId,
         notes,
@@ -294,28 +270,9 @@ const useStore = create((set, get) => ({
         set((s) => ({ orders: [res.data, ...s.orders], currentOrder: res.data, cart: [], appliedCoupon: null }));
         return res.data;
       }
-    } catch {}
-
-    // Fallback to local
-    const order = {
-      id: Date.now(),
-      userId: get().user?.id || 1,
-      restaurantId: cart[0]?.food?.restaurantId,
-      items: [...cart],
-      status: 'preparing',
-      deliveryAddress: address,
-      paymentMethod,
-      deliveryFee: totals.deliveryFee,
-      serviceFee: totals.serviceFee,
-      tax: totals.tax,
-      total: totals.total,
-      notes,
-      createdAt: new Date().toISOString(),
-      estimatedDelivery: '25-35 min',
-      driver: { id: 1, name: 'Sardor R.', phone: '+998901234567', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', vehicleType: 'Car', rating: 4.9 },
-    };
-    set((s) => ({ orders: [order, ...s.orders], currentOrder: order, cart: [], appliedCoupon: null }));
-    return order;
+    } catch (err) {
+      throw err;
+    }
   },
 
   updateOrderStatus: (orderId, status) => set((s) => ({
@@ -325,7 +282,6 @@ const useStore = create((set, get) => ({
 
   // ── NOTIFICATIONS ──
   addNotification: (notif) => set((s) => ({ notifications: [notif, ...s.notifications] })),
-
   markNotificationRead: (id) => set((s) => ({
     notifications: s.notifications.map((n) => n.id === id ? { ...n, isRead: true } : n),
   })),
@@ -336,9 +292,7 @@ const useStore = create((set, get) => ({
     set((s) => ({ addresses: [...s.addresses, newAddr] }));
     try { await api.addAddress(addr); } catch {}
   },
-
   removeAddress: (id) => set((s) => ({ addresses: s.addresses.filter((a) => a.id !== id) })),
-
   setDefaultAddress: (id) => set((s) => ({
     addresses: s.addresses.map((a) => ({ ...a, isDefault: a.id === id })),
   })),

@@ -6,7 +6,7 @@ import useAdminStore from '../store/useAdminStore';
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAdminStore();
-  const [email, setEmail] = useState('admin@bekfood.uz');
+  const [email, setEmail] = useState('admin@ajif.uz');
   const [password, setPassword] = useState('admin123');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ export default function LoginPage() {
     setError('');
 
     setTimeout(() => {
-      if (email === 'admin@bekfood.uz' && password === 'admin123') {
+      if (email === 'admin@ajif.uz' && password === 'admin123') {
         login(email, password);
         navigate('/admin');
       } else {
@@ -47,7 +47,7 @@ export default function LoginPage() {
             Admin Paneli
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            BEK FOOD Boshqaruv Tizimi
+            AJIF Boshqaruv Tizimi
           </p>
         </div>
 
@@ -114,14 +114,14 @@ export default function LoginPage() {
             </div>
 
             <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--bg-secondary)', fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
-              <div style={{ fontWeight: 600, marginBottom: '4px' }}>admin@bekfood.uz</div>
+              <div style={{ fontWeight: 600, marginBottom: '4px' }}>admin@ajif.uz</div>
               <div>admin123</div>
             </div>
           </form>
         </div>
 
         <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)', marginTop: '20px' }}>
-          © 2026 BEK FOOD Admin
+          © 2026 AJIF Admin
         </p>
 
         {/* Order Manager */}

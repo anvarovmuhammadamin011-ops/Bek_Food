@@ -4,12 +4,13 @@ import { paginate } from '../utils/helpers.js';
 
 export const getAll = async (req, res, next) => {
   try {
-    const { search, category, page, limit, available } = req.query;
+    const { search, category, page, limit, available, branchId } = req.query;
     const { skip, take, page: p, limit: l } = paginate(page, limit);
     const where = { deletedAt: null };
     if (search) where.OR = [{ name: { contains: search, mode: 'insensitive' } }, { description: { contains: search, mode: 'insensitive' } }];
     if (category) where.categoryId = category;
     if (available !== undefined) where.isAvailable = available === 'true';
+    if (branchId) where.OR = [...(where.OR || []), { branchId }, { branchId: null }];
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({ where, include: { category: true }, orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }], skip, take }),

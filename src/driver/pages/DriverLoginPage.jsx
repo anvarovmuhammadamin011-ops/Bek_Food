@@ -6,7 +6,7 @@ import useDriverStore from '../store/useDriverStore';
 export default function DriverLoginPage() {
   const navigate = useNavigate();
   const { login } = useDriverStore();
-  const [email, setEmail] = useState('sardor@bekfood.uz');
+  const [email, setEmail] = useState('sardor@ajif.uz');
   const [password, setPassword] = useState('123456');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function DriverLoginPage() {
     setLoading(true);
     setError('');
     setTimeout(() => {
-      if (email === 'sardor@bekfood.uz' && password === '123456') {
+      if (email === 'sardor@ajif.uz' && password === '123456') {
         login(email, password);
         navigate('/driver');
       } else {
@@ -46,7 +46,7 @@ export default function DriverLoginPage() {
             Yetkazish Xizmati
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            BEK FOOD Haydovchi Paneli
+            AJIF Haydovchi Paneli
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function DriverLoginPage() {
             </button>
 
             <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--bg-secondary)', fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
-              <div style={{ fontWeight: 600, marginBottom: '4px' }}>Demo: sardor@bekfood.uz</div>
+              <div style={{ fontWeight: 600, marginBottom: '4px' }}>Demo: sardor@ajif.uz</div>
               <div>Parol: 123456</div>
             </div>
           </form>

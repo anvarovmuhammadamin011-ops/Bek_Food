@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const validateCreateOrder = z.object({
+  branchId: z.string().uuid(),
   deliveryType: z.enum(['DELIVERY', 'PICKUP']),
   addressId: z.string().uuid().optional(),
   notes: z.string().optional(),

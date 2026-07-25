@@ -20,7 +20,7 @@ export const upload = multer({
   },
 });
 
-export const uploadToCloudinary = async (file, folder = 'bekfood') => {
+export const uploadToCloudinary = async (file, folder = 'ajif') => {
   try {
     const b64 = Buffer.from(file.buffer).toString('base64');
     const dataURI = `data:${file.mimetype};base64,${b64}`;
