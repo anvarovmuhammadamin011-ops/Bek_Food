@@ -31,11 +31,11 @@ export default function DriverEarningsPage() {
         <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>Haftalik daromad</h3>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '120px' }}>
           {weeklyEarnings.map((day, i) => {
-            const max = Math.max(...weeklyEarnings.map((d) => d.amount));
-            const pct = (day.amount / max) * 100;
+            const max = Math.max(...weeklyEarnings.map((d) => d.earnings));
+            const pct = (day.earnings / max) * 100;
             return (
               <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)' }}>{(day.amount / 1000).toFixed(0)}K</span>
+                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)' }}>{(day.earnings / 1000).toFixed(0)}K</span>
                 <div style={{ width: '100%', height: '80px', display: 'flex', alignItems: 'flex-end' }}>
                   <div style={{
                     width: '100%', height: `${pct}%`, borderRadius: '6px 6px 2px 2px',

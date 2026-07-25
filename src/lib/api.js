@@ -1,26 +1,51 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 class ApiClient {
   constructor() {
     this.baseUrl = API_URL;
+    this.token = localStorage.getItem('accessToken') || null;
+  }
+
+  setToken(token) {
+    this.token = token;
+    if (token) localStorage.setItem('accessToken', token);
+    else localStorage.removeItem('accessToken');
   }
 
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}/api${endpoint}`;
+    const headers = { 'Content-Type': 'application/json' };
+    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
+
     const config = {
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       credentials: 'include',
       ...options,
+      headers: { ...headers, ...options.headers },
     };
 
-    const response = await fetch(url, config);
-    const data = await response.json();
+    try {
+      const response = await fetch(url, config);
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Request failed');
+      // Token expired — try refresh
+      if (response.status === 401 && data.message === 'Token expired') {
+        const refreshed = await this.refreshToken();
+        if (refreshed) {
+          headers['Authorization'] = `Bearer ${this.token}`;
+          const retryResponse = await fetch(url, { ...config, headers });
+          return retryResponse.json();
+        }
+      }
+
+      if (!response.ok) throw new Error(data.message || 'Request failed');
+      return data;
+    } catch (err) {
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        throw new Error('Network error — backend may be unavailable');
+      }
+      throw err;
     }
-
-    return data;
   }
 
   get(endpoint) { return this.request(endpoint); }
@@ -28,46 +53,60 @@ class ApiClient {
   put(endpoint, body) { return this.request(endpoint, { method: 'PUT', body: JSON.stringify(body) }); }
   delete(endpoint) { return this.request(endpoint, { method: 'DELETE' }); }
 
-  // Auth
+  // ── Auth ──
   login(email, password) { return this.post('/auth/login', { email, password }); }
   register(data) { return this.post('/auth/register', data); }
-  logout() { return this.post('/auth/logout'); }
-  refreshToken() { return this.post('/auth/refresh'); }
+  logout() { this.setToken(null); return this.post('/auth/logout'); }
+  async refreshToken() {
+    try {
+      const res = await this.post('/auth/refresh');
+      if (res.data?.accessToken) { this.setToken(res.data.accessToken); return true; }
+      return false;
+    } catch { return false; }
+  }
 
-  // Products
+  // ── Products ──
   getProducts(params) { return this.get(`/products?${new URLSearchParams(params)}`); }
   getProduct(id) { return this.get(`/products/${id}`); }
 
-  // Categories
+  // ── Categories ──
   getCategories() { return this.get('/categories'); }
 
-  // Cart
+  // ── Cart ──
   getCart() { return this.get('/cart'); }
   addToCart(productId, quantity) { return this.post('/cart/items', { productId, quantity }); }
   updateCartItem(productId, quantity) { return this.put(`/cart/items/${productId}`, { quantity }); }
   removeFromCart(productId) { return this.delete(`/cart/items/${productId}`); }
 
-  // Orders
+  // ── Orders ──
   createOrder(data) { return this.post('/orders', data); }
   getOrders() { return this.get('/orders'); }
   getOrder(id) { return this.get(`/orders/${id}`); }
 
-  // User
+  // ── User ──
   getProfile() { return this.get('/users/profile'); }
   updateProfile(data) { return this.put('/users/profile', data); }
   getAddresses() { return this.get('/users/addresses'); }
   addAddress(data) { return this.post('/users/addresses', data); }
+  updateAddress(id, data) { return this.put(`/users/addresses/${id}`, data); }
+  deleteAddress(id) { return this.delete(`/users/addresses/${id}`); }
 
-  // Promotions
+  // ── Promotions ──
   validatePromo(code, subtotal) { return this.post('/promotions/validate', { code, subtotal }); }
 
-  // Upload
+  // ── Notifications ──
+  getNotifications() { return this.get('/notifications'); }
+  markNotificationRead(id) { return this.put(`/notifications/${id}/read`); }
+
+  // ── Upload ──
   async uploadImage(file, folder = 'bekfood') {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('folder', folder);
     const url = `${this.baseUrl}/api/upload/image`;
-    const response = await fetch(url, { method: 'POST', body: formData, credentials: 'include' });
+    const headers = {};
+    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
+    const response = await fetch(url, { method: 'POST', body: formData, credentials: 'include', headers });
     return response.json();
   }
 }

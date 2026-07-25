@@ -1,4 +1,4 @@
-import { Clock, MapPin, CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import useDriverStore from '../store/useDriverStore';
 
 export default function DriverHistoryPage() {
@@ -18,20 +18,20 @@ export default function DriverHistoryPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{
                 width: '40px', height: '40px', borderRadius: '10px',
-                background: order.status === 'delivered' ? 'var(--color-success-light)' : 'var(--color-danger-light)',
+                background: order.status === 'completed' ? 'var(--color-success-light)' : 'var(--color-danger-light)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                {order.status === 'delivered' ? <CheckCircle size={18} color="var(--color-success)" /> : <XCircle size={18} color="var(--color-danger)" />}
+                {order.status === 'completed' ? <CheckCircle size={18} color="var(--color-success)" /> : <XCircle size={18} color="var(--color-danger)" />}
               </div>
               <div>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{order.orderNumber}</div>
                 <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  {order.customer.name} · {new Date(order.completedAt).toLocaleDateString('uz-UZ')}
+                  {order.customer} · {order.date}
                 </div>
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-success)' }}>+{order.deliveryFee.toLocaleString()}</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-success)' }}>+{order.earnings.toLocaleString()}</div>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{order.timeTaken} daq</div>
             </div>
           </div>

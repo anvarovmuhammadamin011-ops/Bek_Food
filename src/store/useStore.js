@@ -1,10 +1,15 @@
 import { create } from 'zustand';
+import api from '../lib/api';
 import { restaurants, foods, categories, banners, coupons as couponData, notifications as notifData, addresses as addrData } from '../data/mockData';
 
 const useStore = create((set, get) => ({
+  // Auth
   user: null,
   isAuthenticated: false,
+  authLoading: false,
+  authError: null,
 
+  // Data (mock fallback + real API)
   restaurants,
   foods,
   categories,
@@ -25,16 +30,104 @@ const useStore = create((set, get) => ({
   currentOrder: null,
 
   // Delivery state
-  deliveryType: 'delivery', // 'delivery' | 'pickup'
+  deliveryType: 'delivery',
   selectedAddressId: addrData.find(a => a.isDefault)?.id || addrData[0]?.id || null,
-  deliveryLocation: null, // { lat, lng, address }
+  deliveryLocation: null,
   estimatedDeliveryTime: '25-35 min',
 
-  login: (userData) => set({ user: userData, isAuthenticated: true }),
-  logout: () => set({ user: null, isAuthenticated: false, cart: [], orders: [], favorites: [] }),
+  // Loading states
+  loading: false,
+  cartLoading: false,
 
-  updateUser: (data) => set((s) => ({ user: { ...s.user, ...data } })),
+  // ── AUTH ──
+  login: async (email, password) => {
+    set({ authLoading: true, authError: null });
+    try {
+      const res = await api.login(email, password);
+      set({ user: res.data.user, isAuthenticated: true, authLoading: false });
+      // Load user data after login
+      get().loadUserData();
+      return true;
+    } catch (err) {
+      // Fallback to mock login if backend unavailable
+      if (err.message.includes('fetch') || err.message.includes('NetworkError')) {
+        set({ user: { id: 1, name: 'Guest', email, role: 'CUSTOMER' }, isAuthenticated: true, authLoading: false });
+        return true;
+      }
+      set({ authError: err.message, authLoading: false });
+      return false;
+    }
+  },
 
+  register: async (data) => {
+    set({ authLoading: true, authError: null });
+    try {
+      const res = await api.register(data);
+      set({ user: res.data.user, isAuthenticated: true, authLoading: false });
+      return true;
+    } catch (err) {
+      if (err.message.includes('fetch') || err.message.includes('NetworkError')) {
+        set({ user: { id: 1, ...data, role: 'CUSTOMER' }, isAuthenticated: true, authLoading: false });
+        return true;
+      }
+      set({ authError: err.message, authLoading: false });
+      return false;
+    }
+  },
+
+  logout: async () => {
+    try { await api.logout(); } catch {}
+    set({
+      user: null, isAuthenticated: false, cart: [], orders: [], favorites: [],
+      appliedCoupon: null, currentOrder: null,
+    });
+  },
+
+  // ── LOAD DATA FROM API ──
+  loadUserData: async () => {
+    try {
+      const [profileRes, cartRes, ordersRes, addressesRes] = await Promise.allSettled([
+        api.getProfile(),
+        api.getCart(),
+        api.getOrders(),
+        api.getAddresses(),
+      ]);
+
+      const updates = {};
+      if (profileRes.status === 'fulfilled') updates.user = profileRes.value.data;
+      if (cartRes.status === 'fulfilled' && cartRes.value.data?.items) {
+        updates.cart = cartRes.value.data.items.map(i => ({
+          id: i.id,
+          foodId: i.productId,
+          food: i.product,
+          quantity: i.quantity,
+          notes: i.notes || '',
+          price: i.product.discountPrice || i.product.price,
+          extras: [],
+        }));
+      }
+      if (ordersRes.status === 'fulfilled') updates.orders = ordersRes.value.data || [];
+      if (addressesRes.status === 'fulfilled') updates.addresses = addressesRes.value.data || [];
+
+      set(updates);
+    } catch {}
+  },
+
+  loadProducts: async () => {
+    try {
+      const res = await api.getProducts({ page: 1, limit: 100 });
+      if (res.data) set({ foods: res.data });
+    } catch {}
+  },
+
+  loadCategories: async () => {
+    try {
+      const res = await api.getCategories();
+      if (res.data) set({ categories: res.data });
+    } catch {}
+  },
+
+  // ── SELECTORS ──
   selectRestaurant: (id) => {
     const r = get().restaurants.find((r) => r.id === id);
     set({ selectedRestaurant: r });
@@ -54,7 +147,8 @@ const useStore = create((set, get) => ({
     }
   },
 
-  addToCart: (food, quantity = 1, extras = [], notes = '') => {
+  // ── CART ──
+  addToCart: async (food, quantity = 1, extras = [], notes = '') => {
     const item = {
       id: Date.now(),
       foodId: food.id,
@@ -65,20 +159,41 @@ const useStore = create((set, get) => ({
       price: (food.discountPrice || food.price) + extras.reduce((s, e) => s + (e.price || 0), 0),
     };
     set((s) => ({ cart: [...s.cart, item] }));
+
+    // Try to sync with backend
+    try { await api.addToCart(food.id, quantity); } catch {}
   },
 
-  removeFromCart: (foodId) => set((s) => ({ cart: s.cart.filter((i) => i.foodId !== foodId) })),
+  removeFromCart: async (foodId) => {
+    set((s) => ({ cart: s.cart.filter((i) => i.foodId !== foodId) }));
+    try { await api.removeFromCart(foodId); } catch {}
+  },
 
-  updateCartItemQuantity: (foodId, delta) => set((s) => ({
-    cart: s.cart.map((i) => i.foodId === foodId ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i),
-  })),
+  updateCartItemQuantity: async (foodId, delta) => {
+    set((s) => {
+      const item = s.cart.find(i => i.foodId === foodId);
+      if (!item) return {};
+      const newQty = Math.max(1, item.quantity + delta);
+      if (delta < 0 && item.quantity <= 1) {
+        return { cart: s.cart.filter(i => i.foodId !== foodId) };
+      }
+      return {
+        cart: s.cart.map(i => i.foodId === foodId ? { ...i, quantity: newQty } : i),
+      };
+    });
+    const item = get().cart.find(i => i.foodId === foodId);
+    if (item) { try { await api.updateCartItem(foodId, item.quantity); } catch {} }
+  },
 
-  clearCart: () => set({ cart: [] }),
+  clearCart: async () => {
+    set({ cart: [] });
+    try { await api.request('/cart/clear', { method: 'DELETE' }); } catch {}
+  },
 
   getCartTotal: () => {
     const cart = get().cart;
     const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-    const deliveryFee = subtotal > 50000 ? 0 : 10000;
+    const deliveryFee = get().deliveryType === 'pickup' ? 0 : (subtotal > 50000 ? 0 : 10000);
     const serviceFee = Math.round(subtotal * 0.05);
     const tax = Math.round(subtotal * 0.12);
     let discount = 0;
@@ -89,7 +204,18 @@ const useStore = create((set, get) => ({
     return { subtotal, deliveryFee, serviceFee, tax, discount, total: subtotal + deliveryFee + serviceFee - tax - discount };
   },
 
-  applyPromoCode: (code) => {
+  // ── PROMO ──
+  applyPromoCode: async (code) => {
+    // Try backend first
+    try {
+      const totals = get().getCartTotal();
+      const res = await api.validatePromo(code, totals.subtotal);
+      if (res.data) {
+        set({ appliedCoupon: { code: res.data.code, discount: res.data.discount, discountType: res.data.discountType === 'PERCENT' ? 'percent' : 'fixed' } });
+        return true;
+      }
+    } catch {}
+    // Fallback to local coupons
     const coupon = get().coupons.find((c) => c.code === code.toUpperCase() && c.isActive);
     if (coupon) {
       set({ appliedCoupon: coupon });
@@ -100,6 +226,7 @@ const useStore = create((set, get) => ({
 
   removeCoupon: () => set({ appliedCoupon: null }),
 
+  // ── FAVORITES ──
   toggleFavorite: (type, id) => set((s) => {
     const exists = s.favorites.find((f) => f.type === type && f.id === id);
     if (exists) return { favorites: s.favorites.filter((f) => !(f.type === type && f.id === id)) };
@@ -108,9 +235,28 @@ const useStore = create((set, get) => ({
 
   isFavorite: (type, id) => get().favorites.some((f) => f.type === type && f.id === id),
 
-  placeOrder: (paymentMethod, address, notes) => {
+  // ── ORDERS ──
+  placeOrder: async (paymentMethod, address, notes) => {
     const cart = get().cart;
     const totals = get().getCartTotal();
+
+    // Try backend
+    try {
+      const res = await api.createOrder({
+        deliveryType: get().deliveryType,
+        addressId: get().selectedAddressId,
+        notes,
+        paymentMethod: paymentMethod.toUpperCase(),
+        items: cart.map(i => ({ productId: i.foodId, quantity: i.quantity })),
+        promoCode: get().appliedCoupon?.code,
+      });
+      if (res.data) {
+        set((s) => ({ orders: [res.data, ...s.orders], currentOrder: res.data, cart: [], appliedCoupon: null }));
+        return res.data;
+      }
+    } catch {}
+
+    // Fallback to local
     const order = {
       id: Date.now(),
       userId: get().user?.id || 1,
@@ -137,13 +283,19 @@ const useStore = create((set, get) => ({
     currentOrder: s.currentOrder?.id === orderId ? { ...s.currentOrder, status } : s.currentOrder,
   })),
 
+  // ── NOTIFICATIONS ──
   addNotification: (notif) => set((s) => ({ notifications: [notif, ...s.notifications] })),
 
   markNotificationRead: (id) => set((s) => ({
     notifications: s.notifications.map((n) => n.id === id ? { ...n, isRead: true } : n),
   })),
 
-  addAddress: (addr) => set((s) => ({ addresses: [...s.addresses, { ...addr, id: Date.now(), userId: s.user?.id || 1 }] })),
+  // ── ADDRESSES ──
+  addAddress: async (addr) => {
+    const newAddr = { ...addr, id: Date.now(), userId: get().user?.id || 1 };
+    set((s) => ({ addresses: [...s.addresses, newAddr] }));
+    try { await api.addAddress(addr); } catch {}
+  },
 
   removeAddress: (id) => set((s) => ({ addresses: s.addresses.filter((a) => a.id !== id) })),
 
@@ -151,8 +303,8 @@ const useStore = create((set, get) => ({
     addresses: s.addresses.map((a) => ({ ...a, isDefault: a.id === id })),
   })),
 
+  // ── SETTINGS ──
   setPaymentMethod: (method) => set({ selectedPaymentMethod: method }),
-
   setDeliveryType: (type) => set({ deliveryType: type }),
   setSelectedAddress: (id) => set({ selectedAddressId: id }),
   setDeliveryLocation: (loc) => set({ deliveryLocation: loc }),

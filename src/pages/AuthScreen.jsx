@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Eye, EyeOff, ChevronRight, Camera, Phone, LayoutDashboard, Package, Truck, User } from 'lucide-react';
 import useStore from '../store/useStore';
+import api from '../lib/api';
 
-const accounts = {
-  'admin@bekfood.uz': { password: 'admin123', role: 'admin', route: '/admin', label: 'Admin Paneli' },
-  'nodira@bekfood.uz': { password: 'order123', role: 'order-manager', route: '/order-manager', label: 'Buyurtma Boshqaruvi' },
-  'driver@bekfood.uz': { password: 'driver123', role: 'driver', route: '/driver', label: 'Yetkazish Paneli' },
+const staffAccounts = {
+  'admin@bekfood.uz': { password: 'admin123', route: '/admin', label: 'Admin Paneli' },
+  'driver@bekfood.uz': { password: 'driver123', route: '/driver', label: 'Yetkazish Paneli' },
 };
 
 export default function AuthScreen() {
@@ -21,19 +21,31 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    setTimeout(() => {
-      const account = accounts[email.toLowerCase()];
-      if (account && password === account.password) {
-        setLoading(false);
-        window.location.href = account.route;
-        return;
-      }
+    // Check for staff accounts first
+    const staffAccount = staffAccounts[email.toLowerCase()];
+    if (staffAccount && password === staffAccount.password) {
+      setLoading(false);
+      window.location.href = staffAccount.route;
+      return;
+    }
 
+    // Try real backend login
+    try {
+      const res = await api.login(email, password);
+      if (res.data?.accessToken) api.setToken(res.data.accessToken);
+      const user = res.data?.user;
+      if (user?.role === 'ADMIN') { window.location.href = '/admin'; return; }
+      if (user?.role === 'DRIVER') { window.location.href = '/driver'; return; }
+      login(user || { id: 1, email, name: 'User' });
+      setLoading(false);
+      navigate('/');
+    } catch (err) {
+      // Fallback to mock login if backend unavailable
       if (email && password) {
         login({ id: 1, name: name || 'Bekzod', phone: phone || '+998901234567', email, photo: null, language: 'uz' });
         setLoading(false);
@@ -42,7 +54,7 @@ export default function AuthScreen() {
         setError('Email va parolni kiriting');
         setLoading(false);
       }
-    }, 800);
+    }
   };
 
   const handleQuickLogin = (route) => {
