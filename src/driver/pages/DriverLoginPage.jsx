@@ -1,144 +1,105 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
 import useDriverStore from '../store/useDriverStore';
 
 export default function DriverLoginPage() {
   const navigate = useNavigate();
-  const login = useDriverStore((s) => s.login);
+  const { login } = useDriverStore();
   const [email, setEmail] = useState('sardor@bekfood.uz');
   const [password, setPassword] = useState('123456');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
     setTimeout(() => {
-      login(email, password);
+      if (email === 'sardor@bekfood.uz' && password === '123456') {
+        login(email, password);
+        navigate('/driver');
+      } else {
+        setError('Email yoki parol noto\'g\'ri');
+      }
       setLoading(false);
-      navigate('/driver/dashboard');
-    }, 1000);
+    }, 800);
   };
 
   return (
     <div style={{
       position: 'fixed', inset: 0, display: 'flex', alignItems: 'center',
-      justifyContent: 'center', background: 'var(--bg-primary)', padding: '24px', zIndex: 9999,
+      justifyContent: 'center', background: 'var(--bg-primary)', padding: '20px', zIndex: 9999,
     }}>
-      <div style={{
-        width: '100%', maxWidth: '380px', animation: 'slideUp 0.5s ease-out',
-      }}>
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+      <div style={{ width: '100%', maxWidth: '400px', animation: 'slideUp 0.4s ease-out' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '18px',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
+            background: 'linear-gradient(135deg, var(--color-success), #1a9a4a)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 16px', boxShadow: '0 8px 32px rgba(232, 89, 12, 0.3)',
+            boxShadow: '0 8px 32px rgba(43, 138, 62, 0.3)', margin: '0 auto 16px',
           }}>
             <span style={{ fontWeight: 900, color: 'white', fontSize: '22px' }}>BF</span>
           </div>
-          <h1 style={{
-            fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
-          }}>
-            BEK FOOD Yetkazish
+          <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+            Yetkazish Xizmati
           </h1>
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            Yetkazishni boshlash uchun kiring
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
+            BEK FOOD Haydovchi Paneli
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleLogin}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* Email */}
-            <div style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-                color: 'var(--text-muted)', display: 'flex', alignItems: 'center',
-              }}>
-                <Mail size={18} />
-              </div>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email manzil"
-                style={{
-                  width: '100%', padding: '14px 14px 14px 44px',
-                  background: 'var(--bg-card)', border: '1.5px solid var(--border)',
-                  borderRadius: 'var(--radius-md)', fontSize: '14px',
-                  color: 'var(--text-primary)', fontFamily: 'var(--font-family)',
-                  transition: 'all 0.2s ease', outline: 'none',
-                }}
-                onFocus={(e) => { e.target.style.borderColor = 'var(--color-primary)'; e.target.style.boxShadow = '0 0 0 3px var(--color-primary-glow)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
-              />
+        <div style={{
+          background: 'var(--bg-card)', borderRadius: '20px', padding: '28px',
+          border: '1px solid var(--border)', boxShadow: '0 4px 24px rgba(45, 42, 38, 0.06)',
+        }}>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>Xush kelibsiz</h2>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>Yetkazishni boshlash uchun kiring</p>
             </div>
 
-            {/* Password */}
-            <div style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-                color: 'var(--text-muted)', display: 'flex', alignItems: 'center',
-              }}>
-                <Lock size={18} />
+            {error && (
+              <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--color-danger-light)', color: 'var(--color-danger)', fontSize: '13px', fontWeight: 500 }}>
+                {error}
               </div>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Parol"
-                style={{
-                  width: '100%', padding: '14px 44px 14px 44px',
-                  background: 'var(--bg-card)', border: '1.5px solid var(--border)',
-                  borderRadius: 'var(--radius-md)', fontSize: '14px',
-                  color: 'var(--text-primary)', fontFamily: 'var(--font-family)',
-                  transition: 'all 0.2s ease', outline: 'none',
-                }}
-                onFocus={(e) => { e.target.style.borderColor = 'var(--color-primary)'; e.target.style.boxShadow = '0 0 0 3px var(--color-primary-glow)'; }}
-                onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
-              />
-              <button type="button" onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
-                  background: 'none', border: 'none', color: 'var(--text-muted)',
-                  cursor: 'pointer', padding: '4px', display: 'flex',
-                }}>
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            )}
+
+            <div style={{ position: 'relative' }}>
+              <Mail size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input type="email" placeholder="Email manzil" value={email} onChange={(e) => setEmail(e.target.value)}
+                style={{ width: '100%', background: 'var(--bg-card)', border: '1.5px solid var(--border)', borderRadius: '12px', padding: '14px 16px 14px 44px', fontSize: '14px', color: 'var(--text-primary)', fontFamily: 'var(--font-family)', transition: 'all 0.25s ease' }} />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <Lock size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input type={showPassword ? 'text' : 'password'} placeholder="Parol" value={password} onChange={(e) => setPassword(e.target.value)}
+                style={{ width: '100%', background: 'var(--bg-card)', border: '1.5px solid var(--border)', borderRadius: '12px', padding: '14px 44px 14px 44px', fontSize: '14px', color: 'var(--text-primary)', fontFamily: 'var(--font-family)', transition: 'all 0.25s ease' }} />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-          </div>
 
-          <button type="submit" disabled={loading}
-            style={{
-              width: '100%', padding: '16px', marginTop: '24px',
-              borderRadius: 'var(--radius-md)', background: 'var(--color-primary)',
-              color: 'white', border: 'none', fontSize: '15px', fontWeight: 800,
-              cursor: loading ? 'default' : 'pointer',
-              boxShadow: '0 6px 24px rgba(232, 89, 12, 0.30)',
-              transition: 'all 0.25s ease', fontFamily: 'var(--font-family)',
-              opacity: loading ? 0.8 : 1,
+            <button type="submit" disabled={loading} style={{
+              width: '100%', padding: '14px', borderRadius: '12px',
+              background: 'var(--color-success)', color: 'white', border: 'none',
+              fontSize: '14px', fontWeight: 700, cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(43, 138, 62, 0.3)', opacity: loading ? 0.7 : 1,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              fontFamily: 'var(--font-family)',
             }}>
-            {loading ? (
-              <div style={{
-                width: '20px', height: '20px', borderRadius: '50%',
-                border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff',
-                animation: 'spin 0.8s linear infinite',
-              }} />
-            ) : 'Kirish'}
-          </button>
-        </form>
+              {loading ? (
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff', animation: 'spin 0.8s linear infinite' }} />
+              ) : <><Shield size={16} /> Kirish</>}
+            </button>
 
-        <p style={{
-          textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)',
-          marginTop: '20px',
-        }}>
-          Demo: sardor@bekfood.uz / 123456
-        </p>
+            <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--bg-secondary)', fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
+              <div style={{ fontWeight: 600, marginBottom: '4px' }}>Demo: sardor@bekfood.uz</div>
+              <div>Parol: 123456</div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

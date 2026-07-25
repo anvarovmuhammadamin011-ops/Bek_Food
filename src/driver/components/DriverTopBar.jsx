@@ -1,218 +1,110 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bell, MapPin } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Menu, Bell, Sun, Moon, LogOut, User, ChevronDown } from 'lucide-react';
 import useDriverStore from '../store/useDriverStore';
 
-function formatTime(date) {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
+const pageTitles = {
+  dashboard: 'Boshqaruv paneli',
+  orders: 'Buyurtmalar',
+  history: 'Tarix',
+  earnings: 'Daromad',
+  profile: 'Profil',
+};
 
-export default function DriverTopBar({ hideOnline = false }) {
-  const navigate = useNavigate();
-  const profile = useDriverStore((s) => s.profile);
-  const isOnline = useDriverStore((s) => s.isOnline);
-  const toggleOnline = useDriverStore((s) => s.toggleOnline);
-  const unreadCount = useDriverStore((s) => s.unreadCount);
+export default function DriverTopBar() {
+  const {
+    toggleSidebar, darkMode, toggleDarkMode, logout,
+    setActivePage, isOnline, toggleOnline, profile,
+  } = useDriverStore();
   const [time, setTime] = useState(new Date());
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 60000);
-    return () => clearInterval(timer);
+    const interval = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const today = time.toLocaleDateString('uz-UZ', { weekday: 'short', month: 'short', day: 'numeric' });
+  const currentTime = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
   return (
-    <div style={styles.bar}>
-      <div style={styles.inner}>
-        {/* Left: photo + name */}
-        <div style={styles.left}>
-          <img
-            src={profile.photo}
-            alt={profile.name}
-            style={styles.avatar}
-          />
-          <div style={styles.nameBlock}>
-            <span style={styles.name}>{profile.name}</span>
-            <div style={styles.locationRow}>
-              <MapPin size={10} color="var(--text-muted)" />
-              <span style={styles.location}>Tashkent</span>
-            </div>
-          </div>
+    <header className="driver-topbar">
+      <div className="driver-topbar-left">
+        <button onClick={toggleSidebar} className="driver-topbar-btn driver-menu-btn">
+          <Menu size={22} />
+        </button>
+        <h1 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+          {pageTitles[activePage] || 'Boshqaruv paneli'}
+        </h1>
+      </div>
+
+      <div className="driver-topbar-right">
+        <button
+          onClick={toggleOnline}
+          className="driver-online-badge"
+          style={{ cursor: 'pointer', border: 'none' }}
+        >
+          <div className="driver-online-dot" style={{ background: isOnline ? 'var(--color-success)' : 'var(--text-muted)' }} />
+          <span style={{ fontSize: '11px', fontWeight: 600, color: isOnline ? 'var(--color-success)' : 'var(--text-muted)' }}>
+            {isOnline ? 'Online' : 'Offline'}
+          </span>
+        </button>
+
+        <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)', padding: '6px 12px', background: 'var(--bg-secondary)', borderRadius: '10px' }}>
+          {today} · <span style={{ fontVariantNumeric: 'tabular-nums' }}>{currentTime}</span>
         </div>
 
-        {/* Right: time, bell, toggle */}
-        <div style={styles.right}>
-          <span style={styles.time}>{formatTime(time)}</span>
+        <button onClick={toggleDarkMode} className="driver-topbar-btn">
+          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
 
-          <button onClick={() => navigate('/driver/notifications')} style={styles.bellBtn}>
-            <Bell size={18} color="var(--text-primary)" />
-            {unreadCount() > 0 && (
-              <span style={styles.bellBadge}>{unreadCount()}</span>
-            )}
+        <div ref={profileRef} style={{ position: 'relative' }}>
+          <button onClick={() => setProfileOpen(!profileOpen)} style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            padding: '4px 8px 4px 4px', borderRadius: '10px',
+            background: 'none', border: '1.5px solid transparent',
+            cursor: 'pointer', transition: 'all 0.2s ease',
+          }}>
+            <div style={{ width: '34px', height: '34px', borderRadius: '9px', overflow: 'hidden' }}>
+              <img src={profile.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{profile.name.split(' ')[0]}</span>
+            <ChevronDown size={14} color="var(--text-muted)" />
           </button>
 
-          {!hideOnline && (
-            <button
-              onClick={toggleOnline}
-              style={{
-                ...styles.toggle,
-                background: isOnline ? 'var(--color-success)' : 'var(--border-strong)',
-                boxShadow: isOnline ? '0 2px 12px rgba(43, 138, 62, 0.35)' : 'none',
-              }}
-              aria-label={isOnline ? 'Go offline' : 'Go online'}
-            >
-              <div
-                style={{
-                  ...styles.knob,
-                  left: isOnline ? 29 : 3,
-                }}
-              />
-              <span
-                style={{
-                  ...styles.toggleLabel,
-                  color: isOnline ? 'white' : 'var(--text-muted)',
-                }}
-              >
-                {isOnline ? 'Online' : 'Offline'}
-              </span>
-            </button>
+          {profileOpen && (
+            <div style={{
+              position: 'absolute', top: 'calc(100% + 8px)', right: 0, width: '200px',
+              background: 'var(--bg-card)', border: '1px solid var(--border)',
+              borderRadius: '14px', boxShadow: '0 12px 40px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden',
+            }}>
+              <button onClick={() => { setActivePage('profile'); setProfileOpen(false); }} style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '13px', color: 'var(--text-primary)', fontFamily: 'var(--font-family)',
+              }}>
+                <User size={16} /> Profil
+              </button>
+              <div style={{ height: '1px', background: 'var(--border)' }} />
+              <button onClick={() => { logout(); setProfileOpen(false); }} style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '13px', color: 'var(--color-danger)', fontFamily: 'var(--font-family)',
+              }}>
+                <LogOut size={16} /> Chiqish
+              </button>
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 }
-
-const styles = {
-  bar: {
-    position: 'sticky',
-    top: 0,
-    zIndex: 40,
-    background: 'rgba(255, 248, 241, 0.88)',
-    backdropFilter: 'blur(30px)',
-    WebkitBackdropFilter: 'blur(30px)',
-    borderBottom: '1px solid var(--border)',
-    padding: '10px 16px',
-  },
-  inner: {
-    maxWidth: 480,
-    margin: '0 auto',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  left: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    minWidth: 0,
-  },
-  avatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 'var(--radius-full)',
-    objectFit: 'cover',
-    border: '2px solid var(--border)',
-    flexShrink: 0,
-  },
-  nameBlock: {
-    display: 'flex',
-    flexDirection: 'column',
-    minWidth: 0,
-  },
-  name: {
-    fontSize: 'var(--font-size-sm)',
-    fontWeight: 600,
-    color: 'var(--text-primary)',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  locationRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 3,
-  },
-  location: {
-    fontSize: 10,
-    color: 'var(--text-muted)',
-    fontWeight: 500,
-  },
-  right: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    flexShrink: 0,
-  },
-  time: {
-    fontSize: 12,
-    fontWeight: 600,
-    color: 'var(--text-secondary)',
-    fontFamily: 'var(--font-family)',
-  },
-  bellBtn: {
-    position: 'relative',
-    width: 36,
-    height: 36,
-    borderRadius: 'var(--radius-full)',
-    background: 'var(--bg-card)',
-    border: '1px solid var(--border)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    boxShadow: 'var(--shadow-sm)',
-    padding: 0,
-  },
-  bellBadge: {
-    position: 'absolute',
-    top: -3,
-    right: -3,
-    background: 'var(--color-danger)',
-    color: 'white',
-    fontSize: 9,
-    fontWeight: 700,
-    borderRadius: 'var(--radius-full)',
-    minWidth: 16,
-    height: 16,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 2px 6px rgba(224, 49, 49, 0.3)',
-    padding: '0 4px',
-  },
-  toggle: {
-    position: 'relative',
-    width: 56,
-    height: 30,
-    borderRadius: 15,
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    padding: 0,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  knob: {
-    position: 'absolute',
-    top: 3,
-    width: 24,
-    height: 24,
-    borderRadius: '50%',
-    background: 'white',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-  },
-  toggleLabel: {
-    position: 'absolute',
-    fontSize: 9,
-    fontWeight: 700,
-    letterSpacing: '0.05em',
-    textTransform: 'uppercase',
-    transition: 'color 0.3s ease',
-    pointerEvents: 'none',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};

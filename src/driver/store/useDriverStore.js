@@ -104,9 +104,20 @@ const useDriverStore = create((set, get) => ({
   // Quick messages
   quickMessages,
 
-  // Active page (mobile bottom nav)
+  // Active page
   activePage: 'dashboard',
   setActivePage: (page) => set({ activePage: page }),
+
+  // Sidebar
+  sidebarOpen: false,
+  sidebarCollapsed: false,
+  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+  setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+
+  // Dark mode
+  darkMode: false,
+  toggleDarkMode: () => set((s) => ({ darkMode: !s.darkMode })),
 
   // Delivery request countdown
   requestCountdown: 30,
