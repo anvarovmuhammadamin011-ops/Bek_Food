@@ -11,7 +11,7 @@ import DriverProfilePage from './pages/DriverProfilePage';
 import './driver.css';
 
 function DriverLayout() {
-  const { activePage, sidebarCollapsed } = useDriverStore();
+  const { activePage, sidebarCollapsed, darkMode } = useDriverStore();
 
   const pages = {
     dashboard: DriverDashboard,
@@ -24,7 +24,7 @@ function DriverLayout() {
   const ActivePage = pages[activePage] || DriverDashboard;
 
   return (
-    <div className="driver-layout">
+    <div className={`driver-layout${darkMode ? ' driver-dark' : ''}`}>
       <DriverSidebar />
       <div className={`driver-main${sidebarCollapsed ? ' driver-collapsed' : ''}`}>
         <DriverTopBar />
