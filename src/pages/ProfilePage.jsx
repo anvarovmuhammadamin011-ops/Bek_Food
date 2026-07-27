@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { User, ChevronRight, MapPin, Bell, Heart, ClipboardList, LogOut, Star } from 'lucide-react';
 import useStore from '../store/useStore';
+import LoyaltyCard from '../components/LoyaltyCard';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function ProfilePage() {
       <div className="p-4 space-y-4 mt-4">
         {/* Profile header */}
         <div className="card p-5 text-center animate-fade-in">
-          <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#e51e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: '#fff' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #e51e1e, #c41a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: '#fff', boxShadow: '0 4px 20px rgba(229,30,30,.3)' }}>
             {user?.name?.charAt(0) || 'B'}
           </div>
           <h2 style={{ color: '#fff', fontSize: 16, fontWeight: 500 }}>{user?.name || 'Foydalanuvchi'}</h2>
@@ -50,16 +51,19 @@ export default function ProfilePage() {
           )}
         </div>
 
+        {/* Loyalty Card */}
+        <LoyaltyCard points={user?.bonus || 0} tier={user?.bonus > 500 ? 'gold' : user?.bonus > 100 ? 'silver' : 'standard'} />
+
         {/* Menu */}
-        <div className="card" style={{ overflow: 'hidden' }}>
+        <div className="card animate-fade-in-up" style={{ overflow: 'hidden', animationDelay: '.1s' }}>
           {menu.map((item, i) => (
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
               className="w-full flex items-center justify-between"
               style={{
-                padding: '14px 16px', transition: 'all .15s', cursor: 'pointer', background: 'none', border: 'none',
-                borderBottom: i < menu.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none'
+                padding: '14px 16px', transition: 'all .2s', cursor: 'pointer', background: 'none', border: 'none',
+                borderBottom: i < menu.length - 1 ? '1px solid var(--border)' : 'none'
               }}
             >
               <div className="flex items-center gap-3">
@@ -72,7 +76,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Logout */}
-        <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2" style={{ padding: 12, borderRadius: 10, border: '1px solid rgba(229,30,30,.3)', background: 'none', color: '#e51e1e', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
+        <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2" style={{ padding: 12, borderRadius: 10, border: '1px solid rgba(229,30,30,.3)', background: 'none', color: '#e51e1e', fontSize: 14, fontWeight: 500, cursor: 'pointer', transition: 'all .2s' }}>
           <LogOut size={16} />
           Chiqish
         </button>
