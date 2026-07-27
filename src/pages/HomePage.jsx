@@ -1,10 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Flame, Star, TrendingUp } from 'lucide-react';
 import useStore from '../store/useStore';
 import FoodCard from '../components/FoodCard';
-import PromoBanner from '../components/PromoBanner';
 import { SkeletonCard, SkeletonCategory, SkeletonBanner } from '../components/Skeleton';
+
+function HeroParticles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      size: 2 + Math.random() * 3,
+      duration: 4 + Math.random() * 6,
+      delay: Math.random() * 4,
+      opacity: 0.2 + Math.random() * 0.3,
+    })), []);
+
+  return (
+    <div className="hero-particles">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="hero-particle"
+          style={{
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            animationDuration: `${p.duration}s`,
+            animationDelay: `${p.delay}s`,
+            opacity: p.opacity,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -28,17 +58,17 @@ export default function HomePage() {
         {/* Header */}
         <div className="flex items-center justify-between animate-fade-in" style={{ padding: '16px 0' }}>
           <div>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#fff', fontSize: 20, letterSpacing: '-.02em' }}>Bek Food</div>
-            <div style={{ color: '#6b6b6b', fontSize: 11, marginTop: 1 }}>Chinobod, O'zbekiston</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#fff', fontSize: 22, letterSpacing: '-.02em', lineHeight: 1.2 }}>Bek Food</div>
+            <div style={{ color: '#6b6b6b', fontSize: 11, marginTop: 2 }}>Chinobod, O'zbekiston</div>
           </div>
-          <div className="flex items-center" style={{ gap: 12 }}>
-            <button onClick={() => navigate('/profile')} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all .2s' }}>
+          <div className="flex items-center" style={{ gap: 10 }}>
+            <button onClick={() => navigate('/profile')} className="card-interactive" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <User size={18} color="#b8b8b8" />
             </button>
-            <button onClick={() => navigate('/cart')} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative', transition: 'all .2s' }}>
+            <button onClick={() => navigate('/cart')} className="card-interactive" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}>
               <ShoppingCart size={18} color="#fff" />
               {cart.length > 0 && (
-                <div className="animate-cart-bounce" style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, background: 'var(--red)', borderRadius: 9, fontSize: 10, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, padding: '0 4px', boxShadow: '0 2px 8px rgba(229,30,30,.4)' }}>
+                <div className="animate-pop-in" style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, background: 'var(--red)', borderRadius: 9, fontSize: 10, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, padding: '0 4px', boxShadow: '0 2px 8px rgba(229,30,30,.4)' }}>
                   {cart.length}
                 </div>
               )}
@@ -46,30 +76,31 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Hero Banner */}
+        {/* Premium Hero */}
         {loading ? (
-          <div style={{ marginBottom: 16 }}><SkeletonBanner /></div>
+          <div style={{ marginBottom: 20 }}><div className="skeleton skeleton-hero" /></div>
         ) : (
-          <div className="animate-fade-in-up" style={{ marginBottom: 16 }}>
-            <div className="promo-banner" style={{ height: 'min(38vw, 160px)' }}>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(229,30,30,.15) 0%, rgba(10,10,10,.9) 50%, rgba(10,10,10,.7) 100%)', borderRadius: 'inherit' }} />
-              <div style={{ position: 'absolute', inset: 0, padding: '20px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div>
-                  <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
-                    <Flame size={14} color="#e51e1e" />
-                    <span style={{ color: '#e51e1e', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.08em' }}>Yangi</span>
-                  </div>
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 600, color: '#fff', lineHeight: 1.2, marginBottom: 4 }}>
-                    {banners[0]?.title || "Yangi menyu qo'shildi"}
-                  </h2>
-                  <p style={{ color: '#b8b8b8', fontSize: 12 }}>
-                    {banners[0]?.subtitle || 'Lyulya kabob endi menyuda'}
-                  </p>
-                </div>
-                <button onClick={() => navigate('/search')} className="btn btn-primary" style={{ alignSelf: 'flex-start', borderRadius: 'var(--radius)', padding: '8px 20px', minHeight: 36, fontSize: 13 }}>
-                  Ko'rish
-                </button>
+          <div className="hero animate-fade-in-up" style={{ height: 'min(45vw, 200px)', marginBottom: 20 }}>
+            <img
+              src={branch?.coverImage || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=400&fit=crop'}
+              alt="Bek Food"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <HeroParticles />
+            <div className="hero-content">
+              <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
+                <Flame size={14} color="#e51e1e" />
+                <span style={{ color: '#e51e1e', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.1em' }}>Yangi</span>
               </div>
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600, color: '#fff', lineHeight: 1.15, marginBottom: 6, letterSpacing: '-.02em' }}>
+                {banners[0]?.title || "Yangi menyu qo'shildi"}
+              </h1>
+              <p style={{ color: '#b8b8b8', fontSize: 13, marginBottom: 12, lineHeight: 1.5 }}>
+                {banners[0]?.subtitle || 'Lyulya kabob endi menyuda'}
+              </p>
+              <button onClick={() => navigate('/search')} className="btn btn-primary btn-sm btn-glow" style={{ alignSelf: 'flex-start', borderRadius: 'var(--radius)' }}>
+                Ko'rish
+              </button>
             </div>
           </div>
         )}
@@ -80,7 +111,7 @@ export default function HomePage() {
         ) : (
           <div className="animate-fade-in-up" style={{ marginBottom: 20, animationDelay: '.1s' }}>
             <div className="flex gap-2 overflow-x-auto scrollbar-hide" style={{ paddingBottom: 4 }}>
-              {categories.map((cat, i) => (
+              {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
@@ -90,7 +121,7 @@ export default function HomePage() {
                     background: selectedCategory === cat.id ? 'var(--red)' : 'var(--surface)',
                     border: `1.5px solid ${selectedCategory === cat.id ? 'var(--red)' : 'var(--border)'}`,
                     color: selectedCategory === cat.id ? '#fff' : '#b8b8b8',
-                    cursor: 'pointer', transition: 'all .25s cubic-bezier(.4,0,.2,1)',
+                    cursor: 'pointer', transition: 'all .3s var(--ease-spring)',
                     boxShadow: selectedCategory === cat.id ? 'var(--shadow-red)' : 'none'
                   }}
                 >
@@ -157,7 +188,6 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* Loading skeletons */}
             {loading && (
               <div className="grid grid-cols-2" style={{ gap: 10 }}>
                 {[1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)}
