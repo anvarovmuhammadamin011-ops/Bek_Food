@@ -34,10 +34,19 @@ import CourierSettings from './pages/courier/CourierSettings';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminBranches from './pages/admin/AdminBranches';
-import AdminEmployees from './pages/admin/AdminEmployees';
-import AdminStatistics from './pages/admin/AdminStatistics';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminMenu from './pages/admin/AdminMenu';
+import AdminCustomers from './pages/admin/AdminCustomers';
+import AdminEmployees from './pages/admin/AdminEmployees';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminFinance from './pages/admin/AdminFinance';
+import AdminInventory from './pages/admin/AdminInventory';
+import AdminBanners from './pages/admin/AdminBanners';
+import AdminReviews from './pages/admin/AdminReviews';
+import AdminAudit from './pages/admin/AdminAudit';
+import AdminSettings from './pages/admin/AdminSettings';
+import AdminBranches from './pages/admin/AdminBranches';
+import AdminStatistics from './pages/admin/AdminStatistics';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, role } = useStore();
@@ -67,6 +76,7 @@ export default function App() {
         <Route path="/login" element={<AppShell><LoginPage /></AppShell>} />
         <Route path="/verify" element={<AppShell><VerifyPage /></AppShell>} />
 
+        {/* Customer routes */}
         <Route path="/" element={<CustomerLayout><HomePage /></CustomerLayout>} />
         <Route path="/search" element={<CustomerLayout><SearchPage /></CustomerLayout>} />
         <Route path="/restaurant/:id" element={<CustomerLayout><RestaurantPage /></CustomerLayout>} />
@@ -95,10 +105,19 @@ export default function App() {
 
         {/* Admin routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminDashboard /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/branches" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminBranches /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminEmployees /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/statistics" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminStatistics /></AppShell></ProtectedRoute>} />
         <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminOrders /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/menu" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminMenu /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/customers" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminCustomers /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminEmployees /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminAnalytics /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/finance" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminFinance /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminInventory /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/banners" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminBanners /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/reviews" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminReviews /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/audit" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminAudit /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminSettings /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/branches" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminBranches /></AppShell></ProtectedRoute>} />
+        <Route path="/admin/statistics" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminStatistics /></AppShell></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
