@@ -1,118 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useStore from '../store/useStore';
 
 export default function SplashScreen() {
   const navigate = useNavigate();
   const [phase, setPhase] = useState(0);
-  const isAuthenticated = useStore((s) => s.isAuthenticated);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 500);
-    const t2 = setTimeout(() => setPhase(2), 1500);
-    const t3 = setTimeout(() => navigate(isAuthenticated ? '/' : '/login'), 2500);
+    const t1 = setTimeout(() => setPhase(1), 300);
+    const t2 = setTimeout(() => setPhase(2), 1200);
+    const t3 = setTimeout(() => navigate('/login'), 2000);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [navigate, isAuthenticated]);
+  }, [navigate]);
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'var(--bg-primary)',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      {/* Subtle green glow */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '300px',
-        height: '300px',
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(107,143,113,0.12) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        transition: 'all 0.7s ease',
-        opacity: phase >= 0 ? 1 : 0,
-        transform: phase >= 0 ? 'scale(1)' : 'scale(0.95)',
-      }}>
-        {/* Logo */}
-        <div style={{
-          width: '80px',
-          height: '80px',
-          borderRadius: '20px',
-          background: 'var(--color-primary)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: '20px',
-          boxShadow: 'var(--shadow-primary)',
-        }}>
-          <span style={{
-            fontWeight: 800,
-            color: 'white',
-            fontSize: '28px',
-            letterSpacing: '-0.02em',
-          }}>AC</span>
+    <div className="h-full flex flex-col items-center justify-center" style={{ background: '#0a0a0a' }}>
+      <div className={`flex flex-col items-center transition-all duration-500 ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`} style={{ transform: phase >= 1 ? 'scale(1)' : 'scale(.95)' }}>
+        <div style={{ width: 64, height: 64, borderRadius: '50%', border: '2px solid #e51e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+          <img
+            src="/logo.png"
+            alt="BEK FOOD"
+            style={{ width: 40, height: 40, objectFit: 'contain' }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+          <div className="hidden" style={{ display: 'none', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600, color: '#e51e1e' }}>BF</span>
+          </div>
         </div>
-
-        {/* Brand name */}
-        <h1 style={{
-          fontSize: '32px',
-          fontWeight: 800,
-          color: 'var(--text-primary)',
-          letterSpacing: '-0.02em',
-        }}>
-          Alif Cafe
-        </h1>
-
-        {/* Tagline */}
-        <div style={{
-          marginTop: '8px',
-          transition: 'all 0.5s ease 0.2s',
-          opacity: phase >= 1 ? 1 : 0,
-          transform: phase >= 1 ? 'translateY(0)' : 'translateY(8px)',
-        }}>
-          <p style={{
-            fontSize: '12px',
-            fontWeight: 500,
-            color: 'var(--text-muted)',
-            letterSpacing: '0.05em',
-          }}>
-            Premium Coffee & Fast Food
-          </p>
-        </div>
-
-        {/* Progress bar */}
-        <div style={{
-          marginTop: '32px',
-          width: '140px',
-          height: '2px',
-          background: 'var(--border)',
-          borderRadius: '1px',
-          overflow: 'hidden',
-          opacity: phase >= 1 ? 1 : 0,
-          transition: 'opacity 0.5s ease',
-        }}>
-          <div style={{
-            height: '100%',
-            background: 'var(--color-primary)',
-            borderRadius: '1px',
-            transition: 'width 1s ease-out',
-            width: phase === 1 ? '50%' : phase >= 2 ? '100%' : '15%',
-          }} />
+      </div>
+      <div className={`absolute bottom-24 w-32 transition-all duration-400 ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="progress-bar">
+          <div className="progress-bar-fill" style={{ width: phase === 1 ? '50%' : phase >= 2 ? '100%' : '0%' }} />
         </div>
       </div>
     </div>

@@ -1,55 +1,50 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import useStore from '../store/useStore';
 import FoodCard from '../components/FoodCard';
 import RestaurantCard from '../components/RestaurantCard';
-import { Heart, ArrowRight } from 'lucide-react';
 
 export default function FavoritesPage() {
-  const navigate = useNavigate();
   const { favorites, foods, restaurants } = useStore();
-  const [activeTab, setActiveTab] = useState('restaurants');
+  const [tab, setTab] = useState('restaurants');
 
-  const tabs = [
-    { id: 'restaurants', label: 'Restaurants' },
-    { id: 'foods', label: 'Foods' },
-  ];
-
-  const favRestaurants = (restaurants || []).filter(r => (favorites || []).some(f => f.type === 'restaurant' && f.id === r.id));
-  const favFoods = (foods || []).filter(f => (favorites || []).some(fav => fav.type === 'food' && fav.id === f.id));
-  const displayed = activeTab === 'restaurants' ? favRestaurants : favFoods;
+  const favRestaurants = restaurants.filter((r) => favorites.some((f) => f.type === 'restaurant' && f.id === r.id));
+  const favFoods = foods.filter((f) => favorites.some((fav) => fav.type === 'food' && fav.id === f.id));
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-24">
-      <div className="p-4 glass-strong sticky top-0 z-30">
-        <h1 className="text-lg font-bold text-center">Favorites</h1>
-        <div className="tab-group mt-3">
-          {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}>
-              {tab.label}
+    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+      <div className="p-4">
+        <h1 className="heading text-center" style={{ marginBottom: 12 }}>Sevimlilar</h1>
+        <div className="flex gap-2">
+          {[
+            { id: 'restaurants', label: 'Restoranlar' },
+            { id: 'foods', label: 'Taomlar' },
+          ].map((t) => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className="flex-1" style={{
+                padding: '8px 0', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all .15s',
+                background: tab === t.id ? '#e51e1e' : '#141414',
+                color: tab === t.id ? '#fff' : '#6b6b6b',
+                border: `1px solid ${tab === t.id ? '#e51e1e' : 'rgba(255,255,255,0.08)'}`
+              }}>
+              {t.label}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="p-4 max-w-lg mx-auto vertical-list">
-        {displayed.length === 0 && (
-          <div className="empty-state">
-            <div className="icon-wrapper">
-              <div className="icon-circle red">
-                <Heart size={40} className="text-danger" />
-              </div>
+      <div className="p-4 space-y-3">
+        {(tab === 'restaurants' ? favRestaurants : favFoods).length === 0 && (
+          <div className="empty-state py-16">
+            <div className="empty-state-icon">
+              <Heart size={20} />
             </div>
-            <h3>No favorites yet</h3>
-            <p>Tap the heart icon on any restaurant or dish to save it here for quick access.</p>
-            <button onClick={() => navigate('/')} className="btn btn-primary rounded-xl max-w-xs">
-              Explore Restaurants <ArrowRight size={16} />
-            </button>
+            <h3 style={{ color: '#fff', fontWeight: 500, marginBottom: 4 }}>Sevimlilar yo'q</h3>
+            <p style={{ color: '#6b6b6b', fontSize: 12 }}>Yurakcha bosib sevimlilarga qo'shing</p>
           </div>
         )}
-        {activeTab === 'restaurants' && favRestaurants.map(r => <RestaurantCard key={r.id} restaurant={r} />)}
-        {activeTab === 'foods' && favFoods.map(f => <FoodCard key={f.id} food={f} />)}
+        {tab === 'restaurants' && favRestaurants.map((r) => <RestaurantCard key={r.id} restaurant={r} />)}
+        {tab === 'foods' && <div className="grid grid-cols-2" style={{ gap: 10 }}>{favFoods.map((f) => <FoodCard key={f.id} food={f} />)}</div>}
       </div>
     </div>
   );

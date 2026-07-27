@@ -1,87 +1,46 @@
 export const categories = [
-  { id: 1, name: 'Burgers', icon: '🍔', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
-  { id: 2, name: 'Pizza', icon: '🍕', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200' },
-  { id: 3, name: 'Chicken', icon: '🍗', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=200' },
-  { id: 4, name: 'Hot Dogs', icon: '🌭', image: 'https://images.unsplash.com/photo-1612392062120-e5a0e2e4f5b4?w=200' },
-  { id: 5, name: 'Lavash', icon: '🌯', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=200' },
-  { id: 6, name: 'Fries', icon: '🍟', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200' },
-  { id: 7, name: 'Drinks', icon: '🥤', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=200' },
-  { id: 8, name: 'Desserts', icon: '🍰', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=200' },
-  { id: 9, name: 'Combos', icon: '🍽', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
-];
-
-export const restaurants = [
-  {
-    id: 1, name: 'Mini Burger Hub', logo: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=100',
-    coverImage: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
-    rating: 4.8, deliveryTime: '8-12', distance: '0.5 km', isOpen: true, minOrder: 15000,
-    address: 'Tashkent, Amir Temur street 78', latitude: 41.3111, longitude: 69.2797, categoryId: 1,
-  },
-  {
-    id: 2, name: 'Pizza Bite', logo: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100',
-    coverImage: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800',
-    rating: 4.6, deliveryTime: '10-15', distance: '0.8 km', isOpen: true, minOrder: 20000,
-    address: 'Tashkent, Navoi street 34', latitude: 41.3028, longitude: 69.2856, categoryId: 2,
-  },
-  {
-    id: 3, name: 'Chicken Express', logo: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=100',
-    coverImage: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=800',
-    rating: 4.5, deliveryTime: '8-12', distance: '0.3 km', isOpen: true, minOrder: 12000,
-    address: 'Tashkent, Buyuk Ipak Yoli 56', latitude: 41.3089, longitude: 69.2721, categoryId: 3,
-  },
-  {
-    id: 4, name: 'Quick Wrap', logo: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=100',
-    coverImage: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800',
-    rating: 4.7, deliveryTime: '10-15', distance: '1.0 km', isOpen: true, minOrder: 18000,
-    address: 'Tashkent, Shayxontohur district', latitude: 41.2956, longitude: 69.2678, categoryId: 5,
-  },
-  {
-    id: 5, name: 'Snack Attack', logo: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=100',
-    coverImage: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800',
-    rating: 4.9, deliveryTime: '5-8', distance: '0.2 km', isOpen: true, minOrder: 10000,
-    address: 'Tashkent, Mirzo Ulugbek district', latitude: 41.3256, longitude: 69.3123, categoryId: 8,
-  },
+  { id: 1, name: 'Shashliklar', icon: '🥩' },
+  { id: 2, name: 'Fastfud', icon: '🍔' },
+  { id: 3, name: 'Ichimliklar', icon: '🥤' },
+  { id: 4, name: 'Desertlar', icon: '🍰' },
+  { id: 5, name: 'Gazaklar', icon: '🥗' },
 ];
 
 export const foods = [
-  { id: 1, restaurantId: 1, categoryId: 1, name: 'Mini Slider', description: '2 bite-sized beef sliders', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', price: 18000, discountPrice: 15000, calories: 320, ingredients: ['Beef', 'Mini Bun', 'Lettuce', 'Sauce'], spiceLevel: 1, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 5 },
-  { id: 2, restaurantId: 1, categoryId: 1, name: 'Cheese Slider', description: 'Mini cheeseburger with pickles', image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400', price: 20000, discountPrice: null, calories: 350, ingredients: ['Beef', 'Cheese', 'Pickle', 'Mini Bun'], spiceLevel: 0, isAvailable: true, isPopular: true, isRecommended: false, prepTime: 5 },
-  { id: 3, restaurantId: 2, categoryId: 2, name: 'Pizza Slice', description: 'Single slice pepperoni', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400', price: 12000, discountPrice: 10000, calories: 280, ingredients: ['Dough', 'Tomato', 'Mozzarella', 'Pepperoni'], spiceLevel: 1, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 8 },
-  { id: 4, restaurantId: 2, categoryId: 2, name: 'Mini Margherita', description: '4-inch personal pizza', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400', price: 15000, discountPrice: null, calories: 310, ingredients: ['Dough', 'Tomato', 'Mozzarella', 'Basil'], spiceLevel: 0, isAvailable: true, isPopular: false, isRecommended: true, prepTime: 10 },
-  { id: 5, restaurantId: 3, categoryId: 3, name: '5pc Chicken Bites', description: '5 pieces crispy chicken nuggets', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=400', price: 16000, discountPrice: 13000, calories: 290, ingredients: ['Chicken', 'Breading', 'Spices'], spiceLevel: 2, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 6 },
-  { id: 6, restaurantId: 3, categoryId: 3, name: 'Wings 4pc', description: '4 spicy chicken wings', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=400', price: 22000, discountPrice: null, calories: 380, ingredients: ['Chicken Wings', 'Hot Sauce', 'Spices'], spiceLevel: 3, isAvailable: true, isPopular: true, isRecommended: false, prepTime: 8 },
-  { id: 7, restaurantId: 4, categoryId: 5, name: 'Mini Lavash', description: 'Small chicken wrap with veggies', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400', price: 14000, discountPrice: 12000, calories: 260, ingredients: ['Lavash', 'Chicken', 'Tomato', 'Sauce'], spiceLevel: 1, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 5 },
-  { id: 8, restaurantId: 5, categoryId: 8, name: 'Mini Ice Cream', description: 'Single scoop vanilla/chocolate', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400', price: 8000, discountPrice: null, calories: 180, ingredients: ['Milk', 'Sugar', 'Cream'], spiceLevel: 0, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 2 },
-  { id: 9, restaurantId: 1, categoryId: 4, name: 'Mini Hot Dog', description: 'Bite-sized hot dog with mustard', image: 'https://images.unsplash.com/photo-1612392062120-e5a0e2e4f5b4?w=400', price: 10000, discountPrice: 8000, calories: 220, ingredients: ['Sausage', 'Mini Bun', 'Mustard'], spiceLevel: 0, isAvailable: true, isPopular: false, isRecommended: true, prepTime: 4 },
-  { id: 10, restaurantId: 3, categoryId: 7, name: 'Small Lemonade', description: '250ml fresh lemonade', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400', price: 6000, discountPrice: null, calories: 80, ingredients: ['Lemon', 'Sugar', 'Water'], spiceLevel: 0, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 2 },
-  { id: 11, restaurantId: 5, categoryId: 6, name: 'Small Fries', description: 'Crispy mini portion fries', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400', price: 8000, discountPrice: 6000, calories: 200, ingredients: ['Potato', 'Salt', 'Oil'], spiceLevel: 0, isAvailable: true, isPopular: true, isRecommended: true, prepTime: 3 },
-  { id: 12, restaurantId: 4, categoryId: 5, name: 'Falafel Wrap', description: '3 mini falafel in lavash', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400', price: 12000, discountPrice: null, calories: 240, ingredients: ['Lavash', 'Falafel', 'Tahini', 'Lettuce'], spiceLevel: 1, isAvailable: true, isPopular: false, isRecommended: true, prepTime: 6 },
+  { id: 1, name: "Qiyma Shashlik", description: "200g qiyma go'sht, maxsus marinad", price: 25000, image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop", categoryId: 1, isPopular: true, calories: 450, ingredients: ["Qiyma go'sht", "Piyoz", "Ziravorlar", "Tuz"], restaurantId: 1, spiceLevel: 1 },
+  { id: 2, name: "Jigar Shashlik", description: "Mol jigaridan tayyorlangan shashlik", price: 22000, image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop", categoryId: 1, isPopular: true, discountPrice: 18000, calories: 320, ingredients: ["Mol jigari", "Piyoz", "Ziravorlar"], restaurantId: 1, spiceLevel: 0 },
+  { id: 3, name: "Tovuq Shashlik", description: "Tovuq go'shtidan shashlik", price: 20000, image: "https://images.unsplash.com/photo-1527477396000-e27163b4be8a?w=400&h=300&fit=crop", categoryId: 1, isPopular: true, calories: 280, ingredients: ["Tovuq go'shti", "Piyoz", "Ziravorlar"], restaurantId: 1, spiceLevel: 1 },
+  { id: 4, name: "Lavash", description: "Mol go'shti bilan lavash", price: 28000, image: "https://images.unsplash.com/photo-1659714885921-0e8d6a1bc05e?w=400&h=300&fit=crop", categoryId: 2, isPopular: true, calories: 520, ingredients: ["Non", "Mol go'shti", "Sabzavotlar", "Sous"], restaurantId: 1, spiceLevel: 2 },
+  { id: 5, name: "Gamburger", description: "200g kotlet, pishloq, sabzavotlar", price: 32000, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop", categoryId: 2, isPopular: false, discountPrice: 26000, calories: 680, ingredients: ["Bulochka", "Mol go'shti", "Pishloq", "Sabzavotlar"], restaurantId: 1, spiceLevel: 1 },
+  { id: 6, name: "Hot Dog", description: "Sosiskali hot-dog", price: 15000, image: "https://images.unsplash.com/photo-1619534885941-5d7e2aea1e57?w=400&h=300&fit=crop", categoryId: 2, isPopular: false, calories: 380, ingredients: ["Bulochka", "Sosiska", "Ketchup", "Gorchitsa"], restaurantId: 1, spiceLevel: 0 },
+  { id: 7, name: "Coca-Cola", description: "1L", price: 8000, image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop", categoryId: 3, isPopular: true, calories: 180, ingredients: ["Suv", "Shakar"], restaurantId: 1, spiceLevel: 0 },
+  { id: 8, name: "Choy", description: "Ko'k choy / qora choy", price: 3000, image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=300&fit=crop", categoryId: 3, isPopular: false, calories: 0, ingredients: ["Choy"], restaurantId: 1, spiceLevel: 0 },
+  { id: 9, name: "Kompot", description: "Uydagi kompot", price: 5000, image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&h=300&fit=crop", categoryId: 3, isPopular: false, calories: 60, ingredients: ["Meva", "Shakar", "Suv"], restaurantId: 1, spiceLevel: 0 },
+  { id: 10, name: "Medovik", description: "Asalli tort", price: 18000, image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop", categoryId: 4, isPopular: false, calories: 380, ingredients: ["Un", "Asal", "Smetana", "Shakar"], restaurantId: 1, spiceLevel: 0 },
+  { id: 11, name: "Napoleon", description: "Qatlamali tort", price: 18000, image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop", categoryId: 4, isPopular: false, calories: 350, ingredients: ["Un", "Sariyog'", "Krem"], restaurantId: 1, spiceLevel: 0 },
+  { id: 12, name: "Kartoshka Fri", description: "Katta porsiya", price: 12000, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop", categoryId: 5, isPopular: true, calories: 320, ingredients: ["Kartoshka", "Yog'", "Tuz"], restaurantId: 1, spiceLevel: 0 },
+];
+
+export const restaurants = [
+  { id: 1, name: 'BEK FOOD Chinobod', coverImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop', logo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100&h=100&fit=crop', cuisine: 'Shashlik & Fastfood', rating: 4.8, deliveryTime: '25-35', distance: 'Chinobod', minOrder: 0, isOpen: true, address: 'Chinobod tumani, Oqtepa ko\'chasi, 15', phone: '+998901234567', workingHours: '10:00 - 23:00', coordinates: { lat: 41.2995, lng: 69.2401 } },
 ];
 
 export const banners = [
-  { id: 1, title: '50% OFF', subtitle: 'Mini Sliders', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800', linkType: 'restaurant', linkId: 1 },
-  { id: 2, title: 'Quick Bite', subtitle: 'Under 10 min delivery', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=800', linkType: 'category', linkId: 3 },
-  { id: 3, title: 'New Snacks', subtitle: 'Try our mini menu', image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800', linkType: 'restaurant', linkId: 4 },
-];
-
-export const coupons = [
-  { id: 1, code: 'SNACK50', discount: 50, discountType: 'percent', minOrder: 20000, maxUses: 100, expiresAt: '2026-08-30', isActive: true },
-  { id: 2, code: 'FIRSTBITE', discount: 30, discountType: 'percent', minOrder: 15000, maxUses: 1, expiresAt: '2026-12-31', isActive: true },
-  { id: 3, code: 'QUICK10', discount: 10000, discountType: 'fixed', minOrder: 25000, maxUses: 50, expiresAt: '2026-09-15', isActive: true },
-];
-
-export const notifications = [
-  { id: 1, userId: 1, title: 'Order Ready!', body: 'Your mini bites are on the way!', type: 'order', isRead: false, createdAt: '2026-07-23T10:00:00' },
-  { id: 2, userId: 1, title: '50% OFF Deal!', body: 'Mini sliders half price today!', type: 'offer', isRead: false, createdAt: '2026-07-23T09:00:00' },
-  { id: 3, userId: 1, title: 'Welcome to BEK FOOD', body: 'Quick bites, quick delivery. Use FIRSTBITE for 30% off.', type: 'system', isRead: true, createdAt: '2026-07-22T12:00:00' },
+  { id: 1, image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=350&fit=crop', title: 'Qiyma Shashlik', subtitle: 'Maxsus marinad bilan 25 000 so\'mdan' },
+  { id: 2, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=350&fit=crop', title: 'Gamburger', subtitle: '200g kotlet bilan 26 000 so\'m' },
 ];
 
 export const addresses = [
-  { id: 1, userId: 1, label: 'Home', fullAddress: 'Tashkent, Mirzo Ulugbek district, Street 5, House 12', latitude: 41.3111, longitude: 69.2797, isDefault: true },
-  { id: 2, userId: 1, label: 'Work', fullAddress: 'Tashkent, Amir Temur street 78, Office 301', latitude: 41.3028, longitude: 69.2856, isDefault: false },
+  { id: 1, label: 'Uy', fullAddress: 'Chinobod, Oqtepa ko\'chasi, 15', isDefault: true },
+  { id: 2, label: 'Ish', fullAddress: 'Chinobod, Navoiy ko\'chasi, 27', isDefault: false },
 ];
 
-export const drivers = [
-  { id: 1, name: 'Sardor R.', phone: '+998901234567', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', vehicleType: 'Bike', rating: 4.9, latitude: 41.3089, longitude: 69.2721 },
-  { id: 2, name: 'Jamshid K.', phone: '+998907654321', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100', vehicleType: 'Bike', rating: 4.7, latitude: 41.3156, longitude: 69.2812 },
+export const paymentMethods = [
+  { id: 'cash', name: 'Naqd pul', icon: 'Banknote' },
+  { id: 'card', name: 'Karta orqali', icon: 'CreditCard', comingSoon: true },
+];
+
+export const notifications = [
+  { id: 1, title: 'Buyurtma qabul qilindi', message: '#1234-sonli buyurtmangiz qabul qilindi', time: new Date().toISOString(), isRead: false, type: 'order' },
+  { id: 2, title: 'Aksiya!', message: 'Qiyma shashlik 20% chegirma bilan', time: new Date(Date.now() - 86400000).toISOString(), isRead: false, type: 'promo' },
 ];

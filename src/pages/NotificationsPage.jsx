@@ -1,73 +1,49 @@
+import { Bell } from 'lucide-react';
 import useStore from '../store/useStore';
-import { Package, Tag, Gift, Info, Bell } from 'lucide-react';
-
-const typeConfig = {
-  order: { icon: Package, bg: 'var(--color-primary-light)', color: 'var(--color-primary)' },
-  offer: { icon: Tag, bg: 'var(--color-success-light)', color: 'var(--color-success)' },
-  coupon: { icon: Gift, bg: 'var(--color-success-light)', color: 'var(--color-success)' },
-  system: { icon: Info, bg: 'var(--color-primary-light)', color: 'var(--color-primary)' },
-};
 
 export default function NotificationsPage() {
-  const { notifications, markNotificationRead } = useStore();
+  const { notifications, markNotifRead, clearNotifs } = useStore();
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-24">
-      <div style={{ padding: '16px', maxWidth: '480px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px', letterSpacing: '-0.02em' }}>
-          Notifications
-        </h1>
+    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+      <div className="p-4 flex items-center justify-between">
+        <h1 className="heading">Bildirishnomalar</h1>
+        {notifications.length > 0 && (
+          <button onClick={clearNotifs} style={{ color: '#e51e1e', fontSize: 12, fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer' }}>Tozalash</button>
+        )}
+      </div>
 
+      <div className="p-4 space-y-2">
         {notifications.length === 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 32px', textAlign: 'center' }}>
-            <div style={{
-              width: '64px', height: '64px', borderRadius: '50%',
-              background: 'var(--bg-card)', border: '1px solid var(--border)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px',
-            }}>
-              <Bell size={24} color="var(--text-secondary)" />
+          <div className="empty-state py-16">
+            <div className="empty-state-icon">
+              <Bell size={20} />
             </div>
-            <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>No notifications</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>You're all caught up!</p>
+            <h3 style={{ color: '#fff', fontWeight: 500, marginBottom: 4 }}>Bildirishnoma yo'q</h3>
+            <p style={{ color: '#6b6b6b', fontSize: 12 }}>Yangiliklar va buyurtma holati haqida xabarlar keladi</p>
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {notifications.map(notif => {
-            const config = typeConfig[notif.type] || typeConfig.system;
-            const Icon = config.icon;
-            return (
-              <button key={notif.id} onClick={() => markNotificationRead(notif.id)}
-                style={{
-                  width: '100%', display: 'flex', alignItems: 'flex-start', gap: '12px',
-                  padding: '16px', borderRadius: '16px', border: '1px solid',
-                  borderColor: notif.isRead ? 'var(--border)' : 'var(--color-primary-border)',
-                  background: 'var(--bg-card)', textAlign: 'left',
-                  transition: 'all 0.2s ease', cursor: 'pointer', fontFamily: 'var(--font-family)',
-                  animation: 'slideUp 0.3s ease-out',
-                }}>
-                <div style={{
-                  padding: '10px', borderRadius: '12px',
-                  background: config.bg, color: config.color, flexShrink: 0,
-                }}>
-                  <Icon size={16} />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <h4 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{notif.title}</h4>
-                    {!notif.isRead && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-primary)', flexShrink: 0 }} />}
-                  </div>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px', lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                    {notif.body}
-                  </p>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '10px', marginTop: '6px' }}>
-                    {new Date(notif.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        {notifications.map((n) => (
+          <button
+            key={n.id}
+            onClick={() => markNotifRead(n.id)}
+            className="w-full text-left card p-4"
+            style={{ cursor: 'pointer', borderColor: !n.isRead ? 'rgba(229,30,30,.3)' : undefined }}
+          >
+            <div className="flex items-start gap-3">
+              <div style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: n.type === 'order' ? 'rgba(229,30,30,.15)' : 'rgba(234,179,8,.15)', color: n.type === 'order' ? '#e51e1e' : '#eab308' }}>
+                <Bell size={14} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h4 style={{ color: '#fff', fontSize: 14, fontWeight: !n.isRead ? 500 : 400 }}>{n.title}</h4>
+                <p style={{ color: '#6b6b6b', fontSize: 12, marginTop: 2 }}>{n.message}</p>
+                <p style={{ color: '#6b6b6b', fontSize: 10, marginTop: 4 }}>{new Date(n.time).toLocaleDateString()}</p>
+              </div>
+              {!n.isRead && <div style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, marginTop: 8, background: '#e51e1e' }} />}
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   );

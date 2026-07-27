@@ -1,170 +1,81 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, MapPin, CreditCard, Bell, Globe, Moon, HelpCircle, Shield, FileText, LogOut, Camera, LayoutDashboard } from 'lucide-react';
+import { User, ChevronRight, MapPin, Bell, Heart, ClipboardList, LogOut, Star } from 'lucide-react';
 import useStore from '../store/useStore';
-import Logo from '../components/Logo';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { user, logout } = useStore();
+  const { user, logout, isAuthenticated } = useStore();
 
-  const menuItems = [
-    { icon: <MapPin size={18} />, label: 'Manzillarim', path: '/addresses' },
-    { icon: <CreditCard size={18} />, label: 'Saqlangan kartalar', path: '/coupons' },
-    { icon: <Bell size={18} />, label: 'Bildirishnomalar', path: '/notifications' },
-    { icon: <Globe size={18} />, label: 'Til', value: "O'zbek" },
-    { icon: <Moon size={18} />, label: 'Qorong\'u rejim', value: 'Yoqilgan', toggle: true },
-    { icon: <HelpCircle size={18} />, label: 'Yordam markazi', muted: true },
-    { icon: <Shield size={18} />, label: 'Maxfiylik siyosati', muted: true },
-    { icon: <FileText size={18} />, label: 'Foydalanish shartlari', muted: true },
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center px-8 text-center">
+        <div className="empty-state-icon">
+          <User size={24} />
+        </div>
+        <h2 style={{ color: '#fff', fontSize: 15, fontWeight: 500, marginBottom: 4 }}>Profilingizga kiring</h2>
+        <p className="text-muted" style={{ fontSize: 12, marginBottom: 24 }}>Buyurtma berish uchun kirish kerak</p>
+        <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ borderRadius: 10, padding: '13px 32px' }}>Kirish</button>
+      </div>
+    );
+  }
+
+  const menu = [
+    { icon: ClipboardList, label: 'Buyurtmalar tarixi', path: '/orders' },
+    { icon: Heart, label: 'Sevimlilar', path: '/favorites' },
+    { icon: MapPin, label: 'Manzillarim', path: '/addresses' },
+    { icon: Bell, label: 'Bildirishnomalar', path: '/notifications' },
+    { icon: Star, label: 'Aksiya va bonuslar', path: '/coupons' },
   ];
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-24">
-      <div style={{ padding: '16px', maxWidth: '480px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-        {/* Profile Header */}
-        <div style={{
-          background: 'var(--bg-card)', borderRadius: '20px',
-          padding: '24px', border: '1px solid var(--border)',
-          boxShadow: '0 2px 12px rgba(45,42,38,0.05)',
-          textAlign: 'center', animation: 'fadeIn 0.3s ease-out',
-        }}>
-          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '12px' }}>
-            <div style={{
-              width: '80px', height: '80px', borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--color-primary), var(--color-danger))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '28px', fontWeight: 900, color: 'white',
-              boxShadow: '0 4px 20px rgba(232, 89, 12, 0.3)',
-            }}>
-              {user?.name?.charAt(0) || 'B'}
+    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+      <div className="p-4 space-y-4 mt-4">
+        {/* Profile header */}
+        <div className="card p-5 text-center animate-fade-in">
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#e51e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: '#fff' }}>
+            {user?.name?.charAt(0) || 'B'}
+          </div>
+          <h2 style={{ color: '#fff', fontSize: 16, fontWeight: 500 }}>{user?.name || 'Foydalanuvchi'}</h2>
+          <p style={{ color: '#6b6b6b', fontSize: 12, marginTop: 2 }}>{user?.phone || '+998901234567'}</p>
+          {user?.bonus > 0 && (
+            <div style={{ marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 16, background: 'rgba(229,30,30,.15)', color: '#e51e1e', fontSize: 12, fontWeight: 500 }}>
+              <Star size={12} />
+              {user.bonus.toLocaleString()} so'm bonus
             </div>
-            <button style={{
-              position: 'absolute', bottom: '0', right: '0',
-              width: '32px', height: '32px', borderRadius: '50%',
-              background: 'var(--color-primary)', color: 'white',
-              border: '3px solid var(--bg-card)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', boxShadow: '0 2px 8px rgba(232, 89, 12, 0.3)',
-              transition: 'all 0.2s ease',
-            }}>
-              <Camera size={12} />
-            </button>
-          </div>
-          <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-            {user?.name || 'Bekzod'}
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '2px' }}>
-            {user?.phone || '+998 90 123 45 67'}
-          </p>
-          <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '2px' }}>
-            {user?.email || 'bekzod@example.com'}
-          </p>
-
-          {/* Brand Badge */}
-          <div style={{
-            marginTop: '16px', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', gap: '8px',
-            padding: '8px 16px', background: 'var(--bg-secondary)',
-            borderRadius: '12px',
-          }}>
-            <Logo size="sm" />
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)' }}>AJIF Member</span>
-          </div>
+          )}
         </div>
 
-        {/* Menu Items */}
-        <div style={{
-          background: 'var(--bg-card)', borderRadius: '20px',
-          border: '1px solid var(--border)', overflow: 'hidden',
-          boxShadow: '0 2px 12px rgba(45,42,38,0.05)',
-        }}>
-          {menuItems.map((item, i) => (
+        {/* Menu */}
+        <div className="card" style={{ overflow: 'hidden' }}>
+          {menu.map((item, i) => (
             <button
-              key={i}
-              onClick={() => item.path && navigate(item.path)}
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className="w-full flex items-center justify-between"
               style={{
-                width: '100%', display: 'flex', alignItems: 'center',
-                gap: '14px', padding: '16px 20px',
-                background: 'none', border: 'none',
-                cursor: item.path ? 'pointer' : 'default',
-                transition: 'background 0.15s ease',
-                textAlign: 'left', color: 'var(--text-primary)',
-                fontFamily: 'var(--font-family)',
-                borderTop: i > 0 ? '1px solid var(--border)' : 'none',
+                padding: '14px 16px', transition: 'all .15s', cursor: 'pointer', background: 'none', border: 'none',
+                borderBottom: i < menu.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none'
               }}
             >
-              <span style={{ color: item.muted ? 'var(--text-secondary)' : 'var(--color-primary)' }}>
-                {item.icon}
-              </span>
-              <span style={{ flex: 1, fontSize: '14px', fontWeight: 500 }}>{item.label}</span>
-              {item.value && <span style={{ color: 'var(--text-muted)', fontSize: '12px', marginRight: '4px' }}>{item.value}</span>}
-              {item.toggle ? (
-                <div style={{
-                  width: '40px', height: '24px', borderRadius: '9999px',
-                  background: 'var(--color-primary)', position: 'relative',
-                }}>
-                  <div style={{
-                    position: 'absolute', right: '2px', top: '2px',
-                    width: '20px', height: '20px', borderRadius: '50%',
-                    background: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
-                  }} />
-                </div>
-              ) : (
-                <ChevronRight size={16} color="var(--text-muted)" />
-              )}
+              <div className="flex items-center gap-3">
+                <item.icon size={18} color="#6b6b6b" />
+                <span style={{ color: '#fff', fontSize: 14 }}>{item.label}</span>
+              </div>
+              <ChevronRight size={16} color="#6b6b6b" />
             </button>
           ))}
         </div>
 
         {/* Logout */}
-        <button
-          onClick={() => { logout(); navigate('/login'); }}
-          style={{
-            width: '100%', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', gap: '8px',
-            background: 'var(--color-danger-light)',
-            color: 'var(--color-danger)', fontWeight: 700,
-            padding: '16px', borderRadius: '20px',
-            border: '1.5px solid rgba(224, 49, 49, 0.15)',
-            cursor: 'pointer', transition: 'all 0.2s ease',
-            fontSize: '14px', fontFamily: 'var(--font-family)',
-          }}
-        >
-          <LogOut size={18} />
+        <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2" style={{ padding: 12, borderRadius: 10, border: '1px solid rgba(229,30,30,.3)', background: 'none', color: '#e51e1e', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>
+          <LogOut size={16} />
           Chiqish
         </button>
-
-        {/* Admin Panel Link */}
-        <button
-          onClick={() => window.location.href = '/admin'}
-          style={{
-            width: '100%', display: 'flex', alignItems: 'center',
-            gap: '12px', padding: '14px 20px',
-            background: 'var(--bg-card)', borderRadius: '16px',
-            border: '1.5px solid var(--border)',
-            cursor: 'pointer', transition: 'all 0.2s ease',
-            fontFamily: 'var(--font-family)',
-            boxShadow: '0 2px 8px rgba(45,42,38,0.04)',
-          }}
-        >
-          <div style={{
-            width: '36px', height: '36px', borderRadius: '10px',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-terracotta))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <LayoutDashboard size={16} color="white" />
-          </div>
-          <div style={{ flex: 1, textAlign: 'left' }}>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Admin Paneli</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Restoran va buyurtmalarni boshqarish</div>
-          </div>
-          <ChevronRight size={16} color="var(--text-muted)" />
-        </button>
-
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '10px', paddingBottom: '16px' }}>
-          AJIF v1.0.0
-        </p>
       </div>
     </div>
   );
