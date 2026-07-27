@@ -24,11 +24,13 @@ import SellerDashboard from './pages/seller/SellerDashboard';
 import SellerOrders from './pages/seller/SellerOrders';
 import SellerMenu from './pages/seller/SellerMenu';
 import SellerInventory from './pages/seller/SellerInventory';
-import SellerBonuses from './pages/seller/SellerBonuses';
+import SellerAnalytics from './pages/seller/SellerAnalytics';
+import SellerSettings from './pages/seller/SellerSettings';
 
 // Courier pages
 import CourierDashboard from './pages/courier/CourierDashboard';
 import CourierOrders from './pages/courier/CourierOrders';
+import CourierSettings from './pages/courier/CourierSettings';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -83,11 +85,13 @@ export default function App() {
         <Route path="/seller/orders" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerOrders /></AppShell></ProtectedRoute>} />
         <Route path="/seller/menu" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerMenu /></AppShell></ProtectedRoute>} />
         <Route path="/seller/inventory" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerInventory /></AppShell></ProtectedRoute>} />
-        <Route path="/seller/bonuses" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerBonuses /></AppShell></ProtectedRoute>} />
+        <Route path="/seller/analytics" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerAnalytics /></AppShell></ProtectedRoute>} />
+        <Route path="/seller/settings" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerSettings /></AppShell></ProtectedRoute>} />
 
         {/* Courier routes */}
         <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierDashboard /></AppShell></ProtectedRoute>} />
         <Route path="/courier/orders" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierOrders /></AppShell></ProtectedRoute>} />
+        <Route path="/courier/settings" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierSettings /></AppShell></ProtectedRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminDashboard /></AppShell></ProtectedRoute>} />

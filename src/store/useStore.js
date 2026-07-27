@@ -1,12 +1,61 @@
 import { create } from 'zustand';
 import { foods, restaurants, categories, banners, addresses, notifications } from '../data/mockData';
 
+const mockOrders = [
+  { id: 1001, items: [{ food: foods[0], quantity: 2, price: 25000 }], total: 50000, status: 'pending', paymentMethod: 'cash', address: "Chinobod, Oqtepa ko'chasi, 15", notes: 'Achchiq qiling', createdAt: new Date(Date.now() - 300000).toISOString(), customerName: 'Aziz', customerPhone: '+998901112233', priority: 'high', estimatedReady: '14:30' },
+  { id: 1002, items: [{ food: foods[3], quantity: 1, price: 28000 }, { food: foods[6], quantity: 2, price: 8000 }], total: 44000, status: 'preparing', paymentMethod: 'card', address: "Chinobod, Navoiy ko'chasi, 27", notes: '', createdAt: new Date(Date.now() - 600000).toISOString(), customerName: 'Sardor', customerPhone: '+998902223344', priority: 'normal', estimatedReady: '14:45' },
+  { id: 1003, items: [{ food: foods[1], quantity: 3, price: 18000 }], total: 54000, status: 'ready', paymentMethod: 'cash', address: "Chinobod, Bog'ishamol ko'chasi, 8", notes: 'Tezroq', createdAt: new Date(Date.now() - 900000).toISOString(), customerName: 'Jamshid', customerPhone: '+998903334455', priority: 'low', estimatedReady: '14:15', courierId: null },
+  { id: 1004, items: [{ food: foods[4], quantity: 1, price: 32000 }, { food: foods[11], quantity: 1, price: 12000 }], total: 44000, status: 'onTheWay', paymentMethod: 'cash', address: "Chinobod, Mustaqillik ko'chasi, 42", notes: '', createdAt: new Date(Date.now() - 1200000).toISOString(), customerName: 'Otabek', customerPhone: '+998904445566', priority: 'normal', courierId: 1 },
+  { id: 1005, items: [{ food: foods[2], quantity: 2, price: 20000 }], total: 40000, status: 'delivered', paymentMethod: 'cash', address: "Chinobod, Bobur ko'chasi, 12", notes: '', createdAt: new Date(Date.now() - 1800000).toISOString(), customerName: 'Dilshod', customerPhone: '+998905556677', priority: 'normal', courierId: 1, deliveredAt: new Date(Date.now() - 600000).toISOString() },
+  { id: 1006, items: [{ food: foods[5], quantity: 4, price: 15000 }], total: 60000, status: 'pending', paymentMethod: 'cash', address: "Chinobod, Cho'pon ota ko'chasi, 5", notes: 'Ketchup ko\'proq', createdAt: new Date(Date.now() - 120000).toISOString(), customerName: 'Nodir', customerPhone: '+998906667788', priority: 'high', estimatedReady: '15:00' },
+];
+
+const mockCourierStats = {
+  today: { orders: 12, distance: 47.5, avgTime: 28, earnings: 180000, hours: 6.5 },
+  week: { orders: 78, distance: 312, avgTime: 31, earnings: 1150000 },
+  month: { orders: 312, distance: 1248, avgTime: 29, earnings: 4600000 },
+  weekChart: [12, 15, 10, 14, 16, 11, 13],
+  monthChart: [78, 82, 75, 88, 92, 85, 78, 95, 89, 84, 91, 86],
+};
+
+const mockSellerStats = {
+  today: { revenue: 1250000, orders: 34, cancelled: 2, preparing: 5, waitingCourier: 3, avgPrepTime: 18 },
+  week: { revenue: 8750000, orders: 238 },
+  month: { revenue: 35000000, orders: 952 },
+  topItems: [
+    { name: 'Qiyma Shashlik', sold: 156, revenue: 3900000 },
+    { name: 'Lavash', sold: 134, revenue: 3752000 },
+    { name: 'Gamburger', sold: 98, revenue: 2548000 },
+    { name: 'Tovuq Shashlik', sold: 87, revenue: 1740000 },
+    { name: 'Hot Dog', sold: 76, revenue: 1140000 },
+  ],
+  weekChart: [1250000, 980000, 1450000, 1320000, 1680000, 1120000, 1350000],
+};
+
+const mockInventory = [
+  { id: 1, name: "Qiyma go'sht", quantity: 15, unit: 'kg', minQuantity: 5, status: 'ok' },
+  { id: 2, name: "Tovuq go'shti", quantity: 8, unit: 'kg', minQuantity: 5, status: 'low' },
+  { id: 3, name: "Piyoz", quantity: 20, unit: 'kg', minQuantity: 10, status: 'ok' },
+  { id: 4, name: "Kartoshka", quantity: 3, unit: 'kg', minQuantity: 8, status: 'critical' },
+  { id: 5, name: "Non", quantity: 50, unit: 'dona', minQuantity: 20, status: 'ok' },
+  { id: 6, name: "Pishloq", quantity: 4, unit: 'kg', minQuantity: 3, status: 'ok' },
+  { id: 7, name: "Coca-Cola", quantity: 24, unit: 'dona', minQuantity: 12, status: 'ok' },
+  { id: 8, name: "Sosiska", quantity: 2, unit: 'kg', minQuantity: 4, status: 'critical' },
+];
+
+const mockEmployees = [
+  { id: 1, name: 'Akbar', role: 'courier', phone: '+998901112233', rating: 4.8, totalDeliveries: 312, isOnline: true },
+  { id: 2, name: 'Sardor', role: 'courier', phone: '+998902223344', rating: 4.6, totalDeliveries: 198, isOnline: false },
+  { id: 3, name: 'Otabek', role: 'seller', phone: '+998903334455', rating: 4.9, totalOrders: 1245, isOnline: true },
+  { id: 4, name: 'Jamshid', role: 'seller', phone: '+998904445566', rating: 4.7, totalOrders: 980, isOnline: true },
+];
+
 const initialState = {
   user: null,
   isAuthenticated: false,
   role: null,
   cart: [],
-  orders: [],
+  orders: mockOrders,
   favorites: [],
   appliedCoupon: null,
   selectedPaymentMethod: 'cash',
@@ -22,12 +71,27 @@ const initialState = {
   searchQuery: '',
   searchResults: [],
   recentSearches: [],
-  // Seller state
-  inventory: [],
-  // Admin state
+  inventory: mockInventory,
   branches: restaurants,
-  employees: [],
+  employees: mockEmployees,
   isAppLoading: true,
+  courierStats: mockCourierStats,
+  sellerStats: mockSellerStats,
+  activeOrderTimers: {},
+  sellerNotifications: [
+    { id: 1, title: 'Yangi buyurtma', message: '#1001 - 50,000 so\'m', time: new Date(Date.now() - 300000).toISOString(), isRead: false, sound: true },
+    { id: 2, title: 'Yangi buyurtma', message: '#1006 - 60,000 so\'m', time: new Date(Date.now() - 120000).toISOString(), isRead: false, sound: true },
+  ],
+  courierNotifications: [
+    { id: 1, title: 'Buyurtma tayyor', message: '#1003 - olishingiz mumkin', time: new Date(Date.now() - 60000).toISOString(), isRead: false },
+  ],
+  quickMessages: [
+    '5 daqiqada yetib boraman',
+    'Uy oldidaman',
+    'Iltimos telefonni ko\'taring',
+    'Buyurtma tayyor, chiqyapman',
+    'Xech narsa unutmang',
+  ],
 };
 
 export const useStore = create((set, get) => ({
@@ -43,18 +107,23 @@ export const useStore = create((set, get) => ({
     });
   },
   loginAs: (role, userData) => {
+    const defaults = {
+      courier: { id: 10, name: 'Akbar', phone: '+998901112233', rating: 4.8, totalDeliveries: 312 },
+      seller: { id: 20, name: 'Otabek', phone: '+998903334455', rating: 4.9, totalOrders: 1245 },
+      admin: { id: 30, name: 'Admin', phone: '+998900000000' },
+    };
     set({
-      user: userData || { id: 1, name: 'Bekzod', phone: '+998901234567' },
+      user: userData || defaults[role] || { id: 1, name: 'Bekzod', phone: '+998901234567' },
       isAuthenticated: true,
       role,
     });
   },
-  logout: () => set({ user: null, isAuthenticated: false, role: null, cart: [], orders: [], currentOrder: null }),
+  logout: () => set({ user: null, isAuthenticated: false, role: null, cart: [], orders: mockOrders, currentOrder: null }),
 
   // Cart
   addToCart: (food, quantity = 1, extras = [], notes = '') => {
     const cart = get().cart;
-    const existing = cart.find((i) => i.food.id === food.id && i.extras.length === extras.length);
+    const existing = cart.find((i) => i.food.id === food.id && JSON.stringify(i.extras) === JSON.stringify(extras));
     if (existing) {
       get().updateCartItemQuantity(existing.id, quantity);
     } else {
@@ -103,16 +172,11 @@ export const useStore = create((set, get) => ({
       notes,
       createdAt: new Date().toISOString(),
       driver: null,
+      customerName: get().user?.name || 'Mijoz',
+      customerPhone: get().user?.phone || '',
+      priority: 'normal',
     };
     set({ orders: [order, ...get().orders], currentOrder: order, cart: [] });
-    // Auto progress simulation
-    const statuses = ['pending', 'preparing', 'ready', 'onTheWay', 'delivered'];
-    statuses.forEach((s, i) => {
-      setTimeout(() => {
-        const o = get().orders.find((o) => o.id === order.id);
-        if (o) get().updateOrderStatus(order.id, s);
-      }, (i + 1) * 8000);
-    });
     return order;
   },
   updateOrderStatus: (id, status) => {
@@ -122,6 +186,28 @@ export const useStore = create((set, get) => ({
     });
   },
   cancelOrder: (id) => get().updateOrderStatus(id, 'cancelled'),
+
+  // Seller order actions
+  acceptOrder: (id) => get().updateOrderStatus(id, 'preparing'),
+  readyOrder: (id) => get().updateOrderStatus(id, 'ready'),
+  assignCourier: (id, courierId) => {
+    set({
+      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'onTheWay', courierId } : o)),
+    });
+  },
+
+  // Courier order actions
+  courierAcceptOrder: (id) => {
+    const courierId = get().user?.id || 10;
+    set({
+      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'onTheWay', courierId } : o)),
+    });
+  },
+  courierDelivered: (id) => {
+    set({
+      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'delivered', deliveredAt: new Date().toISOString() } : o)),
+    });
+  },
 
   // Selection
   selectFood: (id) => set({ selectedFood: foods.find((f) => f.id === id) }),
@@ -146,6 +232,10 @@ export const useStore = create((set, get) => ({
   markNotifRead: (id) =>
     set({ notifications: get().notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)) }),
   clearNotifs: () => set({ notifications: [] }),
+  markSellerNotifRead: (id) =>
+    set({ sellerNotifications: get().sellerNotifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)) }),
+  markCourierNotifRead: (id) =>
+    set({ courierNotifications: get().courierNotifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)) }),
 
   // Coupon
   applyPromoCode: (code) => {
@@ -162,14 +252,33 @@ export const useStore = create((set, get) => ({
   updateProduct: (id, data) => set({ foods: get().foods.map((f) => (f.id === id ? { ...f, ...data } : f)) }),
   deleteProduct: (id) => set({ foods: get().foods.filter((f) => f.id !== id) }),
   addInventory: (entry) => set({ inventory: [...get().inventory, { ...entry, id: Date.now() }] }),
+  updateInventory: (id, data) => set({ inventory: get().inventory.map((i) => (i.id === id ? { ...i, ...data } : i)) }),
 
   // Notify seller about new orders
   getPendingOrders: () => get().orders.filter((o) => o.status === 'pending' || o.status === 'preparing'),
+
+  // Courier helpers
+  getCourierOrders: () => get().orders.filter((o) => o.status === 'onTheWay' || o.status === 'ready'),
+  getAvailableOrders: () => get().orders.filter((o) => o.status === 'ready' && !o.courierId),
 
   // Admin actions
   addBranch: (branch) => set({ branches: [...get().branches, { ...branch, id: Date.now() }] }),
   addEmployee: (employee) => set({ employees: [...get().employees, { ...employee, id: Date.now() }] }),
   removeEmployee: (id) => set({ employees: get().employees.filter((e) => e.id !== id) }),
+
+  // Timer
+  startOrderTimer: (orderId) => {
+    const timers = { ...get().activeOrderTimers };
+    timers[orderId] = { startTime: Date.now(), elapsed: 0 };
+    set({ activeOrderTimers: timers });
+  },
+  stopOrderTimer: (orderId) => {
+    const timers = { ...get().activeOrderTimers };
+    if (timers[orderId]) {
+      timers[orderId].elapsed = Date.now() - timers[orderId].startTime;
+      set({ activeOrderTimers: timers });
+    }
+  },
 
   // Reset
   reset: () => set(initialState),
