@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import useStore from '../../store/useStore';
-import { motion } from 'framer-motion';
 import {
-  DollarSign, ShoppingCart, TrendingUp, Calculator, Download, FileText,
-  ArrowUpRight, ArrowDownRight, CreditCard, Wallet, Receipt,
+  DollarSign,
+  ShoppingCart,
+  TrendingUp,
+  Calculator,
+  Download,
+  FileText,
+  ArrowUpRight,
+  ArrowDownRight,
+  CreditCard,
+  Wallet,
+  Receipt,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Button } from '../../components/ui/Button';
 
 const formatCurrency = (n) =>
   n.toLocaleString('uz-UZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -34,9 +39,6 @@ const expenseBreakdown = [
   { name: 'Boshqa', pct: 5, color: 'var(--primary)' },
 ];
 
-const container = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
-const item = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
-
 const AdminFinance = () => {
   const store = useStore();
   const [period, setPeriod] = useState('oy');
@@ -58,23 +60,106 @@ const AdminFinance = () => {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <motion.div variants={container} initial="hidden" animate="visible">
-        <motion.div variants={item} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+    <div style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}>
+      <style>{`
+        .af-fade { animation: afFadeIn 0.5s ease forwards; }
+        .af-stagger > * { opacity: 0; animation: afFadeUp 0.4s ease forwards; }
+        .af-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+        .af-stagger > *:nth-child(2) { animation-delay: 0.1s; }
+        .af-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+        .af-stagger > *:nth-child(4) { animation-delay: 0.2s; }
+        .af-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+        .af-stagger > *:nth-child(6) { animation-delay: 0.3s; }
+        .af-stagger > *:nth-child(7) { animation-delay: 0.35s; }
+        .af-stagger > *:nth-child(8) { animation-delay: 0.4s; }
+        .af-stagger > *:nth-child(9) { animation-delay: 0.45s; }
+        .af-stagger > *:nth-child(10) { animation-delay: 0.5s; }
+        @keyframes afFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes afFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .af-card {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: 20px;
+          transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .af-card:hover {
+          border-color: var(--border-strong);
+        }
+        .af-card-lift:hover {
+          border-color: var(--primary);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-2px);
+        }
+        .af-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          border: none;
+          border-radius: var(--radius-sm);
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .af-btn-primary {
+          background: var(--primary);
+          color: #fff;
+        }
+        .af-btn-primary:hover {
+          background: #ea580c;
+          box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+        }
+        .af-badge {
+          padding: 4px 10px;
+          border-radius: 999px;
+          font-size: 11px;
+          font-weight: 600;
+        }
+        .af-badge-green { background: rgba(34,197,94,0.1); color: var(--success); }
+        .af-badge-red { background: rgba(239,68,68,0.1); color: var(--danger); }
+        .af-input {
+          width: 100%;
+          padding: 10px 14px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-sm);
+          color: var(--text);
+          font-size: 13px;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .af-input:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+        }
+        @media (max-width: 1024px) {
+          .af-overview-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .af-two-col { grid-template-columns: 1fr !important; }
+          .af-bottom-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 640px) {
+          .af-overview-grid { grid-template-columns: 1fr !important; }
+          .af-stats-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+
+      <div className="af-fade" style={{ padding: '0 0 24px', maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', margin: 0 }}>Moliya</h1>
             <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '4px 0 0' }}>Moliyaviy hisobot va tahlillar</p>
           </div>
           <div style={{ position: 'relative' }}>
-            <Button variant="primary" size="md" leftIcon={<Download size={16} />} onClick={() => setExportOpen(!exportOpen)}>Export</Button>
+            <button className="af-btn af-btn-primary" style={{ padding: '10px 16px', borderRadius: 10 }} onClick={() => setExportOpen(!exportOpen)}>
+              <Download size={16} />
+              <span>Export</span>
+            </button>
             {exportOpen && (
               <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 6, minWidth: 160, zIndex: 50, boxShadow: 'var(--shadow-lg)' }}>
                 {[{ label: 'Excel', icon: FileText, color: 'var(--success)' }, { label: 'PDF', icon: FileText, color: 'var(--danger)' }, { label: 'CSV', icon: FileText, color: '#3B82F6' }].map((item) => (
-                  <button key={item.label} onClick={() => setExportOpen(false)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 14px', border: 'none', borderRadius: 8, background: 'transparent', color: 'var(--text)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-active)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
+                  <button key={item.label} onClick={() => setExportOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 14px', border: 'none', borderRadius: 8, background: 'transparent', color: 'var(--text)', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'background 0.15s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--surface-active)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}>
                     <item.icon size={16} color={item.color} />
                     {item.label}
                   </button>
@@ -82,49 +167,47 @@ const AdminFinance = () => {
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div variants={item} style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
           {[{ key: 'kun', label: 'Kun' }, { key: 'hafta', label: 'Hafta' }, { key: 'oy', label: 'Oy' }, { key: 'yil', label: 'Yil' }].map((p) => (
-            <button key={p.key} onClick={() => setPeriod(p.key)}
-              style={{
-                padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
-                border: `1px solid ${period === p.key ? 'var(--primary)' : 'var(--border)'}`,
-                background: period === p.key ? 'var(--primary)' : 'var(--surface)',
-                color: period === p.key ? '#fff' : 'var(--text-secondary)', transition: 'all 0.2s',
-                boxShadow: period === p.key ? '0 4px 12px rgba(249,115,22,0.3)' : 'none',
-              }}
-            >{p.label}</button>
+            <button key={p.key} style={{ padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: `1px solid ${period === p.key ? 'var(--primary)' : 'var(--border)'}`, background: period === p.key ? 'var(--primary)' : 'var(--surface)', color: period === p.key ? '#fff' : 'var(--text-secondary)', transition: 'all 0.2s', boxShadow: period === p.key ? '0 4px 12px rgba(249,115,22,0.3)' : 'none' }} onClick={() => setPeriod(p.key)}>
+              {p.label}
+            </button>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.div variants={item} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+        <div className="af-overview-grid af-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
           {overviewCards.map((card, i) => {
             const Icon = card.icon;
             return (
-              <Card key={i} padding="md" hoverable>
+              <div key={i} className="af-card af-card-lift" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ width: 44, height: 44, borderRadius: 12, background: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={22} color={card.color} />
                   </div>
                   {card.trend && (
-                    <Badge variant={card.trend.startsWith('+') ? 'success' : 'danger'} size="xs">{card.trend}</Badge>
+                    <span className={`af-badge ${card.trend.startsWith('+') ? 'af-badge-green' : 'af-badge-red'}`}>
+                      {card.trend}
+                    </span>
                   )}
                 </div>
-                <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '12px 0 0' }}>{card.label}</p>
-                <p style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', margin: '4px 0 0' }}>
-                  {formatCurrency(card.value)} <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>so'm</span>
-                </p>
-              </Card>
+                <div>
+                  <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>{card.label}</p>
+                  <p style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', margin: '4px 0 0' }}>
+                    {formatCurrency(card.value)} <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>so'm</span>
+                  </p>
+                </div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
 
-        <motion.div variants={item} style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 20, marginBottom: 24 }}>
-          <Card padding="lg">
+        <div className="af-two-col" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 20, marginBottom: 24 }}>
+          <div className="af-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <div>
-                <CardTitle>Daromad grafigi</CardTitle>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', margin: 0 }}>Daromad grafigi</h3>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>Haftalik tushum</p>
               </div>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(34,197,94,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -152,24 +235,29 @@ const AdminFinance = () => {
                       <animate attributeName="height" from="0" to={barH} dur="0.8s" fill="freeze" begin={`${i * 0.1}s`} />
                       <animate attributeName="y" from="200" to={y} dur="0.8s" fill="freeze" begin={`${i * 0.1}s`} />
                     </rect>
-                    <text x={x + 30} y={18} textAnchor="middle" fill="var(--text-muted)" fontSize="10" fontWeight="500">{weekLabels[i]}</text>
-                    <text x={x + 30} y={y - 5} textAnchor="middle" fill="var(--text)" fontSize="9" fontWeight="600">{formatCurrency(v)}</text>
+                    <text x={x + 30} y={18} textAnchor="middle" fill="var(--text-muted)" fontSize="10" fontWeight="500">
+                      {weekLabels[i]}
+                    </text>
+                    <text x={x + 30} y={y - 5} textAnchor="middle" fill="var(--text)" fontSize="9" fontWeight="600">
+                      {formatCurrency(v)}
+                    </text>
                   </g>
                 );
               })}
             </svg>
-          </Card>
+          </div>
 
-          <Card padding="lg">
+          <div className="af-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <div>
-                <CardTitle>Xarajatlar tarkibi</CardTitle>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', margin: 0 }}>Xarajatlar tarkibi</h3>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>Kategoriya bo'yicha</p>
               </div>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <ShoppingCart size={16} color="var(--danger)" />
               </div>
             </div>
+
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
               <svg viewBox="0 0 120 120" style={{ width: 120, height: 120 }}>
                 {(() => {
@@ -185,10 +273,15 @@ const AdminFinance = () => {
                     );
                   });
                 })()}
-                <text x="60" y="56" textAnchor="middle" fill="var(--text)" fontSize="14" fontWeight="800">{formatCurrency(expenses)}</text>
-                <text x="60" y="70" textAnchor="middle" fill="var(--text-muted)" fontSize="8">Jami xarajat</text>
+                <text x="60" y="56" textAnchor="middle" fill="var(--text)" fontSize="14" fontWeight="800">
+                  {formatCurrency(expenses)}
+                </text>
+                <text x="60" y="70" textAnchor="middle" fill="var(--text-muted)" fontSize="8">
+                  Jami xarajat
+                </text>
               </svg>
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {expenseBreakdown.map((item, i) => (
                 <div key={i}>
@@ -205,10 +298,10 @@ const AdminFinance = () => {
                 </div>
               ))}
             </div>
-          </Card>
-        </motion.div>
+          </div>
+        </div>
 
-        <motion.div variants={item} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+        <div className="af-stats-grid af-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
           {[
             { label: 'Jami cashback', value: 125000, icon: Wallet, color: 'var(--success)', bg: 'rgba(34,197,94,0.08)' },
             { label: 'Jami refund', value: 45000, icon: CreditCard, color: 'var(--danger)', bg: 'rgba(239,68,68,0.08)' },
@@ -216,7 +309,7 @@ const AdminFinance = () => {
           ].map((item, i) => {
             const Icon = item.icon;
             return (
-              <Card key={i} padding="md" hoverable>
+              <div key={i} className="af-card af-card-lift" style={{ padding: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: item.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} color={item.color} />
@@ -226,26 +319,33 @@ const AdminFinance = () => {
                 <p style={{ fontSize: 22, fontWeight: 800, color: item.color, margin: 0 }}>
                   {formatCurrency(item.value)} <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-muted)' }}>so'm</span>
                 </p>
-              </Card>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
 
-        <motion.div variants={item} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20 }}>
-          <Card padding="lg">
+        <div className="af-bottom-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20 }}>
+          <div className="af-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <div>
-                <CardTitle>Tranzaksiyalar</CardTitle>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', margin: 0 }}>Tranzaksiyalar</h3>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>So'nggi 10 ta tranzaksiya</p>
               </div>
-              <Button variant="ghost" size="sm">Barchasi</Button>
+              <button style={{ padding: '6px 14px', fontSize: 12, fontWeight: 600, background: 'var(--surface-active)', border: '1px solid var(--border)', color: 'var(--text-secondary)', borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                Barchasi
+              </button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+            <div className="af-stagger" style={{ display: 'flex', flexDirection: 'column' }}>
               {transactions.map((tx) => (
                 <div key={tx.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: tx.type === 'income' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      {tx.type === 'income' ? <ArrowUpRight size={16} color="var(--success)" /> : <ArrowDownRight size={16} color="var(--danger)" />}
+                      {tx.type === 'income' ? (
+                        <ArrowUpRight size={16} color="var(--success)" />
+                      ) : (
+                        <ArrowDownRight size={16} color="var(--danger)" />
+                      )}
                     </div>
                     <div>
                       <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', margin: 0 }}>{tx.desc}</p>
@@ -258,27 +358,24 @@ const AdminFinance = () => {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
 
-          <Card padding="lg">
+          <div className="af-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <div>
-                <CardTitle>Export qilish</CardTitle>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', margin: 0 }}>Export qilish</h3>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 0' }}>Hisobotni yuklab olish</p>
               </div>
               <Download size={18} color="var(--text-muted)" />
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
               {[
                 { label: 'Excel fayl', desc: '.xlsx formatida', icon: FileText, color: 'var(--success)', bgColor: 'rgba(34,197,94,0.1)' },
                 { label: 'PDF hisobot', desc: '.pdf formatida', icon: FileText, color: 'var(--danger)', bgColor: 'rgba(239,68,68,0.1)' },
                 { label: "CSV ma'lumot", desc: '.csv formatida', icon: FileText, color: '#3B82F6', bgColor: 'rgba(59,130,246,0.1)' },
               ].map((item, i) => (
-                <button key={i}
-                  style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', fontSize: 13, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', fontFamily: 'inherit', width: '100%' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = item.color; e.currentTarget.style.boxShadow = `0 4px 12px ${item.bgColor}`; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
-                >
+                <button key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', fontSize: 13, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = item.color; e.currentTarget.style.boxShadow = `0 4px 12px ${item.bgColor}`; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}>
                   <div style={{ width: 36, height: 36, borderRadius: 8, background: item.bgColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <item.icon size={16} color={item.color} />
                   </div>
@@ -289,24 +386,23 @@ const AdminFinance = () => {
                 </button>
               ))}
             </div>
-            <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 8px' }}>Sana oralig'i</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <input type="date"
-                style={{ width: '100%', padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', fontSize: 13, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
-                onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-                onBlur={e => e.target.style.borderColor = 'var(--border)'}
-              />
-              <input type="date"
-                style={{ width: '100%', padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', fontSize: 13, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
-                onFocus={e => e.target.style.borderColor = 'var(--primary)'}
-                onBlur={e => e.target.style.borderColor = 'var(--border)'}
-              />
+
+            <div>
+              <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 8px' }}>Sana oralig'i</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <input type="date" className="af-input" />
+                <input type="date" className="af-input" />
+              </div>
             </div>
-            <Button variant="primary" size="md" leftIcon={<Download size={16} />} style={{ width: '100%', marginTop: 16 }}>Export qilish</Button>
-          </Card>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+
+            <button className="af-btn af-btn-primary" style={{ width: '100%', marginTop: 16, padding: '12px 20px', borderRadius: 'var(--radius-sm)' }}>
+              <Download size={16} />
+              Export qilish
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

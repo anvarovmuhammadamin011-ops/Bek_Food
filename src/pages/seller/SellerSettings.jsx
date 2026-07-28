@@ -1,23 +1,53 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../store/useStore';
-import { motion } from 'framer-motion';
-import { cn } from '../../utils/cn';
-
 import {
-  ChevronLeft, ChevronRight, Bell, Globe, Sun, LogOut, Store, Clock,
-  MapPin, Settings, User, Phone, Save, Home, ShoppingBag, UtensilsCrossed, BarChart3
+  ChevronLeft,
+  ChevronRight,
+  Bell,
+  Globe,
+  Sun,
+  LogOut,
+  Store,
+  Clock,
+  MapPin,
+  Settings,
+  User,
+  Phone,
+  Save,
 } from 'lucide-react';
 
-function Toggle({ enabled, onToggle }) {
-  return (
-    <div onClick={onToggle} className={cn('w-10 h-[22px] rounded-full relative cursor-pointer transition-all flex-shrink-0', enabled ? 'bg-primary' : 'bg-surfaceActive')}>
-      <div className={cn('w-[18px] h-[18px] rounded-full bg-white absolute top-[2px] transition-all shadow-sm', enabled ? 'left-[20px]' : 'left-[2px]')} />
-    </div>
-  );
-}
+const Toggle = ({ enabled, onToggle }) => (
+  <div
+    onClick={onToggle}
+    style={{
+      width: 40,
+      height: 22,
+      borderRadius: 11,
+      background: enabled ? 'var(--primary)' : 'var(--surface-active)',
+      position: 'relative',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease',
+      flexShrink: 0,
+    }}
+  >
+    <div
+      style={{
+        width: 18,
+        height: 18,
+        borderRadius: '50%',
+        background: '#fff',
+        position: 'absolute',
+        top: 2,
+        left: enabled ? 20 : 2,
+        transition: 'left 0.2s ease',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+      }}
+    />
+  </div>
+);
 
-export default function SellerSettings() {
+const SellerSettings = () => {
   const { user, logout } = useStore();
   const navigate = useNavigate();
 
@@ -30,135 +60,358 @@ export default function SellerSettings() {
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
-  const navItems = [
-    { label: 'KDS', icon: Home, path: '/seller' },
-    { label: 'Buyurtmalar', icon: ShoppingBag, path: '/seller/orders' },
-    { label: 'Menyu', icon: UtensilsCrossed, path: '/seller/menu' },
-    { label: 'Statistika', icon: BarChart3, path: '/seller/analytics' },
-    { label: 'Sozlamalar', icon: Settings, path: '/seller/settings' },
-  ];
+  const s = {
+    page: {
+      minHeight: '100%',
+      background: 'var(--bg)',
+      paddingBottom: 100,
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '16px 16px 12px',
+    },
+    headerLeft: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+    },
+    backBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 'var(--radius-sm)',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      color: 'var(--text)',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: 0,
+      letterSpacing: '-0.01em',
+    },
+    placeholder: {
+      width: 36,
+    },
+    content: {
+      padding: '0 16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+    },
+    card: {
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
+      padding: 20,
+    },
+    profileRow: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 14,
+    },
+    avatar: {
+      width: 56,
+      height: 56,
+      borderRadius: '50%',
+      background: 'var(--primary-light)',
+      border: '2px solid var(--primary)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    userName: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: '0 0 2px 0',
+    },
+    userPhone: {
+      fontSize: 13,
+      color: 'var(--text-muted)',
+      margin: '0 0 6px 0',
+    },
+    roleBadge: {
+      display: 'inline-block',
+      padding: '3px 10px',
+      background: 'var(--primary-light)',
+      color: 'var(--primary)',
+      borderRadius: 999,
+      fontSize: 11,
+      fontWeight: 600,
+    },
+    sectionTitle: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--primary)',
+      marginBottom: 16,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+    },
+    fieldGroup: {
+      marginBottom: 14,
+    },
+    fieldLabel: {
+      display: 'block',
+      fontSize: 12,
+      fontWeight: 600,
+      color: 'var(--text-secondary)',
+      marginBottom: 6,
+    },
+    fieldInput: {
+      width: '100%',
+      padding: '10px 12px',
+      background: 'var(--bg)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--text)',
+      fontSize: 13,
+      outline: 'none',
+      transition: 'border-color 0.15s',
+      boxSizing: 'border-box',
+    },
+    menuItem: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '14px 0',
+      borderBottom: '1px solid var(--border)',
+    },
+    menuItemLast: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '14px 0',
+    },
+    menuItemLeft: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+    },
+    menuItemIcon: {
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      background: 'var(--primary-light)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--primary)',
+      flexShrink: 0,
+    },
+    menuItemText: {
+      fontSize: 14,
+      fontWeight: 500,
+      color: 'var(--text)',
+    },
+    menuItemValue: {
+      fontSize: 13,
+      color: 'var(--text-muted)',
+    },
+    saveBtn: {
+      width: '100%',
+      padding: '12px',
+      background: 'var(--primary)',
+      border: 'none',
+      borderRadius: 'var(--radius-sm)',
+      color: '#fff',
+      fontSize: 14,
+      fontWeight: 600,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      transition: 'opacity 0.15s',
+    },
+    logoutBtn: {
+      width: '100%',
+      padding: '12px',
+      background: 'var(--surface)',
+      border: '1px solid var(--danger)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--danger)',
+      fontSize: 14,
+      fontWeight: 600,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      transition: 'all 0.15s',
+    },
+    chevron: {
+      color: 'var(--text-muted)',
+    },
+  };
 
   return (
-    <div className="min-h-full bg-bg pb-24">
-      <div className="px-4 pt-3 pb-2">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center hover:border-borderStrong transition-all">
-              <ChevronLeft size={18} className="text-text" />
-            </button>
-            <h1 className="text-lg font-bold text-text">Sozlamalar</h1>
-          </div>
-          <div className="w-9 h-9" />
+    <div style={s.page}>
+      <div style={s.header}>
+        <div style={s.headerLeft}>
+          <button onClick={() => navigate(-1)} style={s.backBtn}>
+            <ChevronLeft size={18} />
+          </button>
+          <h1 style={s.title}>Sozlamalar</h1>
         </div>
-
-        <div className="bg-surface border border-border rounded-2xl p-4 mb-3">
-          <div className="flex items-center gap-3.5">
-            <div className="w-14 h-14 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center flex-shrink-0">
-              <User size={24} className="text-primary" />
-            </div>
-            <div>
-              <p className="font-bold text-text">{user?.name || 'Seller'}</p>
-              <p className="text-sm text-textMuted">{user?.phone || '+998 90 123 45 67'}</p>
-              <Badge variant="primary" size="xs">Sotuvchi</Badge>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-surface border border-border rounded-2xl p-4 mb-3">
-          <div className="flex items-center gap-2 mb-4">
-            <Store size={16} className="text-primary" />
-            <span className="text-sm font-bold text-primary">Restoran Sozlamalari</span>
-          </div>
-
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1.5">Restoran nomi</label>
-              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="text" value={restaurantName} onChange={(e) => setRestaurantName(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1.5"><Phone size={12} className="inline mr-1" />Telefon</label>
-              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1.5"><Clock size={12} className="inline mr-1" />Ish vaqti</label>
-              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="text" value={workTime} onChange={(e) => setWorkTime(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1.5">Minimal buyurtma</label>
-              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="text" value={minOrder} onChange={(e) => setMinOrder(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1.5">Yetkazish narxi</label>
-              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="text" value={deliveryPrice} onChange={(e) => setDeliveryPrice(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1.5"><MapPin size={12} className="inline mr-1" />Yetkazish radiusi</label>
-              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="text" value={deliveryRadius} onChange={(e) => setDeliveryRadius(e.target.value)} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-surface border border-border rounded-2xl p-4 mb-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Settings size={16} className="text-primary" />
-            <span className="text-sm font-bold text-primary">Umumiy Sozlamalar</span>
-          </div>
-
-          <div className="divide-y divide-border">
-            <div className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center"><Bell size={16} className="text-primary" /></div>
-                <span className="text-sm font-medium text-text">Bildirishnomalar</span>
-              </div>
-              <Toggle enabled={notifications} onToggle={() => setNotifications(!notifications)} />
-            </div>
-            <div className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center"><Globe size={16} className="text-primary" /></div>
-                <span className="text-sm font-medium text-text">Til</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-textMuted">O'zbek</span>
-                <ChevronRight size={14} className="text-textMuted" />
-              </div>
-            </div>
-            <div className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center"><Sun size={16} className="text-primary" /></div>
-                <span className="text-sm font-medium text-text">Yorug' rejim</span>
-              </div>
-              <Toggle enabled={darkMode} onToggle={() => setDarkMode(!darkMode)} />
-            </div>
-          </div>
-        </div>
-
-        <button className="w-full py-3 rounded-xl bg-primary text-white font-semibold shadow-primary hover:brightness-110 transition-all text-sm flex items-center justify-center gap-2 mb-3">
-          <Save size={16} /> Saqlash
-        </button>
-        <button onClick={handleLogout} className="w-full py-3 rounded-xl bg-surface border border-danger/30 text-danger font-semibold hover:bg-danger/5 transition-all text-sm flex items-center justify-center gap-2">
-          <LogOut size={16} /> Tizimdan chiqish
-        </button>
+        <div style={s.placeholder} />
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border pb-[env(safe-area-inset-bottom)]">
-        <div className="flex items-center justify-around h-14 max-w-lg mx-auto">
-          {navItems.map((item) => {
-            const active = item.path === '/seller/settings';
-            return (
-              <button key={item.path} onClick={() => navigate(item.path)}
-                className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full border-none bg-transparent cursor-pointer transition-all"
-                style={{ color: active ? 'var(--primary)' : 'var(--text-muted)' }}
-              >
-                <item.icon size={22} strokeWidth={active ? 2.2 : 1.8} />
-                <span className="text-[10px] font-semibold" style={{ fontWeight: active ? 700 : 500 }}>{item.label}</span>
-                {active && <div className="w-1 h-1 rounded-full bg-primary mt-0.5" />}
-              </button>
-            );
-          })}
+      <div style={s.content}>
+        <div style={s.card}>
+          <div style={s.profileRow}>
+            <div style={s.avatar}>
+              <User size={24} style={{ color: 'var(--primary)' }} />
+            </div>
+            <div>
+              <div style={s.userName}>{user?.name || 'Seller'}</div>
+              <div style={s.userPhone}>{user?.phone || '+998 90 123 45 67'}</div>
+              <span style={s.roleBadge}>Sotuvchi</span>
+            </div>
+          </div>
         </div>
-      </nav>
+
+        <div style={s.card}>
+          <div style={s.sectionTitle}>
+            <Store size={16} />
+            Restoran Sozlamalari
+          </div>
+
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>Restoran nomi</label>
+            <input
+              style={s.fieldInput}
+              type="text"
+              value={restaurantName}
+              onChange={(e) => setRestaurantName(e.target.value)}
+            />
+          </div>
+
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>
+              <Phone size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+              Telefon
+            </label>
+            <input
+              style={s.fieldInput}
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>
+
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>
+              <Clock size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+              Ish vaqti
+            </label>
+            <input
+              style={s.fieldInput}
+              type="text"
+              value={workTime}
+              onChange={(e) => setWorkTime(e.target.value)}
+            />
+          </div>
+
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>Minimal buyurtma</label>
+            <input
+              style={s.fieldInput}
+              type="text"
+              value={minOrder}
+              onChange={(e) => setMinOrder(e.target.value)}
+            />
+          </div>
+
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>Yetkazish narxi</label>
+            <input
+              style={s.fieldInput}
+              type="text"
+              value={deliveryPrice}
+              onChange={(e) => setDeliveryPrice(e.target.value)}
+            />
+          </div>
+
+          <div style={{ ...s.fieldGroup, marginBottom: 0 }}>
+            <label style={s.fieldLabel}>
+              <MapPin size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+              Yetkazish radiusi
+            </label>
+            <input
+              style={s.fieldInput}
+              type="text"
+              value={deliveryRadius}
+              onChange={(e) => setDeliveryRadius(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div style={s.card}>
+          <div style={s.sectionTitle}>
+            <Settings size={16} />
+            Umumiy Sozlamalar
+          </div>
+
+          <div style={s.menuItem}>
+            <div style={s.menuItemLeft}>
+              <div style={s.menuItemIcon}>
+                <Bell size={18} />
+              </div>
+              <span style={s.menuItemText}>Bildirishnomalar</span>
+            </div>
+            <Toggle enabled={notifications} onToggle={() => setNotifications(!notifications)} />
+          </div>
+
+          <div style={s.menuItem}>
+            <div style={s.menuItemLeft}>
+              <div style={s.menuItemIcon}>
+                <Globe size={18} />
+              </div>
+              <span style={s.menuItemText}>Til</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={s.menuItemValue}>O'zbek</span>
+              <ChevronRight size={16} style={s.chevron} />
+            </div>
+          </div>
+
+          <div style={s.menuItemLast}>
+            <div style={s.menuItemLeft}>
+              <div style={s.menuItemIcon}>
+                <Sun size={18} />
+              </div>
+              <span style={s.menuItemText}>Yorug' rejim</span>
+            </div>
+            <Toggle enabled={darkMode} onToggle={() => setDarkMode(!darkMode)} />
+          </div>
+        </div>
+
+        <button style={s.saveBtn}>
+          <Save size={16} />
+          Saqlash
+        </button>
+
+        <button style={s.logoutBtn} onClick={handleLogout}>
+          <LogOut size={16} />
+          Tizimdan chiqish
+        </button>
+      </div>
     </div>
   );
-}
+};
+
+export default SellerSettings;
