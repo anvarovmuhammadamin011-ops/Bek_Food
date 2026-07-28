@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import useStore from '../../store/useStore';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useStore from '../../store/useStore';
 import {
   ChevronLeft,
   TrendingUp,
@@ -15,11 +15,12 @@ import {
 
 const formatCurrency = (v) => v.toLocaleString('uz-UZ');
 
-const Sparkline = ({ data, width = 140, height = 40, color = '#e51e1e' }) => {
+const Sparkline = ({ data, width = 140, height = 40 }) => {
   if (!data || data.length < 2) return null;
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
+  const color = '#F97316';
   const points = data
     .map((v, i) => {
       const x = (i / (data.length - 1)) * width;
@@ -32,7 +33,7 @@ const Sparkline = ({ data, width = 140, height = 40, color = '#e51e1e' }) => {
     <svg width={width} height={height} style={{ display: 'block' }}>
       <defs>
         <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -54,7 +55,7 @@ const Sparkline = ({ data, width = 140, height = 40, color = '#e51e1e' }) => {
   );
 };
 
-const BarChart = ({ data, labels, height = 140, color = '#e51e1e' }) => {
+const BarChart = ({ data, labels, height = 140 }) => {
   if (!data || data.length === 0) return null;
   const max = Math.max(...data, 1);
   const barWidth = 36;
@@ -81,27 +82,13 @@ const BarChart = ({ data, labels, height = 140, color = '#e51e1e' }) => {
               width={barWidth}
               height={barH}
               rx="5"
-              fill={isMax ? color : `${color}88`}
+              fill={isMax ? 'var(--primary)' : 'rgba(249,115,22,0.3)'}
               style={{ transition: 'height 0.6s ease, y 0.6s ease' }}
             />
-            <text
-              x={x + barWidth / 2}
-              y={y - 8}
-              textAnchor="middle"
-              fill="#ccc"
-              fontSize="10"
-              fontWeight="700"
-            >
+            <text x={x + barWidth / 2} y={y - 8} textAnchor="middle" fill="var(--text-muted)" fontSize="10" fontWeight="700">
               {formatCurrency(v)}
             </text>
-            <text
-              x={x + barWidth / 2}
-              y={height + 20}
-              textAnchor="middle"
-              fill="#666"
-              fontSize="11"
-              fontWeight="500"
-            >
+            <text x={x + barWidth / 2} y={height + 20} textAnchor="middle" fill="var(--text-muted)" fontSize="11" fontWeight="500">
               {labels && labels[i] ? labels[i] : ''}
             </text>
           </g>
@@ -111,7 +98,7 @@ const BarChart = ({ data, labels, height = 140, color = '#e51e1e' }) => {
   );
 };
 
-const HorizontalBarChart = ({ data, maxValue, color = '#e51e1e' }) => {
+const HorizontalBarChart = ({ data, maxValue }) => {
   if (!data || data.length === 0) return null;
   const max = maxValue || Math.max(...data.map((d) => d.value), 1);
   return (
@@ -121,36 +108,19 @@ const HorizontalBarChart = ({ data, maxValue, color = '#e51e1e' }) => {
         const isPeak = item.value === max;
         return (
           <div key={i}>
-            <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
-              <span style={{ color: '#bbb', fontSize: 12, fontWeight: 600 }}>
-                {item.label}
-              </span>
-              <span
-                style={{
-                  color: isPeak ? '#e51e1e' : '#888',
-                  fontSize: 12,
-                  fontWeight: isPeak ? 700 : 500,
-                }}
-              >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: 12, fontWeight: 600 }}>{item.label}</span>
+              <span style={{ color: isPeak ? 'var(--primary)' : 'var(--text-muted)', fontSize: 12, fontWeight: isPeak ? 700 : 500 }}>
                 {item.value} buyurtma
               </span>
             </div>
-            <div
-              style={{
-                height: 8,
-                borderRadius: 4,
-                background: '#1e1e1e',
-                overflow: 'hidden',
-              }}
-            >
+            <div style={{ height: 8, borderRadius: 4, background: 'var(--surface-active)', overflow: 'hidden' }}>
               <div
                 style={{
                   height: '100%',
                   width: `${pct}%`,
                   borderRadius: 4,
-                  background: isPeak
-                    ? `linear-gradient(90deg, ${color}, #ff4444)`
-                    : `${color}99`,
+                  background: isPeak ? 'var(--primary)' : 'rgba(249,115,22,0.35)',
                   transition: 'width 0.8s ease',
                 }}
               />
@@ -179,7 +149,6 @@ export default function SellerAnalytics() {
   const weekChart = stats.weekChart || [];
 
   const weekDays = ['Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan', 'Yak'];
-
   const revenueTrend = period === 'today' ? 12.5 : period === 'week' ? 8.3 : 15.2;
   const isUp = revenueTrend >= 0;
 
@@ -195,9 +164,9 @@ export default function SellerAnalytics() {
   ];
 
   const paymentMethods = [
-    { label: 'Naqd', pct: 70, color: '#22c55e' },
-    { label: 'Karta', pct: 20, color: '#3b82f6' },
-    { label: 'Click', pct: 10, color: '#f59e0b' },
+    { label: 'Naqd', pct: 70, color: 'var(--success)' },
+    { label: 'Karta', pct: 20, color: '#3B82F6' },
+    { label: 'Click', pct: 10, color: 'var(--warning)' },
   ];
 
   const sparklineData =
@@ -234,34 +203,10 @@ export default function SellerAnalytics() {
   const worstSellingItem = topItems.length > 0 ? topItems[topItems.length - 1].name : '—';
 
   const statCards = [
-    {
-      icon: Package,
-      label: 'Buyurtmalar',
-      value: ordersCount,
-      color: '#3b82f6',
-      badge: null,
-    },
-    {
-      icon: DollarSign,
-      label: "O'rtacha summa",
-      value: `${formatCurrency(avgOrder)} so'm`,
-      color: '#22c55e',
-      badge: null,
-    },
-    {
-      icon: ArrowUpRight,
-      label: "Eng ko'p sotilgan",
-      value: bestSellingItem,
-      color: '#e51e1e',
-      badge: 'badge-green',
-    },
-    {
-      icon: ArrowDownRight,
-      label: 'Eng kam sotilgan',
-      value: worstSellingItem,
-      color: '#f59e0b',
-      badge: 'badge-yellow',
-    },
+    { icon: Package, label: 'Buyurtmalar', value: ordersCount, color: '#3B82F6' },
+    { icon: DollarSign, label: "O'rtacha summa", value: `${formatCurrency(avgOrder)} so'm`, color: 'var(--success)' },
+    { icon: ArrowUpRight, label: "Eng ko'p sotilgan", value: bestSellingItem, color: 'var(--primary)' },
+    { icon: ArrowDownRight, label: 'Eng kam sotilgan', value: worstSellingItem, color: 'var(--warning)' },
   ];
 
   const periods = [
@@ -270,524 +215,415 @@ export default function SellerAnalytics() {
     { key: 'month', label: 'Oy' },
   ];
 
+  const s = {
+    page: {
+      minHeight: '100%',
+      background: 'var(--bg)',
+      paddingBottom: 100,
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '16px 16px 12px',
+    },
+    headerLeft: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+    },
+    backBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 'var(--radius-sm)',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      color: 'var(--text)',
+    },
+    titleBlock: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: 0,
+      letterSpacing: '-0.01em',
+    },
+    subtitle: {
+      fontSize: 12,
+      color: 'var(--text-muted)',
+      margin: '2px 0 0 0',
+    },
+    iconBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 'var(--radius-sm)',
+      background: 'var(--primary-light)',
+      border: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--primary)',
+    },
+    periodToggle: {
+      display: 'flex',
+      margin: '0 16px 16px',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      padding: 4,
+      gap: 4,
+    },
+    periodBtn: (active) => ({
+      flex: 1,
+      padding: '8px 0',
+      borderRadius: 10,
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: 13,
+      fontWeight: 600,
+      transition: 'all 0.15s ease',
+      background: active ? 'var(--primary)' : 'transparent',
+      color: active ? '#fff' : 'var(--text-muted)',
+    }),
+    heroCard: {
+      margin: '0 16px 16px',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
+      padding: 20,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    heroGlow: {
+      position: 'absolute',
+      top: -30,
+      right: -30,
+      width: 120,
+      height: 120,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)',
+      pointerEvents: 'none',
+    },
+    heroLabel: {
+      fontSize: 13,
+      color: 'var(--text-muted)',
+      margin: '0 0 4px 0',
+      fontWeight: 500,
+    },
+    heroValue: {
+      fontSize: 30,
+      fontWeight: 800,
+      color: 'var(--text)',
+      margin: 0,
+      letterSpacing: '-0.02em',
+      fontVariantNumeric: 'tabular-nums',
+    },
+    heroUnit: {
+      fontSize: 16,
+      color: 'var(--text-muted)',
+      fontWeight: 500,
+    },
+    trendRow: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      marginTop: 8,
+    },
+    trendValue: (up) => ({
+      fontSize: 13,
+      fontWeight: 600,
+      color: up ? 'var(--success)' : 'var(--danger)',
+    }),
+    trendLabel: {
+      fontSize: 12,
+      color: 'var(--text-muted)',
+    },
+    grid2: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: 10,
+      margin: '0 16px 16px',
+    },
+    statCard: {
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      padding: 14,
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: 10,
+    },
+    statIcon: (color) => ({
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      background: `${color}12`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    }),
+    statLabel: {
+      fontSize: 11,
+      color: 'var(--text-muted)',
+      fontWeight: 500,
+      margin: 0,
+    },
+    statValue: {
+      fontSize: 15,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: '2px 0 0 0',
+      fontVariantNumeric: 'tabular-nums',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
+    sectionCard: {
+      margin: '0 16px 16px',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
+      padding: 16,
+    },
+    sectionHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 14,
+    },
+    sectionTitle: {
+      fontSize: 15,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: 0,
+    },
+    badgeCount: {
+      fontSize: 11,
+      fontWeight: 600,
+      padding: '3px 8px',
+      borderRadius: 6,
+      background: 'var(--primary-light)',
+      color: 'var(--primary)',
+    },
+    topItem: {
+      padding: 12,
+      background: 'var(--bg)',
+      borderRadius: 'var(--radius-sm)',
+      border: '1px solid var(--border)',
+      marginBottom: 8,
+    },
+    topItemInner: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 8,
+    },
+    rankBadge: (i) => ({
+      width: 26,
+      height: 26,
+      borderRadius: 8,
+      background: i < 3 ? 'var(--primary-light)' : 'var(--surface-active)',
+      color: i < 3 ? 'var(--primary)' : 'var(--text-muted)',
+      fontSize: 11,
+      fontWeight: 800,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }),
+    topItemName: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: 'var(--text)',
+      margin: 0,
+    },
+    topItemSold: {
+      fontSize: 11,
+      color: 'var(--text-muted)',
+      margin: '2px 0 0 0',
+    },
+    topItemRevenue: {
+      fontSize: 13,
+      fontWeight: 700,
+      color: 'var(--success)',
+      fontVariantNumeric: 'tabular-nums',
+    },
+    barTrack: {
+      height: 6,
+      borderRadius: 3,
+      background: 'var(--surface-active)',
+      overflow: 'hidden',
+    },
+    barFill: (pct) => ({
+      height: '100%',
+      width: `${pct}%`,
+      borderRadius: 3,
+      background: 'var(--primary)',
+      transition: 'width 0.8s ease',
+    }),
+    payLabel: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: 'var(--text-secondary)',
+    },
+    payPct: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--text)',
+      fontVariantNumeric: 'tabular-nums',
+    },
+    payTrack: {
+      height: 10,
+      borderRadius: 5,
+      background: 'var(--surface-active)',
+      overflow: 'hidden',
+    },
+    payFill: (pct, color) => ({
+      height: '100%',
+      width: `${pct}%`,
+      borderRadius: 5,
+      background: color,
+      transition: 'width 0.8s ease',
+    }),
+    sectionIcon: {
+      color: 'var(--text-muted)',
+      flexShrink: 0,
+    },
+  };
+
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
-      <div className="p-4">
-        {/* Header */}
-        <div
-          className="flex items-center justify-between animate-fade-in"
-          style={{ marginBottom: 20 }}
-        >
-          <div className="flex items-center" style={{ gap: 12 }}>
-            <button
-              onClick={() => navigate(-1)}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 12,
-                background: '#141414',
-                border: '1px solid #222',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'background 0.2s',
-              }}
-            >
-              <ChevronLeft size={20} color="#aaa" />
-            </button>
-            <div>
-              <h1
-                style={{
-                  fontSize: 22,
-                  fontWeight: 800,
-                  color: '#fff',
-                  margin: 0,
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                Statistika
-              </h1>
-              <p style={{ color: '#888', fontSize: 13, margin: '2px 0 0 0' }}>
-                Sotuv tahlillari
-              </p>
-            </div>
-          </div>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 12,
-              background: '#e51e1e18',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <BarChart3 size={20} color="#e51e1e" />
+    <div style={s.page}>
+      <div style={s.header}>
+        <div style={s.headerLeft}>
+          <button onClick={() => navigate(-1)} style={s.backBtn}>
+            <ChevronLeft size={18} />
+          </button>
+          <div style={s.titleBlock}>
+            <h1 style={s.title}>Statistika</h1>
+            <p style={s.subtitle}>Sotuv tahlillari</p>
           </div>
         </div>
-
-        {/* Period Toggle */}
-        <div
-          className="animate-fade-in"
-          style={{
-            display: 'flex',
-            background: '#141414',
-            border: '1px solid #1e1e1e',
-            borderRadius: 12,
-            padding: 4,
-            marginBottom: 16,
-            gap: 4,
-          }}
-        >
-          {periods.map((p) => (
-            <button
-              key={p.key}
-              onClick={() => setPeriod(p.key)}
-              style={{
-                flex: 1,
-                padding: '10px 0',
-                borderRadius: 10,
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: 13,
-                fontWeight: 700,
-                transition: 'all 0.2s ease',
-                background: period === p.key ? '#e51e1e' : 'transparent',
-                color: period === p.key ? '#fff' : '#666',
-              }}
-            >
-              {p.label}
-            </button>
-          ))}
+        <div style={s.iconBtn}>
+          <BarChart3 size={18} />
         </div>
+      </div>
 
-        {/* Revenue Hero Card */}
-        <div
-          className="card card-hover animate-fade-in"
-          style={{
-            background:
-              'linear-gradient(135deg, #141414 0%, #1a1a1a 50%, #1f1012 100%)',
-            border: '1px solid #222',
-            borderRadius: 16,
-            padding: 24,
-            marginBottom: 16,
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: -30,
-              right: -30,
-              width: 120,
-              height: 120,
-              borderRadius: '50%',
-              background:
-                'radial-gradient(circle, rgba(229,30,30,0.12) 0%, transparent 70%)',
-              pointerEvents: 'none',
-            }}
-          />
-          <div className="flex items-center justify-between">
-            <div>
-              <p style={{ color: '#888', fontSize: 13, margin: '0 0 4px 0' }}>
-                {period === 'today'
-                  ? 'Bugungi tushum'
-                  : period === 'week'
-                  ? 'Haftalik tushum'
-                  : 'Oylik tushum'}
-              </p>
-              <p
-                style={{
-                  fontSize: 32,
-                  fontWeight: 800,
-                  color: '#fff',
-                  margin: 0,
-                  letterSpacing: '-0.02em',
-                  fontVariantNumeric: 'tabular-nums',
-                }}
-              >
-                {formatCurrency(animatedRevenue)}{' '}
-                <span style={{ fontSize: 18, color: '#888', fontWeight: 500 }}>
-                  so'm
-                </span>
-              </p>
-              <div
-                className="flex items-center"
-                style={{ gap: 6, marginTop: 8 }}
-              >
-                {isUp ? (
-                  <TrendingUp size={14} color="#22c55e" />
-                ) : (
-                  <TrendingDown size={14} color="#e51e1e" />
-                )}
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: isUp ? '#22c55e' : '#e51e1e',
-                  }}
-                >
-                  {isUp ? '+' : ''}
-                  {revenueTrend}%
-                </span>
-                <span style={{ color: '#666', fontSize: 12 }}>
-                  o'tgan davrga nisbatan
-                </span>
-              </div>
-            </div>
-            <div style={{ flexShrink: 0 }}>
-              <Sparkline data={sparklineData} />
+      <div style={s.periodToggle}>
+        {periods.map((p) => (
+          <button key={p.key} onClick={() => setPeriod(p.key)} style={s.periodBtn(period === p.key)}>
+            {p.label}
+          </button>
+        ))}
+      </div>
+
+      <div style={s.heroCard}>
+        <div style={s.heroGlow} />
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div>
+            <p style={s.heroLabel}>
+              {period === 'today' ? 'Bugungi tushum' : period === 'week' ? 'Haftalik tushum' : 'Oylik tushum'}
+            </p>
+            <p style={s.heroValue}>
+              {formatCurrency(animatedRevenue)} <span style={s.heroUnit}>so'm</span>
+            </p>
+            <div style={s.trendRow}>
+              {isUp ? <TrendingUp size={14} style={{ color: 'var(--success)' }} /> : <TrendingDown size={14} style={{ color: 'var(--danger)' }} />}
+              <span style={s.trendValue(isUp)}>{isUp ? '+' : ''}{revenueTrend}%</span>
+              <span style={s.trendLabel}>o'tgan davrga nisbatan</span>
             </div>
           </div>
+          <Sparkline data={sparklineData} />
         </div>
+      </div>
 
-        {/* Stats Row */}
-        <div
-          className="stagger"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: 10,
-            marginBottom: 16,
-          }}
-        >
-          {statCards.map((s, i) => (
-            <div
-              key={i}
-              className="card card-hover animate-fade-in"
-              style={{
-                background: '#141414',
-                border: '1px solid #1e1e1e',
-                borderRadius: 14,
-                padding: 14,
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 10,
-                transition: 'border-color 0.2s, transform 0.15s',
-                animationDelay: `${i * 0.08}s`,
-              }}
-            >
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  background: `${s.color}18`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <s.icon size={18} color={s.color} />
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <p
-                  style={{
-                    color: '#777',
-                    fontSize: 11,
-                    margin: 0,
-                    fontWeight: 500,
-                  }}
-                >
-                  {s.label}
-                </p>
-                <p
-                  style={{
-                    color: '#fff',
-                    fontSize: 16,
-                    fontWeight: 700,
-                    margin: '4px 0 0 0',
-                    fontVariantNumeric: 'tabular-nums',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {s.value}
-                </p>
-              </div>
+      <div style={s.grid2}>
+        {statCards.map((st, i) => (
+          <div key={i} style={s.statCard}>
+            <div style={s.statIcon(st.color)}>
+              <st.icon size={17} style={{ color: st.color }} />
             </div>
-          ))}
-        </div>
+            <div style={{ minWidth: 0 }}>
+              <p style={s.statLabel}>{st.label}</p>
+              <p style={s.statValue}>{st.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Top Items List */}
-        {topItems.length > 0 && (
-          <div
-            className="card animate-fade-in"
-            style={{
-              background: '#141414',
-              border: '1px solid #1e1e1e',
-              borderRadius: 14,
-              padding: 16,
-              marginBottom: 16,
-            }}
-          >
-            <div className="flex items-center justify-between" style={{ marginBottom: 14 }}>
-              <h3
-                style={{
-                  color: '#fff',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  margin: 0,
-                }}
-              >
-                Top mahsulotlar
-              </h3>
-              <span
-                className="badge badge-red"
-                style={{
-                  fontSize: 11,
-                  padding: '3px 8px',
-                  borderRadius: 6,
-                }}
-              >
-                {topItems.length} ta
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {topItems.map((item, i) => {
-                const maxRevenue = topItems[0]?.revenue || 1;
-                const barPct = (item.revenue / maxRevenue) * 100;
-                const rankColors = ['#e51e1e', '#f59e0b', '#3b82f6'];
-                return (
-                  <div
-                    key={i}
-                    style={{
-                      padding: '12px',
-                      background: '#1a1a1a',
-                      borderRadius: 10,
-                      border: '1px solid #222',
-                    }}
-                  >
-                    <div
-                      className="flex items-center justify-between"
-                      style={{ marginBottom: 8 }}
-                    >
-                      <div className="flex items-center" style={{ gap: 10 }}>
-                        <span
-                          style={{
-                            width: 26,
-                            height: 26,
-                            borderRadius: 8,
-                            background:
-                              i < 3
-                                ? `${rankColors[i]}20`
-                                : '#222',
-                            color:
-                              i < 3
-                                ? rankColors[i]
-                                : '#888',
-                            fontSize: 12,
-                            fontWeight: 800,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          #{i + 1}
-                        </span>
-                        <div>
-                          <p
-                            style={{
-                              color: '#ddd',
-                              fontSize: 13,
-                              margin: 0,
-                              fontWeight: 600,
-                            }}
-                          >
-                            {item.name}
-                          </p>
-                          <p
-                            style={{
-                              color: '#777',
-                              fontSize: 11,
-                              margin: '2px 0 0 0',
-                            }}
-                          >
-                            {item.sold} ta sotildi
-                          </p>
-                        </div>
+      {topItems.length > 0 && (
+        <div style={s.sectionCard}>
+          <div style={s.sectionHeader}>
+            <h3 style={s.sectionTitle}>Top mahsulotlar</h3>
+            <span style={s.badgeCount}>{topItems.length} ta</span>
+          </div>
+          <div>
+            {topItems.map((item, i) => {
+              const maxRevenue = topItems[0]?.revenue || 1;
+              const barPct = (item.revenue / maxRevenue) * 100;
+              return (
+                <div key={i} style={{ ...s.topItem, marginBottom: i === topItems.length - 1 ? 0 : 8 }}>
+                  <div style={s.topItemInner}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={s.rankBadge(i)}>#{i + 1}</div>
+                      <div>
+                        <p style={s.topItemName}>{item.name}</p>
+                        <p style={s.topItemSold}>{item.sold} ta sotildi</p>
                       </div>
-                      <span
-                        style={{
-                          color: '#22c55e',
-                          fontSize: 13,
-                          fontWeight: 700,
-                          fontVariantNumeric: 'tabular-nums',
-                        }}
-                      >
-                        {formatCurrency(item.revenue)} so'm
-                      </span>
                     </div>
-                    <div
-                      style={{
-                        height: 6,
-                        borderRadius: 3,
-                        background: '#222',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <div
-                        style={{
-                          height: '100%',
-                          width: `${barPct}%`,
-                          borderRadius: 3,
-                          background:
-                            i < 3
-                              ? `linear-gradient(90deg, ${rankColors[i]}, ${rankColors[i]}88)`
-                              : 'linear-gradient(90deg, #555, #333)',
-                          transition: 'width 0.8s ease',
-                        }}
-                      />
-                    </div>
+                    <span style={s.topItemRevenue}>{formatCurrency(item.revenue)} so'm</span>
                   </div>
-                );
-              })}
-            </div>
+                  <div style={s.barTrack}>
+                    <div style={s.barFill(barPct)} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        )}
-
-        {/* Revenue Chart - Weekly Bar Chart */}
-        {weekChart.length > 0 && (
-          <div
-            className="card animate-fade-in"
-            style={{
-              background: '#141414',
-              border: '1px solid #1e1e1e',
-              borderRadius: 14,
-              padding: 16,
-              marginBottom: 16,
-            }}
-          >
-            <div className="flex items-center justify-between" style={{ marginBottom: 14 }}>
-              <h3
-                style={{
-                  color: '#fff',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  margin: 0,
-                }}
-              >
-                Haftalik tushum
-              </h3>
-              <span style={{ color: '#666', fontSize: 12 }}>
-                So'm
-              </span>
-            </div>
-            <BarChart data={weekChart} labels={weekDays} color="#e51e1e" />
-          </div>
-        )}
-
-        {/* Orders by Hour */}
-        <div
-          className="card animate-fade-in"
-          style={{
-            background: '#141414',
-            border: '1px solid #1e1e1e',
-            borderRadius: 14,
-            padding: 16,
-            marginBottom: 16,
-          }}
-        >
-          <div className="flex items-center justify-between" style={{ marginBottom: 14 }}>
-            <h3
-              style={{
-                color: '#fff',
-                fontSize: 15,
-                fontWeight: 700,
-                margin: 0,
-              }}
-            >
-              Soatlik buyurtmalar
-            </h3>
-            <Clock size={16} color="#666" />
-          </div>
-          <HorizontalBarChart data={hoursData} color="#e51e1e" />
         </div>
+      )}
 
-        {/* Payment Methods */}
-        <div
-          className="card animate-fade-in"
-          style={{
-            background: '#141414',
-            border: '1px solid #1e1e1e',
-            borderRadius: 14,
-            padding: 16,
-            marginBottom: 16,
-          }}
-        >
-          <h3
-            style={{
-              color: '#fff',
-              fontSize: 15,
-              fontWeight: 700,
-              margin: '0 0 14px 0',
-            }}
-          >
-            To'lov usullari
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {paymentMethods.map((m, i) => (
-              <div key={i}>
-                <div
-                  className="flex items-center justify-between"
-                  style={{ marginBottom: 6 }}
-                >
-                  <div className="flex items-center" style={{ gap: 8 }}>
-                    <div
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: '50%',
-                        background: m.color,
-                      }}
-                    />
-                    <span
-                      style={{
-                        color: '#ccc',
-                        fontSize: 13,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {m.label}
-                    </span>
-                  </div>
-                  <span
-                    style={{
-                      color: '#fff',
-                      fontSize: 14,
-                      fontWeight: 700,
-                      fontVariantNumeric: 'tabular-nums',
-                    }}
-                  >
-                    {m.pct}%
-                  </span>
-                </div>
-                <div
-                  style={{
-                    height: 10,
-                    borderRadius: 5,
-                    background: '#1e1e1e',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      width: `${m.pct}%`,
-                      borderRadius: 5,
-                      background: m.color,
-                      transition: 'width 0.8s ease',
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+      {weekChart.length > 0 && (
+        <div style={s.sectionCard}>
+          <div style={s.sectionHeader}>
+            <h3 style={s.sectionTitle}>Haftalik tushum</h3>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>So'm</span>
           </div>
+          <BarChart data={weekChart} labels={weekDays} />
+        </div>
+      )}
+
+      <div style={s.sectionCard}>
+        <div style={s.sectionHeader}>
+          <h3 style={s.sectionTitle}>Soatlik buyurtmalar</h3>
+          <Clock size={15} style={s.sectionIcon} />
+        </div>
+        <HorizontalBarChart data={hoursData} />
+      </div>
+
+      <div style={s.sectionCard}>
+        <h3 style={{ ...s.sectionTitle, marginBottom: 14 }}>To'lov usullari</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {paymentMethods.map((m, i) => (
+            <div key={i}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: m.color }} />
+                  <span style={s.payLabel}>{m.label}</span>
+                </div>
+                <span style={s.payPct}>{m.pct}%</span>
+              </div>
+              <div style={s.payTrack}>
+                <div style={s.payFill(m.pct, m.color)} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

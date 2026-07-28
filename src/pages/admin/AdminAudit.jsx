@@ -1,13 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useStore from '../../store/useStore';
 import {
-  ChevronLeft,
   Search,
   Filter,
   Download,
   Clock,
-  User,
   Monitor,
   Smartphone,
   Globe,
@@ -15,6 +12,9 @@ import {
   Trash2,
   Plus,
   LogIn,
+  X,
+  ChevronDown,
+  AlertCircle,
 } from 'lucide-react';
 
 const mockAuditLogs = [
@@ -26,14 +26,14 @@ const mockAuditLogs = [
     description: 'Yangi menyu elementi "Ribeye Steak 300g" yaratildi',
     ipAddress: '192.168.1.45',
     device: 'Chrome 120 / Windows 11',
-    details: { target: 'Menyu', oldValue: null, newValue: 'Ribeye Steak 300g — 185,000 so\'m' },
+    details: { target: 'Menyu', oldValue: null, newValue: "Ribeye Steak 300g — 185,000 so'm" },
   },
   {
     id: 2,
     timestamp: '2026-07-28T13:18:00',
     user: { name: 'Nilufar Karimova', avatar: 'NK', role: 'Manager' },
     action: "O'zgartirildi",
-    description: 'Buyurtma #1048 holati "Jarayonda" dan "Tayyorlangan" ga o\'zgartirildi',
+    description: "Buyurtma #1048 holati \"Jarayonda\" dan \"Tayyorlangan\" ga o'zgartirildi",
     ipAddress: '192.168.1.62',
     device: 'Safari 17 / macOS',
     details: { target: 'Buyurtma #1048', oldValue: 'Jarayonda', newValue: 'Tayyorlangan' },
@@ -46,7 +46,7 @@ const mockAuditLogs = [
     description: '"Eski Lavash" menyu elementi o\'chirildi',
     ipAddress: '10.0.0.12',
     device: 'Firefox 121 / Ubuntu',
-    details: { target: 'Menyu', oldValue: 'Eski Lavash — 45,000 so\'m', newValue: null },
+    details: { target: 'Menyu', oldValue: "Eski Lavash — 45,000 so'm", newValue: null },
   },
   {
     id: 4,
@@ -66,14 +66,14 @@ const mockAuditLogs = [
     description: 'Yangi buyurtma #1052 yaratildi (5 ta mahsulot)',
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
-    details: { target: 'Buyurtma #1052', oldValue: null, newValue: '5 ta mahsulot, 425,000 so\'m' },
+    details: { target: 'Buyurtma #1052', oldValue: null, newValue: "5 ta mahsulot, 425,000 so'm" },
   },
   {
     id: 6,
     timestamp: '2026-07-28T09:30:00',
     user: { name: 'Nilufar Karimova', avatar: 'NK', role: 'Manager' },
     action: "O'zgartirildi",
-    description: '"Filial 2" ning ish vaqti 09:00-23:00 dan 08:00-24:00 ga o\'zgartirildi',
+    description: "\"Filial 2\" ning ish vaqti 09:00-23:00 dan 08:00-24:00 ga o'zgartirildi",
     ipAddress: '192.168.1.62',
     device: 'Safari 17 / iOS 18',
     details: { target: 'Filial 2', oldValue: '09:00-23:00', newValue: '08:00-24:00' },
@@ -83,7 +83,7 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T22:15:00',
     user: { name: 'Jasur Toshev', avatar: 'JT', role: 'Admin' },
     action: "O'zgartirildi",
-    description: 'Foydalanchi "Malika Nazarova" roli "Oshpaz" dan "Kassir" ga o\'zgartirildi',
+    description: "Foydalanchi \"Malika Nazarova\" roli \"Oshpaz\" dan \"Kassir\" ga o'zgartirildi",
     ipAddress: '10.0.0.12',
     device: 'Chrome 120 / Windows 11',
     details: { target: 'Malika Nazarova', oldValue: 'Oshpaz', newValue: 'Kassir' },
@@ -93,7 +93,7 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T20:40:00',
     user: { name: 'Sardor Raximov', avatar: 'SR', role: 'Admin' },
     action: 'Yaratildi',
-    description: 'Yangi filial "Bekfood Denov" tizimga qo\'shildi',
+    description: "Yangi filial \"Bekfood Denov\" tizimga qo'shildi",
     ipAddress: '192.168.1.45',
     device: 'Chrome 120 / Windows 11',
     details: { target: 'Filial', oldValue: null, newValue: 'Bekfood Denov — Buxoro viloyati' },
@@ -103,10 +103,10 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T18:05:00',
     user: { name: 'Malika Nazarova', avatar: 'MN', role: 'Kassir' },
     action: "O'zgartirildi",
-    description: 'Buyurtma #1039 uchun to\'lov kiritildi — 375,000 so\'m',
+    description: "Buyurtma #1039 uchun to'lov kiritildi — 375,000 so'm",
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
-    details: { target: 'Buyurtma #1039', oldValue: 'To\'lanmagan', newValue: 'To\'langan — 375,000 so\'m' },
+    details: { target: 'Buyurtma #1039', oldValue: "To'lanmagan", newValue: "To'langan — 375,000 so'm" },
   },
   {
     id: 10,
@@ -136,14 +136,14 @@ const mockAuditLogs = [
     description: 'Tizimga kirish — birinchi muvaffaqiyatsiz urinish',
     ipAddress: '10.0.0.12',
     device: 'Firefox 121 / Ubuntu',
-    details: { target: 'Tizim', oldValue: null, newValue: 'Noto\'g\'ri parol — xavfli kirish' },
+    details: { target: 'Tizim', oldValue: null, newValue: "Noto'g'ri parol — xavfli kirish" },
   },
   {
     id: 13,
     timestamp: '2026-07-26T19:35:00',
     user: { name: 'Malika Nazarova', avatar: 'MN', role: 'Kassir' },
     action: "O'zgartirildi",
-    description: 'Buyurtma #1030 ga qo\'shimcha mahsulot qo\'shildi — "Cezar Salat"',
+    description: "Buyurtma #1030 ga qo'shimcha mahsulot qo'shildi — \"Cezar Salat\"",
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
     details: { target: 'Buyurtma #1030', oldValue: '3 ta mahsulot', newValue: '4 ta mahsulot' },
@@ -153,7 +153,7 @@ const mockAuditLogs = [
     timestamp: '2026-07-26T16:20:00',
     user: { name: 'Nilufar Karimova', avatar: 'NK', role: 'Manager' },
     action: 'Yaratildi',
-    description: 'Yangi xodim "Alisher Abduvaliev" tizimga qo\'shildi — Oshpaz',
+    description: "Yangi xodim \"Alisher Abduvaliev\" tizimga qo'shildi — Oshpaz",
     ipAddress: '192.168.1.62',
     device: 'Safari 17 / macOS',
     details: { target: 'Xodim', oldValue: null, newValue: 'Alisher Abduvaliev — Oshpaz' },
@@ -171,405 +171,20 @@ const mockAuditLogs = [
 ];
 
 const actionConfig = {
-  Yaratildi: { color: '#22c55e', bg: 'rgba(34,197,94,0.12)', icon: Plus },
-  "O'zgartirildi": { color: '#eab308', bg: 'rgba(234,179,8,0.12)', icon: Edit },
-  "O'chirildi": { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', icon: Trash2 },
-  Kirish: { color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', icon: LogIn },
+  Yaratildi: { color: 'var(--success)', bg: 'rgba(34,197,94,0.08)', icon: Plus },
+  "O'zgartirildi": { color: 'var(--warning)', bg: 'rgba(245,158,11,0.08)', icon: Edit },
+  "O'chirildi": { color: 'var(--danger)', bg: 'rgba(239,68,68,0.08)', icon: Trash2 },
+  Kirish: { color: '#3B82F6', bg: 'rgba(59,130,246,0.08)', icon: LogIn },
 };
 
 const roleColors = {
-  Admin: '#c8a97e',
-  Manager: '#3b82f6',
-  Kassir: '#22c55e',
-  Oshpaz: '#a855f7',
-};
-
-const styles = {
-  page: {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)',
-    color: '#f5f5f5',
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    padding: '24px',
-    maxWidth: '960px',
-    margin: '0 auto',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '28px',
-    animation: 'fadeIn 0.5s ease',
-  },
-  headerLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-  },
-  backBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
-    background: '#2a2a2a',
-    border: '1px solid #3a3a3a',
-    color: '#f5f5f5',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  },
-  title: {
-    fontSize: '28px',
-    fontWeight: '700',
-    color: '#f5f5f5',
-    margin: 0,
-  },
-  exportBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '10px 20px',
-    background: 'linear-gradient(135deg, #c8a97e, #b8956a)',
-    border: 'none',
-    borderRadius: '10px',
-    color: '#1a1a1a',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  },
-  filtersCard: {
-    background: '#242424',
-    borderRadius: '16px',
-    border: '1px solid #333',
-    padding: '20px',
-    marginBottom: '24px',
-    animation: 'fadeIn 0.5s ease 0.1s both',
-  },
-  filtersHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '18px',
-    paddingBottom: '14px',
-    borderBottom: '1px solid #333',
-  },
-  filtersIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '36px',
-    height: '36px',
-    borderRadius: '10px',
-    background: '#c8a97e20',
-    color: '#c8a97e',
-  },
-  filtersTitle: {
-    fontSize: '16px',
-    fontWeight: '600',
-    color: '#f5f5f5',
-    margin: 0,
-  },
-  filtersGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
-    gap: '14px',
-  },
-  filterGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-  },
-  label: {
-    fontSize: '12px',
-    fontWeight: '500',
-    color: '#aaa',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    background: '#1a1a1a',
-    border: '1px solid #333',
-    borderRadius: '10px',
-    color: '#f5f5f5',
-    fontSize: '13px',
-    outline: 'none',
-    transition: 'all 0.2s ease',
-    boxSizing: 'border-box',
-  },
-  searchRow: {
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gap: '14px',
-    marginTop: '14px',
-  },
-  searchInputWrapper: {
-    position: 'relative',
-  },
-  searchIcon: {
-    position: 'absolute',
-    left: '14px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#666',
-  },
-  logList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-  },
-  logEntry: {
-    background: '#242424',
-    borderRadius: '14px',
-    border: '1px solid #333',
-    padding: '18px 20px',
-    cursor: 'pointer',
-    transition: 'all 0.25s ease',
-    animation: 'fadeIn 0.5s ease both',
-  },
-  logEntryInner: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '14px',
-  },
-  avatar: (color) => ({
-    width: '42px',
-    height: '42px',
-    borderRadius: '12px',
-    background: `${color}18`,
-    color: color,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
-    fontWeight: '700',
-    flexShrink: 0,
-    border: `1px solid ${color}30`,
-  }),
-  logContent: {
-    flex: 1,
-    minWidth: 0,
-  },
-  logTop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '10px',
-    marginBottom: '4px',
-  },
-  logUser: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  userName: {
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#f5f5f5',
-  },
-  roleBadge: (color) => ({
-    fontSize: '10px',
-    fontWeight: '600',
-    padding: '2px 8px',
-    borderRadius: '6px',
-    background: `${color}18`,
-    color: color,
-    border: `1px solid ${color}30`,
-    textTransform: 'uppercase',
-    letterSpacing: '0.3px',
-  }),
-  actionBadge: (cfg) => ({
-    fontSize: '11px',
-    fontWeight: '600',
-    padding: '4px 10px',
-    borderRadius: '8px',
-    background: cfg.bg,
-    color: cfg.color,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  }),
-  logDescription: {
-    fontSize: '13px',
-    color: '#bbb',
-    lineHeight: '1.5',
-    marginTop: '2px',
-  },
-  logMeta: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    marginTop: '10px',
-    flexWrap: 'wrap',
-  },
-  metaItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    fontSize: '12px',
-    color: '#777',
-  },
-  timestamp: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    fontSize: '12px',
-    color: '#888',
-    flexShrink: 0,
-  },
-  emptyState: {
-    textAlign: 'center',
-    padding: '60px 20px',
-    color: '#666',
-  },
-  emptyIcon: {
-    width: '60px',
-    height: '60px',
-    borderRadius: '16px',
-    background: '#2a2a2a',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 16px',
-  },
-  statsRow: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '12px',
-    marginBottom: '24px',
-    animation: 'fadeIn 0.5s ease 0.05s both',
-  },
-  statCard: {
-    background: '#242424',
-    borderRadius: '12px',
-    border: '1px solid #333',
-    padding: '16px',
-    textAlign: 'center',
-  },
-  statNumber: {
-    fontSize: '24px',
-    fontWeight: '700',
-    marginBottom: '4px',
-  },
-  statLabel: {
-    fontSize: '12px',
-    color: '#888',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  modalOverlay: {
-    position: 'fixed',
-    inset: 0,
-    background: 'rgba(0,0,0,0.7)',
-    backdropFilter: 'blur(6px)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-    padding: '24px',
-    animation: 'fadeIn 0.2s ease',
-  },
-  modal: {
-    background: '#1e1e1e',
-    borderRadius: '20px',
-    border: '1px solid #333',
-    width: '100%',
-    maxWidth: '520px',
-    maxHeight: '80vh',
-    overflow: 'auto',
-    animation: 'slideUp 0.3s ease',
-  },
-  modalHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '20px 24px',
-    borderBottom: '1px solid #333',
-  },
-  modalTitle: {
-    fontSize: '18px',
-    fontWeight: '700',
-    color: '#f5f5f5',
-    margin: 0,
-  },
-  modalClose: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '32px',
-    height: '32px',
-    borderRadius: '8px',
-    background: '#2a2a2a',
-    border: '1px solid #3a3a3a',
-    color: '#f5f5f5',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  },
-  modalBody: {
-    padding: '24px',
-  },
-  detailRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: '12px 0',
-    borderBottom: '1px solid #2a2a2a',
-  },
-  detailLabel: {
-    fontSize: '13px',
-    color: '#888',
-    fontWeight: '500',
-    minWidth: '120px',
-  },
-  detailValue: {
-    fontSize: '13px',
-    color: '#f5f5f5',
-    fontWeight: '500',
-    textAlign: 'right',
-    flex: 1,
-    marginLeft: '12px',
-  },
-  changeBlock: {
-    marginTop: '16px',
-    padding: '14px',
-    background: '#1a1a1a',
-    borderRadius: '10px',
-    border: '1px solid #333',
-  },
-  changeTitle: {
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#c8a97e',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    marginBottom: '10px',
-  },
-  changeRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '6px',
-    fontSize: '13px',
-  },
-  changeFrom: {
-    color: '#ef4444',
-    textDecoration: 'line-through',
-  },
-  changeTo: {
-    color: '#22c55e',
-  },
-  changeArrow: {
-    color: '#666',
-  },
+  Admin: 'var(--primary)',
+  Manager: '#3B82F6',
+  Kassir: 'var(--success)',
+  Oshpaz: '#8B5CF6',
 };
 
 const AdminAudit = () => {
-  const navigate = useNavigate();
   const { user } = useStore();
 
   const [filters, setFilters] = useState({
@@ -580,6 +195,7 @@ const AdminAudit = () => {
     search: '',
   });
   const [selectedEntry, setSelectedEntry] = useState(null);
+  const [filtersOpen, setFiltersOpen] = useState(true);
 
   const uniqueUsers = useMemo(() => [...new Set(mockAuditLogs.map((l) => l.user.name))], []);
   const uniqueActions = Object.keys(actionConfig);
@@ -613,13 +229,28 @@ const AdminAudit = () => {
 
   const formatDateTime = (ts) => {
     const d = new Date(ts);
-    return d.toLocaleString('uz-UZ', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return d.toLocaleString('uz-UZ', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   };
 
   const handleExport = () => {
     const csvRows = [
       ['ID', 'Vaqt', 'Foydalanchi', 'Amal', 'Tavsif', 'IP', 'Qurilma'],
-      ...filteredLogs.map((l) => [l.id, formatDateTime(l.timestamp), l.user.name, l.action, l.description, l.ipAddress, l.device]),
+      ...filteredLogs.map((l) => [
+        l.id,
+        formatDateTime(l.timestamp),
+        l.user.name,
+        l.action,
+        l.description,
+        l.ipAddress,
+        l.device,
+      ]),
     ];
     const csv = csvRows.map((r) => r.map((c) => `"${c}"`).join(',')).join('\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -633,147 +264,367 @@ const AdminAudit = () => {
 
   const isMobile = (device) => /android|iphone|ipad|mobile/i.test(device);
 
+  const clearFilters = () => {
+    setFilters({ dateFrom: '', dateTo: '', user: '', action: '', search: '' });
+  };
+
+  const hasActiveFilters = filters.dateFrom || filters.dateTo || filters.user || filters.action || filters.search;
+
   return (
-    <div style={styles.page}>
+    <div style={{ padding: '0 0 40px 0' }}>
       <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
+        @keyframes auditFadeIn {
+          from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        @keyframes auditSlideUp {
+          from { opacity: 0; transform: translateY(16px) scale(0.98); }
           to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .card-hover:hover {
-          border-color: #c8a97e44 !important;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(200, 169, 126, 0.1);
+        @media (max-width: 768px) {
+          .audit-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .audit-filters-grid { grid-template-columns: 1fr !important; }
+          .audit-header-row { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+          .audit-log-row { flex-direction: column !important; }
+          .audit-log-top { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
+          .audit-meta-row { flex-wrap: wrap !important; }
+          .audit-search-span { grid-column: span 1 !important; }
         }
-        .card-hover { transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200, 169, 126, 0.3); }
-        .input:focus { border-color: #c8a97e !important; box-shadow: 0 0 0 3px rgba(200, 169, 126, 0.1); }
-        .back-btn:hover { background: #3a3a3a !important; }
-        .close-btn:hover { background: #3a3a3a !important; }
-        .export-btn:hover { box-shadow: 0 6px 20px rgba(200, 169, 126, 0.3); }
-        .log-entry:hover {
-          border-color: #c8a97e44 !important;
-          background: #2a2a2a !important;
-        }
-        .badge-red { background: rgba(239,68,68,0.12); color: #ef4444; }
-        .badge-green { background: rgba(34,197,94,0.12); color: #22c55e; }
-        .badge-yellow { background: rgba(234,179,8,0.12); color: #eab308; }
-        .badge-blue { background: rgba(59,130,246,0.12); color: #3b82f6; }
       `}</style>
 
-      <header style={styles.header}>
-        <div style={styles.headerLeft}>
-          <button className="back-btn" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <ChevronLeft size={20} />
+      <div style={{ marginBottom: '24px', animation: 'auditFadeIn 0.4s ease' }}>
+        <div className="audit-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+          <div>
+            <h1 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text)', margin: '0 0 4px 0', letterSpacing: '-0.02em' }}>
+              Audit Log
+            </h1>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>
+              {filteredLogs.length} ta yozuv topildi
+            </p>
+          </div>
+          <button
+            onClick={handleExport}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              background: 'var(--primary)',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              color: '#FFFFFF',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 1px 3px rgba(249,115,22,0.3)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 4px 12px rgba(249,115,22,0.35)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 1px 3px rgba(249,115,22,0.3)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+          >
+            <Download size={16} />
+            Export CSV
           </button>
-          <h1 style={styles.title}>Audit Log</h1>
         </div>
-        <button className="export-btn btn-primary" style={styles.exportBtn} onClick={handleExport}>
-          <Download size={16} />
-          Export CSV
-        </button>
-      </header>
+      </div>
 
-      <div style={styles.statsRow}>
+      <div className="audit-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '24px', animation: 'auditFadeIn 0.4s ease 0.05s both' }}>
         {Object.entries(stats).map(([action, count]) => {
           const cfg = actionConfig[action];
+          const Icon = cfg.icon;
           return (
-            <div key={action} className="card card-hover" style={styles.statCard}>
-              <div style={{ ...styles.statNumber, color: cfg.color }}>{count}</div>
-              <div style={styles.statLabel}>{action}</div>
+            <div
+              key={action}
+              style={{
+                background: 'var(--surface)',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border)',
+                padding: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                background: cfg.bg,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <Icon size={18} style={{ color: cfg.color }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '22px', fontWeight: '700', color: 'var(--text)', lineHeight: 1 }}>{count}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{action}</div>
+              </div>
             </div>
           );
         })}
       </div>
 
-      <div className="card card-hover" style={styles.filtersCard}>
-        <div style={styles.filtersHeader}>
-          <div style={styles.filtersIcon}>
-            <Filter size={18} />
+      <div style={{
+        background: 'var(--surface)',
+        borderRadius: 'var(--radius)',
+        border: '1px solid var(--border)',
+        marginBottom: '24px',
+        overflow: 'hidden',
+        animation: 'auditFadeIn 0.4s ease 0.1s both',
+      }}>
+        <button
+          onClick={() => setFiltersOpen(!filtersOpen)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            width: '100%',
+            padding: '16px 20px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            borderBottom: filtersOpen ? '1px solid var(--border)' : 'none',
+          }}
+        >
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'var(--primary-light)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Filter size={16} style={{ color: 'var(--primary)' }} />
           </div>
-          <h3 style={styles.filtersTitle}>Filtrlar</h3>
-        </div>
+          <span style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text)', flex: 1, textAlign: 'left' }}>
+            Filtrlar
+          </span>
+          {hasActiveFilters && (
+            <span style={{
+              padding: '2px 8px',
+              borderRadius: '6px',
+              background: 'var(--primary)',
+              color: '#FFFFFF',
+              fontSize: '11px',
+              fontWeight: '600',
+            }}>
+              Faol
+            </span>
+          )}
+          <ChevronDown
+            size={18}
+            style={{
+              color: 'var(--text-muted)',
+              transition: 'transform 0.2s ease',
+              transform: filtersOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}
+          />
+        </button>
 
-        <div style={styles.filtersGrid}>
-          <div style={styles.filterGroup}>
-            <label style={styles.label}>Dan</label>
-            <input
-              className="input"
-              style={styles.input}
-              type="date"
-              value={filters.dateFrom}
-              onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
-            />
-          </div>
-          <div style={styles.filterGroup}>
-            <label style={styles.label}>Gacha</label>
-            <input
-              className="input"
-              style={styles.input}
-              type="date"
-              value={filters.dateTo}
-              onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
-            />
-          </div>
-          <div style={styles.filterGroup}>
-            <label style={styles.label}>Foydalanchi</label>
-            <select
-              className="input"
-              style={styles.input}
-              value={filters.user}
-              onChange={(e) => setFilters({ ...filters, user: e.target.value })}
-            >
-              <option value="">Barchasi</option>
-              {uniqueUsers.map((u) => (
-                <option key={u} value={u}>{u}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div style={{ ...styles.filtersGrid, marginTop: '14px' }}>
-          <div style={styles.filterGroup}>
-            <label style={styles.label}>Amal turi</label>
-            <select
-              className="input"
-              style={styles.input}
-              value={filters.action}
-              onChange={(e) => setFilters({ ...filters, action: e.target.value })}
-            >
-              <option value="">Barchasi</option>
-              {uniqueActions.map((a) => (
-                <option key={a} value={a}>{a}</option>
-              ))}
-            </select>
-          </div>
-          <div style={{ ...styles.filterGroup, gridColumn: 'span 2' }}>
-            <label style={styles.label}>Qidirish</label>
-            <div style={styles.searchInputWrapper}>
-              <Search size={16} style={styles.searchIcon} />
-              <input
-                className="input"
-                style={{ ...styles.input, paddingLeft: '40px' }}
-                placeholder="Tavsif bo'yicha qidirish..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-              />
+        {filtersOpen && (
+          <div style={{ padding: '16px 20px 20px' }}>
+            <div className="audit-filters-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+                  Dan
+                </label>
+                <input
+                  type="date"
+                  value={filters.dateFrom}
+                  onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '9px 12px',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: 'var(--text)',
+                    fontSize: '13px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s ease',
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+                  Gacha
+                </label>
+                <input
+                  type="date"
+                  value={filters.dateTo}
+                  onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '9px 12px',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: 'var(--text)',
+                    fontSize: '13px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s ease',
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+                  Foydalanchi
+                </label>
+                <select
+                  value={filters.user}
+                  onChange={(e) => setFilters({ ...filters, user: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '9px 12px',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: 'var(--text)',
+                    fontSize: '13px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.2s ease',
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; }}
+                >
+                  <option value="">Barchasi</option>
+                  {uniqueUsers.map((u) => (
+                    <option key={u} value={u}>{u}</option>
+                  ))}
+                </select>
+              </div>
             </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '14px', marginTop: '14px' }} className="audit-filters-grid">
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+                  Amal turi
+                </label>
+                <select
+                  value={filters.action}
+                  onChange={(e) => setFilters({ ...filters, action: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '9px 12px',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: 'var(--text)',
+                    fontSize: '13px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.2s ease',
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; }}
+                >
+                  <option value="">Barchasi</option>
+                  {uniqueActions.map((a) => (
+                    <option key={a} value={a}>{a}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="audit-search-span">
+                <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+                  Qidirish
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+                  <input
+                    placeholder="Tavsif bo'yicha qidirish..."
+                    value={filters.search}
+                    onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '9px 12px 9px 36px',
+                      background: 'var(--bg)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      color: 'var(--text)',
+                      fontSize: '13px',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      transition: 'border-color 0.2s ease',
+                    }}
+                    onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; }}
+                    onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; }}
+                  />
+                </div>
+              </div>
+            </div>
+            {hasActiveFilters && (
+              <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={clearFilters}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '7px 14px',
+                    background: 'none',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: 'var(--text-muted)',
+                    fontSize: '13px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--danger)'; e.currentTarget.style.color = 'var(--danger)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                >
+                  <X size={14} />
+                  Filtrlarni tozalash
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
 
-      <div style={styles.logList}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {filteredLogs.length === 0 ? (
-          <div className="card" style={styles.emptyState}>
-            <div style={styles.emptyIcon}>
-              <Search size={28} color="#555" />
+          <div style={{
+            background: 'var(--surface)',
+            borderRadius: 'var(--radius)',
+            border: '1px solid var(--border)',
+            padding: '60px 20px',
+            textAlign: 'center',
+            animation: 'auditFadeIn 0.4s ease',
+          }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '14px',
+              background: 'var(--bg)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}>
+              <AlertCircle size={24} style={{ color: 'var(--text-muted)' }} />
             </div>
-            <p style={{ fontSize: '16px', fontWeight: '600', margin: '0 0 8px 0', color: '#999' }}>Hech narsa topilmadi</p>
-            <p style={{ fontSize: '13px', margin: 0 }}>Filtrlarni o'zgartirib ko'ring</p>
+            <p style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-secondary)', margin: '0 0 4px 0' }}>
+              Hech narsa topilmadi
+            </p>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+              Filtrlarni o'zgartirib ko'ring
+            </p>
           </div>
         ) : (
           filteredLogs.map((log, i) => {
@@ -782,46 +633,88 @@ const AdminAudit = () => {
             return (
               <div
                 key={log.id}
-                className="card-hover log-entry"
-                style={{
-                  ...styles.logEntry,
-                  animationDelay: `${0.05 + i * 0.03}s`,
-                }}
                 onClick={() => setSelectedEntry(log)}
+                style={{
+                  background: 'var(--surface)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--border)',
+                  padding: '16px 20px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  animation: `auditFadeIn 0.3s ease ${0.03 * i}s both`,
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(249,115,22,0.2)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
               >
-                <div style={styles.logEntryInner}>
-                  <div style={styles.avatar(roleColors[log.user.role] || '#888')}>
+                <div className="audit-log-row" style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '10px',
+                    background: `${roleColors[log.user.role] || 'var(--text-muted)'}10`,
+                    color: roleColors[log.user.role] || 'var(--text-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '13px',
+                    fontWeight: '700',
+                    flexShrink: 0,
+                    border: `1px solid ${roleColors[log.user.role] || 'var(--text-muted)'}20`,
+                  }}>
                     {log.user.avatar}
                   </div>
-                  <div style={styles.logContent}>
-                    <div style={styles.logTop}>
-                      <div style={styles.logUser}>
-                        <span style={styles.userName}>{log.user.name}</span>
-                        <span style={styles.roleBadge(roleColors[log.user.role] || '#888')}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div className="audit-log-top" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text)' }}>{log.user.name}</span>
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: '600',
+                          padding: '2px 7px',
+                          borderRadius: '5px',
+                          background: `${roleColors[log.user.role] || 'var(--text-muted)'}10`,
+                          color: roleColors[log.user.role] || 'var(--text-muted)',
+                          border: `1px solid ${roleColors[log.user.role] || 'var(--text-muted)'}20`,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.3px',
+                        }}>
                           {log.user.role}
                         </span>
                       </div>
-                      <div style={styles.timestamp}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--text-muted)', flexShrink: 0 }}>
                         <Clock size={12} />
                         <span>{formatDate(log.timestamp)}</span>
-                        <span style={{ color: '#555' }}>·</span>
+                        <span style={{ opacity: 0.4 }}>&middot;</span>
                         <span>{formatTime(log.timestamp)}</span>
                       </div>
                     </div>
-                    <p style={styles.logDescription}>{log.description}</p>
-                    <div style={styles.logMeta}>
-                      <div style={styles.actionBadge(cfg)}>
-                        <ActionIcon size={12} />
+                    <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', margin: '2px 0 10px' }}>
+                      {log.description}
+                    </p>
+                    <div className="audit-meta-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: '600',
+                        padding: '3px 9px',
+                        borderRadius: '6px',
+                        background: cfg.bg,
+                        color: cfg.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        <ActionIcon size={11} />
                         {log.action}
-                      </div>
-                      <div style={styles.metaItem}>
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--text-muted)' }}>
                         <Globe size={12} />
-                        <span>{log.ipAddress}</span>
-                      </div>
-                      <div style={styles.metaItem}>
+                        {log.ipAddress}
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--text-muted)' }}>
                         {isMobile(log.device) ? <Smartphone size={12} /> : <Monitor size={12} />}
-                        <span>{log.device}</span>
-                      </div>
+                        {log.device}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -832,68 +725,156 @@ const AdminAudit = () => {
       </div>
 
       {selectedEntry && (
-        <div style={styles.modalOverlay} onClick={() => setSelectedEntry(null)}>
-          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Kirish tafsilotlari</h2>
+        <div
+          onClick={() => setSelectedEntry(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '24px',
+            animation: 'auditFadeIn 0.2s ease',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--surface)',
+              borderRadius: 'var(--radius)',
+              border: '1px solid var(--border)',
+              width: '100%',
+              maxWidth: '520px',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              animation: 'auditSlideUp 0.25s ease',
+              boxShadow: 'var(--shadow-lg)',
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border)',
+            }}>
+              <h2 style={{ fontSize: '17px', fontWeight: '700', color: 'var(--text)', margin: 0 }}>
+                Kirish tafsilotlari
+              </h2>
               <button
-                className="close-btn"
-                style={styles.modalClose}
                 onClick={() => setSelectedEntry(null)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--text)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
               >
-                ×
+                <X size={16} />
               </button>
             </div>
-            <div style={styles.modalBody}>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>ID</span>
-                <span style={styles.detailValue}>#{selectedEntry.id}</span>
-              </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>Vaqt</span>
-                <span style={styles.detailValue}>{formatDateTime(selectedEntry.timestamp)}</span>
-              </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>Foydalanchi</span>
-                <span style={styles.detailValue}>
-                  {selectedEntry.user.name}
-                  <span style={styles.roleBadge(roleColors[selectedEntry.user.role] || '#888')}>
+            <div style={{ padding: '20px 24px' }}>
+              {[
+                { label: 'ID', value: `#${selectedEntry.id}` },
+                { label: 'Vaqt', value: formatDateTime(selectedEntry.timestamp) },
+                { label: 'IP manzil', value: selectedEntry.ipAddress },
+                { label: 'Tavsif', value: selectedEntry.description },
+              ].map((row, idx) => (
+                <div
+                  key={row.label}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    padding: '11px 0',
+                    borderBottom: idx < 3 ? '1px solid var(--border)' : 'none',
+                  }}
+                >
+                  <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '500', minWidth: '100px' }}>{row.label}</span>
+                  <span style={{ fontSize: '13px', color: 'var(--text)', fontWeight: '500', textAlign: 'right', flex: 1, marginLeft: '12px' }}>{row.value}</span>
+                </div>
+              ))}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0', borderBottom: '1px solid var(--border)' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '500', minWidth: '100px' }}>Foydalanchi</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'flex-end' }}>
+                  <span style={{ fontSize: '13px', color: 'var(--text)', fontWeight: '500' }}>{selectedEntry.user.name}</span>
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: '600',
+                    padding: '2px 7px',
+                    borderRadius: '5px',
+                    background: `${roleColors[selectedEntry.user.role] || 'var(--text-muted)'}10`,
+                    color: roleColors[selectedEntry.user.role] || 'var(--text-muted)',
+                    border: `1px solid ${roleColors[selectedEntry.user.role] || 'var(--text-muted)'}20`,
+                    textTransform: 'uppercase',
+                  }}>
                     {selectedEntry.user.role}
                   </span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0', borderBottom: '1px solid var(--border)' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '500', minWidth: '100px' }}>Amal</span>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  padding: '3px 9px',
+                  borderRadius: '6px',
+                  background: actionConfig[selectedEntry.action].bg,
+                  color: actionConfig[selectedEntry.action].color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}>
+                  {React.createElement(actionConfig[selectedEntry.action].icon, { size: 11 })}
+                  {selectedEntry.action}
                 </span>
               </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>Amal</span>
-                <span style={styles.detailValue}>
-                  <span style={styles.actionBadge(actionConfig[selectedEntry.action])}>
-                    {React.createElement(actionConfig[selectedEntry.action].icon, { size: 12 })}
-                    {selectedEntry.action}
-                  </span>
-                </span>
-              </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>Tavsif</span>
-                <span style={styles.detailValue}>{selectedEntry.description}</span>
-              </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>IP manzil</span>
-                <span style={styles.detailValue}>{selectedEntry.ipAddress}</span>
-              </div>
-              <div style={{ ...styles.detailRow, borderBottom: 'none' }}>
-                <span style={styles.detailLabel}>Qurilma</span>
-                <span style={styles.detailValue}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '500', minWidth: '100px' }}>Qurilma</span>
+                <span style={{ fontSize: '13px', color: 'var(--text)', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {isMobile(selectedEntry.device) ? <Smartphone size={13} /> : <Monitor size={13} />}
-                  {' '}{selectedEntry.device}
+                  {selectedEntry.device}
                 </span>
               </div>
 
               {selectedEntry.details && (selectedEntry.details.oldValue || selectedEntry.details.newValue) && (
-                <div style={styles.changeBlock}>
-                  <div style={styles.changeTitle}>O'zgarishlar</div>
-                  <div style={styles.changeRow}>
-                    <span style={styles.changeFrom}>{selectedEntry.details.oldValue || '—'}</span>
-                    <span style={styles.changeArrow}>→</span>
-                    <span style={styles.changeTo}>{selectedEntry.details.newValue || '—'}</span>
+                <div style={{
+                  marginTop: '16px',
+                  padding: '14px',
+                  background: 'var(--bg)',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border)',
+                }}>
+                  <div style={{
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    color: 'var(--primary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '10px',
+                  }}>
+                    O'zgarishlar
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px' }}>
+                    <span style={{ color: 'var(--danger)', textDecoration: 'line-through' }}>
+                      {selectedEntry.details.oldValue || '—'}
+                    </span>
+                    <span style={{ color: 'var(--text-muted)' }}>→</span>
+                    <span style={{ color: 'var(--success)' }}>
+                      {selectedEntry.details.newValue || '—'}
+                    </span>
                   </div>
                 </div>
               )}

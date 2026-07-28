@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useStore from '../../store/useStore';
-import { useNavigate } from 'react-router-dom';
 import {
-  ChevronLeft,
   Plus,
   Edit,
   AlertTriangle,
@@ -11,133 +9,174 @@ import {
   Calendar,
   ArrowUp,
   ArrowDown,
-  Search
+  Search,
+  X,
+  Minus
 } from 'lucide-react';
 
-const categories = ['Hammasi', 'Go\'sht', 'Non', 'Sous', 'Sabzavot', 'Ichimlik'];
+const categories = ['Hammasi', "Go'sht", 'Non', 'Sous', 'Sabzavot', 'Ichimlik'];
 const units = ['kg', 'dona', 'litr', 'pachka', 'quti'];
 
-const styles = {
-  container: {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%)',
-    color: '#f5f5f5',
-    fontFamily: "'Inter', sans-serif",
-    padding: '24px',
+const defaultInventory = [
+  { id: 1, name: "Mol go'shti", category: "Go'sht", quantity: 25, unit: 'kg', minQuantity: 10, supplier: "Toshkent Go'sht", expiryDate: '2026-08-15' },
+  { id: 2, name: "Qo'y go'shti", category: "Go'sht", quantity: 3, unit: 'kg', minQuantity: 8, supplier: 'Samarqand Fermer', expiryDate: '2026-08-10' },
+  { id: 3, name: 'Non', category: 'Non', quantity: 50, unit: 'dona', minQuantity: 20, supplier: 'Nonvoy Usti', expiryDate: '2026-07-30' },
+  { id: 4, name: 'Lavash', category: 'Non', quantity: 15, unit: 'dona', minQuantity: 10, supplier: 'Nonvoy Usti', expiryDate: '2026-07-29' },
+  { id: 5, name: 'Ketchup', category: 'Sous', quantity: 12, unit: 'litr', minQuantity: 5, supplier: 'Oziq-ovqat', expiryDate: '2026-12-01' },
+  { id: 6, name: 'Mayonez', category: 'Sous', quantity: 0, unit: 'litr', minQuantity: 5, supplier: 'Oziq-ovqat', expiryDate: '2026-11-15' },
+  { id: 7, name: 'Pomidor', category: 'Sabzavot', quantity: 18, unit: 'kg', minQuantity: 8, supplier: "Bog'dod Bozori", expiryDate: '2026-08-05' },
+  { id: 8, name: 'Cola', category: 'Ichimlik', quantity: 30, unit: 'dona', minQuantity: 15, supplier: 'Imzo', expiryDate: '2027-01-20' },
+];
+
+function getStatus(quantity, minQuantity) {
+  if (quantity === 0) return 'Tugadi';
+  if (quantity <= minQuantity) return 'Kam qoldi';
+  return 'Yetarli';
+}
+
+function getStatusColor(status) {
+  if (status === 'Yetarli') return 'var(--success)';
+  if (status === 'Kam qoldi') return 'var(--warning)';
+  return 'var(--danger)';
+}
+
+function getCategoryBadgeStyle(cat) {
+  const map = {
+    "Go'sht": { bg: 'rgba(239,68,68,0.08)', color: 'var(--danger)' },
+    'Non': { bg: 'rgba(245,158,11,0.08)', color: 'var(--warning)' },
+    'Sous': { bg: 'rgba(139,92,246,0.08)', color: '#8B5CF6' },
+    'Sabzavot': { bg: 'rgba(34,197,94,0.08)', color: 'var(--success)' },
+    'Ichimlik': { bg: 'rgba(59,130,246,0.08)', color: '#3B82F6' },
+  };
+  return map[cat] || { bg: 'var(--surface-active)', color: 'var(--text-muted)' };
+}
+
+const s = {
+  page: {
+    padding: '0 0 40px',
+    fontFamily: "'Inter', system-ui, sans-serif",
   },
-  header: {
+  headerRow: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: '24px',
-  },
-  headerLeft: {
-    display: 'flex',
-    alignItems: 'center',
+    flexWrap: 'wrap',
     gap: '16px',
   },
-  backBtn: {
-    background: 'rgba(255,255,255,0.1)',
-    border: 'none',
-    borderRadius: '12px',
-    padding: '12px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s',
-  },
   title: {
-    fontSize: '28px',
+    fontSize: '24px',
     fontWeight: '700',
-    color: '#fff',
+    color: 'var(--text)',
+    margin: 0,
+  },
+  headerActions: {
+    display: 'flex',
+    gap: '12px',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   searchBox: {
     position: 'relative',
-    width: '300px',
   },
   searchInput: {
-    width: '100%',
-    padding: '12px 16px 12px 44px',
-    borderRadius: '12px',
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.05)',
-    color: '#fff',
+    padding: '10px 14px 10px 40px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text)',
     fontSize: '14px',
     outline: 'none',
-    transition: 'all 0.2s',
+    width: '260px',
+    transition: 'border-color 0.2s',
   },
-  searchIcon: {
+  searchIconWrap: {
     position: 'absolute',
-    left: '14px',
+    left: '12px',
     top: '50%',
     transform: 'translateY(-50%)',
-    color: '#888',
+    color: 'var(--text-muted)',
+    display: 'flex',
+    pointerEvents: 'none',
   },
-  categories: {
+  addBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 20px',
+    borderRadius: 'var(--radius-sm)',
+    border: 'none',
+    background: 'var(--primary)',
+    color: '#FFFFFF',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s',
+  },
+  categoryBar: {
     display: 'flex',
     gap: '8px',
     marginBottom: '24px',
     flexWrap: 'wrap',
   },
-  categoryBtn: (active) => ({
-    padding: '10px 20px',
-    borderRadius: '10px',
-    border: active ? '2px solid #d4a574' : '1px solid rgba(255,255,255,0.1)',
-    background: active ? 'rgba(212,165,116,0.2)' : 'rgba(255,255,255,0.05)',
-    color: active ? '#d4a574' : '#aaa',
-    fontSize: '14px',
+  catBtn: (active) => ({
+    padding: '8px 18px',
+    borderRadius: 'var(--radius-sm)',
+    border: active ? '1px solid var(--primary)' : '1px solid var(--border)',
+    background: active ? 'var(--primary-light)' : 'var(--surface)',
+    color: active ? 'var(--primary)' : 'var(--text-secondary)',
+    fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'all 0.2s',
+    transition: 'all 0.15s',
   }),
-  stats: {
+  statsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '16px',
     marginBottom: '24px',
   },
-  statCard: (color) => ({
-    background: 'rgba(255,255,255,0.05)',
-    borderRadius: '16px',
+  statCard: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius)',
     padding: '20px',
-    border: `1px solid ${color}30`,
-    animation: 'fade-in 0.5s ease',
-  }),
-  statIcon: (color) => ({
-    width: '48px',
-    height: '48px',
+    transition: 'box-shadow 0.2s',
+  },
+  statIconWrap: (color) => ({
+    width: '44px',
+    height: '44px',
     borderRadius: '12px',
-    background: `${color}20`,
+    background: `${color}12`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: color,
-    marginBottom: '12px',
+    color,
+    marginBottom: '14px',
   }),
   statValue: {
     fontSize: '28px',
     fontWeight: '700',
-    color: '#fff',
+    color: 'var(--text)',
+    lineHeight: 1,
   },
   statLabel: {
     fontSize: '13px',
-    color: '#888',
-    marginTop: '4px',
+    color: 'var(--text-muted)',
+    marginTop: '6px',
   },
   alertBanner: {
-    background: 'linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(239,68,68,0.05) 100%)',
-    border: '1px solid rgba(239,68,68,0.3)',
-    borderRadius: '12px',
+    background: 'rgba(239,68,68,0.06)',
+    border: '1px solid rgba(239,68,68,0.15)',
+    borderRadius: 'var(--radius)',
     padding: '16px 20px',
     marginBottom: '24px',
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
-    animation: 'fade-in 0.5s ease',
+    gap: '14px',
   },
   alertIcon: {
-    color: '#ef4444',
+    color: 'var(--danger)',
     flexShrink: 0,
   },
   alertText: {
@@ -145,18 +184,18 @@ const styles = {
   },
   alertTitle: {
     fontWeight: '600',
-    color: '#ef4444',
+    color: 'var(--danger)',
     fontSize: '14px',
   },
   alertDesc: {
-    color: '#ccc',
+    color: 'var(--text-secondary)',
     fontSize: '13px',
     marginTop: '2px',
   },
-  tableContainer: {
-    background: 'rgba(255,255,255,0.03)',
-    borderRadius: '16px',
-    border: '1px solid rgba(255,255,255,0.08)',
+  tableWrap: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius)',
     overflow: 'hidden',
   },
   table: {
@@ -164,23 +203,23 @@ const styles = {
     borderCollapse: 'collapse',
   },
   th: {
-    padding: '16px 20px',
+    padding: '14px 20px',
     textAlign: 'left',
     fontSize: '12px',
     fontWeight: '600',
-    color: '#888',
+    color: 'var(--text-muted)',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
-    borderBottom: '1px solid rgba(255,255,255,0.08)',
-    background: 'rgba(255,255,255,0.02)',
+    borderBottom: '1px solid var(--border)',
+    background: 'var(--surface-hover)',
+    whiteSpace: 'nowrap',
   },
   td: {
-    padding: '16px 20px',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    padding: '14px 20px',
+    borderBottom: '1px solid var(--border)',
     fontSize: '14px',
-  },
-  tr: {
-    transition: 'all 0.2s',
+    color: 'var(--text)',
+    verticalAlign: 'middle',
   },
   nameCell: {
     display: 'flex',
@@ -188,129 +227,160 @@ const styles = {
     gap: '12px',
   },
   nameIcon: {
-    width: '40px',
-    height: '40px',
+    width: '38px',
+    height: '38px',
     borderRadius: '10px',
-    background: 'rgba(212,165,116,0.15)',
+    background: 'var(--primary-light)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#d4a574',
+    color: 'var(--primary)',
+    flexShrink: 0,
   },
-  productName: {
+  nameText: {
     fontWeight: '600',
-    color: '#fff',
   },
-  categoryBadge: (cat) => ({
+  badge: (bg, color) => ({
     padding: '4px 12px',
     borderRadius: '20px',
     fontSize: '12px',
     fontWeight: '600',
-    background: getCategoryColor(cat) + '20',
-    color: getCategoryColor(cat),
-    border: `1px solid ${getCategoryColor(cat)}40`,
+    background: bg,
+    color,
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
   }),
-  quantity: {
+  qtyValue: {
     fontWeight: '600',
-    color: '#fff',
+    color: 'var(--text)',
   },
-  unit: {
-    color: '#888',
+  qtyUnit: {
+    color: 'var(--text-muted)',
+    fontSize: '13px',
+    marginLeft: '2px',
+  },
+  minQtyText: {
+    color: 'var(--text-muted)',
     fontSize: '13px',
   },
-  progressBar: {
-    width: '100px',
+  progressOuter: {
+    width: '80px',
     height: '6px',
-    background: 'rgba(255,255,255,0.1)',
+    background: 'var(--border)',
     borderRadius: '3px',
     overflow: 'hidden',
+    marginBottom: '6px',
   },
-  progressFill: (pct, color) => ({
-    width: `${Math.min(pct, 100)}%`,
+  progressInner: (pct, color) => ({
+    width: Math.min(pct, 100) + '%',
     height: '100%',
     background: color,
     borderRadius: '3px',
     transition: 'width 0.3s',
   }),
-  badge: (status) => ({
-    padding: '6px 14px',
-    borderRadius: '20px',
-    fontSize: '12px',
-    fontWeight: '600',
+  statusBadge: (color) => ({
     display: 'inline-flex',
     alignItems: 'center',
     gap: '6px',
-    ...getStatusStyle(status),
+    fontSize: '12px',
+    fontWeight: '600',
+    color,
   }),
-  badgeDot: (color) => ({
+  statusDot: (color) => ({
     width: '6px',
     height: '6px',
     borderRadius: '50%',
     background: color,
+    flexShrink: 0,
   }),
   supplierCell: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    color: '#aaa',
+    color: 'var(--text-secondary)',
     fontSize: '13px',
+    whiteSpace: 'nowrap',
   },
   dateCell: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    color: '#aaa',
+    color: 'var(--text-secondary)',
     fontSize: '13px',
+    whiteSpace: 'nowrap',
   },
-  actionBtns: {
+  actions: {
     display: 'flex',
-    gap: '8px',
+    gap: '6px',
+    alignItems: 'center',
   },
-  editBtn: {
+  iconBtn: {
     padding: '8px',
     borderRadius: '8px',
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.05)',
-    color: '#d4a574',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--primary)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s',
+    transition: 'all 0.15s',
   },
-  qtyBtn: (type) => ({
-    padding: '6px 10px',
+  qtyBtnInc: {
+    padding: '6px 8px',
     borderRadius: '8px',
     border: 'none',
-    background: type === 'inc' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)',
-    color: type === 'inc' ? '#22c55e' : '#ef4444',
+    background: 'rgba(34,197,94,0.1)',
+    color: 'var(--success)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s',
-  }),
-  modalOverlay: {
+    transition: 'all 0.15s',
+  },
+  qtyBtnDec: {
+    padding: '6px 8px',
+    borderRadius: '8px',
+    border: 'none',
+    background: 'rgba(239,68,68,0.1)',
+    color: 'var(--danger)',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.15s',
+  },
+  emptyState: {
+    textAlign: 'center',
+    padding: '60px 20px',
+    color: 'var(--text-muted)',
+  },
+  emptyIcon: {
+    marginBottom: '12px',
+    color: 'var(--border-strong)',
+  },
+  overlay: {
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0,0,0,0.7)',
+    background: 'rgba(0,0,0,0.4)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
-    animation: 'fade-in 0.2s ease',
+    backdropFilter: 'blur(4px)',
   },
   modal: {
-    background: '#2d1810',
-    borderRadius: '20px',
+    background: 'var(--surface)',
+    borderRadius: 'var(--radius)',
     width: '520px',
+    maxWidth: '94vw',
     maxHeight: '90vh',
     overflow: 'auto',
-    border: '1px solid rgba(255,255,255,0.1)',
-    animation: 'fade-in 0.3s ease',
+    border: '1px solid var(--border)',
+    boxShadow: 'var(--shadow-lg)',
   },
   modalHeader: {
     padding: '24px 24px 0',
@@ -319,54 +389,55 @@ const styles = {
     justifyContent: 'space-between',
   },
   modalTitle: {
-    fontSize: '20px',
+    fontSize: '18px',
     fontWeight: '700',
-    color: '#fff',
+    color: 'var(--text)',
+    margin: 0,
   },
   modalClose: {
-    background: 'rgba(255,255,255,0.1)',
+    background: 'var(--surface-active)',
     border: 'none',
     borderRadius: '10px',
-    padding: '10px',
+    padding: '8px',
     cursor: 'pointer',
-    color: '#fff',
+    color: 'var(--text-muted)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s',
+    transition: 'all 0.15s',
   },
   modalBody: {
     padding: '24px',
   },
   formGroup: {
-    marginBottom: '20px',
+    marginBottom: '18px',
   },
   label: {
     display: 'block',
     fontSize: '13px',
     fontWeight: '600',
-    color: '#aaa',
-    marginBottom: '8px',
+    color: 'var(--text-secondary)',
+    marginBottom: '6px',
   },
   input: {
     width: '100%',
-    padding: '14px 16px',
-    borderRadius: '12px',
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.05)',
-    color: '#fff',
+    padding: '11px 14px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text)',
     fontSize: '14px',
     outline: 'none',
-    transition: 'all 0.2s',
+    transition: 'border-color 0.2s',
     boxSizing: 'border-box',
   },
   select: {
     width: '100%',
-    padding: '14px 16px',
-    borderRadius: '12px',
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.05)',
-    color: '#fff',
+    padding: '11px 14px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text)',
     fontSize: '14px',
     outline: 'none',
     cursor: 'pointer',
@@ -384,80 +455,44 @@ const styles = {
     justifyContent: 'flex-end',
   },
   cancelBtn: {
-    padding: '12px 24px',
-    borderRadius: '12px',
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.05)',
-    color: '#aaa',
+    padding: '10px 20px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text-secondary)',
     fontSize: '14px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'all 0.2s',
+    transition: 'all 0.15s',
   },
   saveBtn: {
-    padding: '12px 28px',
-    borderRadius: '12px',
+    padding: '10px 24px',
+    borderRadius: 'var(--radius-sm)',
     border: 'none',
-    background: 'linear-gradient(135deg, #d4a574 0%, #b8956a 100%)',
-    color: '#fff',
+    background: 'var(--primary)',
+    color: '#FFFFFF',
     fontSize: '14px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
-  emptyState: {
-    textAlign: 'center',
-    padding: '60px 20px',
-    color: '#888',
-  },
-  emptyIcon: {
-    marginBottom: '16px',
-    color: '#555',
+    transition: 'opacity 0.15s',
   },
 };
 
-function getCategoryColor(cat) {
-  const colors = {
-    "Go'sht": '#ef4444',
-    'Non': '#f59e0b',
-    'Sous': '#8b5cf6',
-    'Sabzavot': '#22c55e',
-    'Ichimlik': '#3b82f6',
-  };
-  return colors[cat] || '#888';
-}
-
-function getStatusStyle(status) {
-  if (status === 'Yetarli') return { background: 'rgba(34,197,94,0.15)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.3)' };
-  if (status === 'Kam qoldi') return { background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' };
-  return { background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' };
-}
-
-function getStatus(quantity, minQuantity) {
-  if (quantity === 0) return 'Tugadi';
-  if (quantity <= minQuantity) return 'Kam qoldi';
-  return 'Yetarli';
-}
-
-function getProgressColor(quantity, minQuantity) {
-  if (quantity === 0) return '#ef4444';
-  if (quantity <= minQuantity) return '#f59e0b';
-  return '#22c55e';
-}
-
-const defaultInventory = [
-  { id: 1, name: "Mol go'shti", category: "Go'sht", quantity: 25, unit: 'kg', minQuantity: 10, supplier: 'Toshkent Go\'sht', expiryDate: '2026-08-15' },
-  { id: 2, name: "Qo'y go'shti", category: "Go'sht", quantity: 3, unit: 'kg', minQuantity: 8, supplier: 'Samarqand Fermer', expiryDate: '2026-08-10' },
-  { id: 3, name: "Non", category: "Non", quantity: 50, unit: 'dona', minQuantity: 20, supplier: 'Nonvoy Usti', expiryDate: '2026-07-30' },
-  { id: 4, name: "Lavash", category: "Non", quantity: 15, unit: 'dona', minQuantity: 10, supplier: 'Nonvoy Usti', expiryDate: '2026-07-29' },
-  { id: 5, name: "Ketchup", category: "Sous", quantity: 12, unit: 'litr', minQuantity: 5, supplier: 'Oziq-ovqat', expiryDate: '2026-12-01' },
-  { id: 6, name: "Mayonez", category: "Sous", quantity: 0, unit: 'litr', minQuantity: 5, supplier: 'Oziq-ovqat', expiryDate: '2026-11-15' },
-  { id: 7, name: "Pomidor", category: "Sabzavot", quantity: 18, unit: 'kg', minQuantity: 8, supplier: 'Bog\'dod Bozori', expiryDate: '2026-08-05' },
-  { id: 8, name: "Cola", category: "Ichimlik", quantity: 30, unit: 'dona', minQuantity: 15, supplier: 'Imzo', expiryDate: '2027-01-20' },
-];
+const css = `
+  @media (max-width: 1100px) {
+    .inv-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .inv-table-wrap { overflow-x: auto; }
+  }
+  @media (max-width: 640px) {
+    .inv-stats-grid { grid-template-columns: 1fr !important; }
+    .inv-header-row { flex-direction: column !important; align-items: stretch !important; }
+    .inv-header-actions { flex-direction: column; }
+    .inv-header-actions input { width: 100% !important; }
+    .inv-form-row { grid-template-columns: 1fr !important; }
+  }
+`;
 
 export default function AdminInventory() {
-  const navigate = useNavigate();
   const store = useStore();
   const inventory = store?.inventory || defaultInventory;
   const updateInventory = store?.updateInventory || (() => {});
@@ -478,9 +513,9 @@ export default function AdminInventory() {
   });
 
   const filtered = inventory.filter((item) => {
-    const matchCategory = activeCategory === 'Hammasi' || item.category === activeCategory;
+    const matchCat = activeCategory === 'Hammasi' || item.category === activeCategory;
     const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
-    return matchCategory && matchSearch;
+    return matchCat && matchSearch;
   });
 
   const stats = {
@@ -492,13 +527,13 @@ export default function AdminInventory() {
 
   const criticalItems = inventory.filter((i) => i.quantity === 0 || i.quantity <= i.minQuantity);
 
-  const handleOpenAdd = () => {
+  const openAdd = () => {
     setEditingItem(null);
     setFormData({ name: '', category: "Go'sht", quantity: '', unit: 'kg', minQuantity: '', supplier: '', expiryDate: '' });
     setShowModal(true);
   };
 
-  const handleOpenEdit = (item) => {
+  const openEdit = (item) => {
     setEditingItem(item);
     setFormData({
       name: item.name,
@@ -529,75 +564,40 @@ export default function AdminInventory() {
   const handleQtyChange = (id, delta) => {
     const item = inventory.find((i) => i.id === id);
     if (item) {
-      const newQty = Math.max(0, item.quantity + delta);
-      updateInventory(id, { quantity: newQty });
+      updateInventory(id, { quantity: Math.max(0, item.quantity + delta) });
     }
   };
 
   return (
-    <div style={styles.container}>
-      <style>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes stagger {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        input::placeholder, select::placeholder { color: #666; }
-        input:focus, select:focus { border-color: #d4a574 !important; }
-        .inventory-row:hover { background: rgba(255,255,255,0.03) !important; }
-        .edit-btn:hover { background: rgba(212,165,116,0.2) !important; }
-        .qty-btn:hover { filter: brightness(1.3); }
-        .back-btn:hover { background: rgba(255,255,255,0.15) !important; }
-        .modal-close:hover { background: rgba(255,255,255,0.2) !important; }
-        .cancel-btn:hover { background: rgba(255,255,255,0.1) !important; }
-        .save-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .cat-btn:hover { background: rgba(255,255,255,0.1) !important; }
-        .search-input:focus { border-color: #d4a574 !important; background: rgba(255,255,255,0.08) !important; }
-        .stat-card { transition: transform 0.2s, box-shadow 0.2s; }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-        select option { background: #2d1810; color: #fff; }
-      `}</style>
+    <div style={s.page}>
+      <style>{css}</style>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <button className="back-btn" style={styles.backBtn} onClick={() => navigate(-1)}>
-            <ChevronLeft size={22} />
-          </button>
-          <h1 style={styles.title}>Inventarizatsiya</h1>
-        </div>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <div style={styles.searchBox}>
-            <Search size={18} style={styles.searchIcon} />
+      <div className="inv-header-row" style={s.headerRow}>
+        <h1 style={s.title}>Inventarizatsiya</h1>
+        <div className="inv-header-actions" style={s.headerActions}>
+          <div style={s.searchBox}>
+            <div style={s.searchIconWrap}>
+              <Search size={16} />
+            </div>
             <input
-              className="search-input"
-              style={styles.searchInput}
+              style={s.searchInput}
               placeholder="Mahsulot qidirish..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button
-            className="btn btn-primary"
-            style={{ padding: '12px 24px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #d4a574 0%, #b8956a 100%)', color: '#fff', fontSize: '14px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}
-            onClick={handleOpenAdd}
-          >
+          <button style={s.addBtn} onClick={openAdd}>
             <Plus size={18} />
             Yangi mahsulot
           </button>
         </div>
       </div>
 
-      {/* Categories */}
-      <div style={styles.categories}>
+      <div style={s.categoryBar}>
         {categories.map((cat) => (
           <button
             key={cat}
-            className="cat-btn"
-            style={styles.categoryBtn(activeCategory === cat)}
+            style={s.catBtn(activeCategory === cat)}
             onClick={() => setActiveCategory(cat)}
           >
             {cat}
@@ -605,153 +605,132 @@ export default function AdminInventory() {
         ))}
       </div>
 
-      {/* Stats */}
-      <div style={styles.stats}>
-        <div className="stat-card" style={styles.statCard('#d4a574')}>
-          <div style={styles.statIcon('#d4a574')}>
-            <Package size={24} />
+      <div className="inv-stats-grid" style={s.statsGrid}>
+        <div style={s.statCard}>
+          <div style={s.statIconWrap('var(--primary)')}>
+            <Package size={22} />
           </div>
-          <div style={styles.statValue}>{stats.total}</div>
-          <div style={styles.statLabel}>Jami mahsulotlar</div>
+          <div style={s.statValue}>{stats.total}</div>
+          <div style={s.statLabel}>Jami mahsulotlar</div>
         </div>
-        <div className="stat-card" style={styles.statCard('#ef4444')}>
-          <div style={styles.statIcon('#ef4444')}>
-            <AlertTriangle size={24} />
+        <div style={s.statCard}>
+          <div style={s.statIconWrap('var(--danger)')}>
+            <AlertTriangle size={22} />
           </div>
-          <div style={styles.statValue}>{stats.out}</div>
-          <div style={styles.statLabel}>Tugagan</div>
+          <div style={s.statValue}>{stats.out}</div>
+          <div style={s.statLabel}>Tugagan</div>
         </div>
-        <div className="stat-card" style={styles.statCard('#f59e0b')}>
-          <div style={styles.statIcon('#f59e0b')}>
-            <ArrowDown size={24} />
+        <div style={s.statCard}>
+          <div style={s.statIconWrap('var(--warning)')}>
+            <ArrowDown size={22} />
           </div>
-          <div style={styles.statValue}>{stats.low}</div>
-          <div style={styles.statLabel}>Kam qoldi</div>
+          <div style={s.statValue}>{stats.low}</div>
+          <div style={s.statLabel}>Kam qoldi</div>
         </div>
-        <div className="stat-card" style={styles.statCard('#22c55e')}>
-          <div style={styles.statIcon('#22c55e')}>
-            <ArrowUp size={24} />
+        <div style={s.statCard}>
+          <div style={s.statIconWrap('var(--success)')}>
+            <ArrowUp size={22} />
           </div>
-          <div style={styles.statValue}>{stats.sufficient}</div>
-          <div style={styles.statLabel}>Yetarli</div>
+          <div style={s.statValue}>{stats.sufficient}</div>
+          <div style={s.statLabel}>Yetarli</div>
         </div>
       </div>
 
-      {/* Alert Banner */}
       {criticalItems.length > 0 && (
-        <div style={styles.alertBanner}>
-          <AlertTriangle size={24} style={styles.alertIcon} />
-          <div style={styles.alertText}>
-            <div style={styles.alertTitle}>Diqqat! {criticalItems.length} ta mahsulotda muammo bor</div>
-            <div style={styles.alertDesc}>
+        <div style={s.alertBanner}>
+          <AlertTriangle size={20} style={s.alertIcon} />
+          <div style={s.alertText}>
+            <div style={s.alertTitle}>Diqqat! {criticalItems.length} ta mahsulotda muammo bor</div>
+            <div style={s.alertDesc}>
               {criticalItems.map((i) => i.name).join(', ')} — zaxira yetarli emas yoki tugagan
             </div>
           </div>
         </div>
       )}
 
-      {/* Table */}
-      <div style={styles.tableContainer}>
-        <table style={styles.table}>
+      <div className="inv-table-wrap" style={s.tableWrap}>
+        <table style={s.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Mahsulot</th>
-              <th style={styles.th}>Kategoriya</th>
-              <th style={styles.th}>Miqdori</th>
-              <th style={styles.th}>Min. limit</th>
-              <th style={styles.th}>Holat</th>
-              <th style={styles.th}>Yetkazib beruvchi</th>
-              <th style={styles.th}>Muddati</th>
-              <th style={styles.th}>Amallar</th>
+              <th style={s.th}>Mahsulot</th>
+              <th style={s.th}>Kategoriya</th>
+              <th style={s.th}>Miqdori</th>
+              <th style={s.th}>Min. limit</th>
+              <th style={s.th}>Holat</th>
+              <th style={s.th}>Yetkazib beruvchi</th>
+              <th style={s.th}>Muddati</th>
+              <th style={s.th}>Amallar</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
                 <td colSpan="8">
-                  <div style={styles.emptyState}>
-                    <Package size={48} style={styles.emptyIcon} />
-                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Mahsulot topilmadi</div>
+                  <div style={s.emptyState}>
+                    <Package size={44} style={s.emptyIcon} />
+                    <div style={{ fontSize: '15px', fontWeight: '600' }}>Mahsulot topilmadi</div>
                   </div>
                 </td>
               </tr>
             ) : (
-              filtered.map((item, idx) => {
+              filtered.map((item) => {
                 const status = getStatus(item.quantity, item.minQuantity);
+                const statusColor = getStatusColor(status);
                 const pct = item.minQuantity > 0 ? (item.quantity / item.minQuantity) * 100 : 0;
-                const progressColor = getProgressColor(item.quantity, item.minQuantity);
+                const catBadge = getCategoryBadgeStyle(item.category);
                 return (
-                  <tr
-                    key={item.id}
-                    className="inventory-row"
-                    style={{
-                      ...styles.tr,
-                      animation: `stagger 0.4s ease ${idx * 0.05}s both`,
-                    }}
-                  >
-                    <td style={styles.td}>
-                      <div style={styles.nameCell}>
-                        <div style={styles.nameIcon}>
+                  <tr key={item.id}>
+                    <td style={s.td}>
+                      <div style={s.nameCell}>
+                        <div style={s.nameIcon}>
                           <Package size={18} />
                         </div>
-                        <span style={styles.productName}>{item.name}</span>
+                        <span style={s.nameText}>{item.name}</span>
                       </div>
                     </td>
-                    <td style={styles.td}>
-                      <span style={styles.categoryBadge(item.category)}>{item.category}</span>
+                    <td style={s.td}>
+                      <span style={s.badge(catBadge.bg, catBadge.color)}>{item.category}</span>
                     </td>
-                    <td style={styles.td}>
-                      <span style={styles.quantity}>{item.quantity}</span>
-                      <span style={styles.unit}> {item.unit}</span>
+                    <td style={s.td}>
+                      <span style={s.qtyValue}>{item.quantity}</span>
+                      <span style={s.qtyUnit}>{item.unit}</span>
                     </td>
-                    <td style={styles.td}>
-                      <span style={{ color: '#888' }}>{item.minQuantity} {item.unit}</span>
+                    <td style={s.td}>
+                      <span style={s.minQtyText}>{item.minQuantity} {item.unit}</span>
                     </td>
-                    <td style={styles.td}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={styles.progressBar}>
-                          <div style={styles.progressFill(pct, progressColor)} />
+                    <td style={s.td}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <div style={s.progressOuter}>
+                          <div style={s.progressInner(pct, statusColor)} />
                         </div>
-                        <span style={styles.badge(status)}>
-                          <span style={styles.badgeDot(progressColor)} />
+                        <div style={s.statusBadge(statusColor)}>
+                          <span style={s.statusDot(statusColor)} />
                           {status}
-                        </span>
+                        </div>
                       </div>
                     </td>
-                    <td style={styles.td}>
-                      <div style={styles.supplierCell}>
+                    <td style={s.td}>
+                      <div style={s.supplierCell}>
                         <Truck size={14} />
                         {item.supplier}
                       </div>
                     </td>
-                    <td style={styles.td}>
-                      <div style={styles.dateCell}>
+                    <td style={s.td}>
+                      <div style={s.dateCell}>
                         <Calendar size={14} />
                         {item.expiryDate}
                       </div>
                     </td>
-                    <td style={styles.td}>
-                      <div style={styles.actionBtns}>
-                        <button
-                          className="edit-btn"
-                          style={styles.editBtn}
-                          onClick={() => handleOpenEdit(item)}
-                        >
-                          <Edit size={16} />
+                    <td style={s.td}>
+                      <div style={s.actions}>
+                        <button style={s.iconBtn} onClick={() => openEdit(item)}>
+                          <Edit size={15} />
                         </button>
-                        <button
-                          className="qty-btn"
-                          style={styles.qtyBtn('dec')}
-                          onClick={() => handleQtyChange(item.id, -1)}
-                        >
-                          <ArrowDown size={14} />
+                        <button style={s.qtyBtnDec} onClick={() => handleQtyChange(item.id, -1)}>
+                          <Minus size={14} />
                         </button>
-                        <button
-                          className="qty-btn"
-                          style={styles.qtyBtn('inc')}
-                          onClick={() => handleQtyChange(item.id, 1)}
-                        >
-                          <ArrowUp size={14} />
+                        <button style={s.qtyBtnInc} onClick={() => handleQtyChange(item.id, 1)}>
+                          <Plus size={14} />
                         </button>
                       </div>
                     </td>
@@ -763,30 +742,29 @@ export default function AdminInventory() {
         </table>
       </div>
 
-      {/* Modal */}
       {showModal && (
-        <div style={styles.modalOverlay} onClick={() => setShowModal(false)}>
-          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>{editingItem ? "Mahsulotni tahrirlash" : "Yangi mahsulot qo'shish"}</h2>
-              <button className="modal-close" style={styles.modalClose} onClick={() => setShowModal(false)}>
-                ✕
+        <div style={s.overlay} onClick={() => setShowModal(false)}>
+          <div style={s.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={s.modalHeader}>
+              <h2 style={s.modalTitle}>{editingItem ? 'Mahsulotni tahrirlash' : "Yangi mahsulot qo'shish"}</h2>
+              <button style={s.modalClose} onClick={() => setShowModal(false)}>
+                <X size={18} />
               </button>
             </div>
-            <div style={styles.modalBody}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Mahsulot nomi</label>
+            <div style={s.modalBody}>
+              <div style={s.formGroup}>
+                <label style={s.label}>Mahsulot nomi</label>
                 <input
-                  style={styles.input}
+                  style={s.input}
                   placeholder="Masalan: Mol go'shti"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Kategoriya</label>
+              <div style={s.formGroup}>
+                <label style={s.label}>Kategoriya</label>
                 <select
-                  style={styles.select}
+                  style={s.select}
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 >
@@ -795,21 +773,21 @@ export default function AdminInventory() {
                   ))}
                 </select>
               </div>
-              <div style={styles.formRow}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Miqdori</label>
+              <div className="inv-form-row" style={s.formRow}>
+                <div style={s.formGroup}>
+                  <label style={s.label}>Miqdori</label>
                   <input
-                    style={styles.input}
+                    style={s.input}
                     type="number"
                     placeholder="0"
                     value={formData.quantity}
                     onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>O'lchov birligi</label>
+                <div style={s.formGroup}>
+                  <label style={s.label}>O'lchov birligi</label>
                   <select
-                    style={styles.select}
+                    style={s.select}
                     value={formData.unit}
                     onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
                   >
@@ -819,46 +797,49 @@ export default function AdminInventory() {
                   </select>
                 </div>
               </div>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Minimal limit</label>
+              <div style={s.formGroup}>
+                <label style={s.label}>Minimal limit</label>
                 <input
-                  style={styles.input}
+                  style={s.input}
                   type="number"
                   placeholder="0"
                   value={formData.minQuantity}
                   onChange={(e) => setFormData({ ...formData, minQuantity: e.target.value })}
                 />
               </div>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Yetkazib beruvchi</label>
+              <div style={s.formGroup}>
+                <label style={s.label}>Yetkazib beruvchi</label>
                 <input
-                  style={styles.input}
+                  style={s.input}
                   placeholder="Kompaniya nomi"
                   value={formData.supplier}
                   onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
                 />
               </div>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Muddati</label>
+              <div style={s.formGroup}>
+                <label style={s.label}>Muddati</label>
                 <input
-                  style={styles.input}
+                  style={s.input}
                   type="date"
                   value={formData.expiryDate}
                   onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
                 />
               </div>
             </div>
-            <div style={styles.modalFooter}>
-              <button className="cancel-btn" style={styles.cancelBtn} onClick={() => setShowModal(false)}>
+            <div style={s.modalFooter}>
+              <button style={s.cancelBtn} onClick={() => setShowModal(false)}>
                 Bekor qilish
               </button>
               <button
-                className="save-btn"
-                style={styles.saveBtn}
+                style={{
+                  ...s.saveBtn,
+                  opacity: !formData.name || !formData.quantity ? 0.5 : 1,
+                  cursor: !formData.name || !formData.quantity ? 'not-allowed' : 'pointer',
+                }}
                 onClick={handleSave}
                 disabled={!formData.name || !formData.quantity}
               >
-                {editingItem ? "Saqlash" : "Qo'shish"}
+                {editingItem ? 'Saqlash' : "Qo'shish"}
               </button>
             </div>
           </div>

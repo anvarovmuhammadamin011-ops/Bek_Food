@@ -13,9 +13,7 @@ export default function VerifyPage() {
   const [resendTimer, setResendTimer] = useState(60);
   const inputsRef = useRef([]);
 
-  useEffect(() => {
-    inputsRef.current[0]?.focus();
-  }, []);
+  useEffect(() => { inputsRef.current[0]?.focus(); }, []);
 
   useEffect(() => {
     if (resendTimer <= 0) return;
@@ -41,7 +39,7 @@ export default function VerifyPage() {
     setLoading(true);
     setTimeout(() => {
       if (fullCode === '000000') {
-        setError('Noto\'g\'ri kod');
+        setError("Noto'g'ri kod");
         setLoading(false);
         return;
       }
@@ -64,21 +62,17 @@ export default function VerifyPage() {
   const formatTimer = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
   return (
-    <div className="h-full flex flex-col items-center justify-center px-5" style={{ background: '#0a0a0a' }}>
+    <div className="h-full flex flex-col items-center justify-center px-5" style={{ background: 'var(--bg)' }}>
       <div style={{ width: '100%', maxWidth: 320 }}>
-        {/* Top bar */}
-        <div style={{ width: 40, height: 4, background: '#333', borderRadius: 2, margin: '0 auto 28px' }} />
+        <div style={{ width: 40, height: 4, background: 'var(--border-strong)', borderRadius: 2, margin: '0 auto 28px' }} />
 
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#fff', fontSize: 20, marginBottom: 6 }}>
-            Kodni kiriting
-          </div>
-          <div style={{ color: '#b8b8b8', fontSize: 12 }}>
-            Telegram'ga <span style={{ color: '#fff' }}>{phone}</span> raqamiga kod yubordik
+          <div className="heading" style={{ fontSize: 22, marginBottom: 8 }}>Kodni kiriting</div>
+          <div className="body" style={{ fontSize: 13 }}>
+            Telegram'ga <span style={{ color: 'var(--text)', fontWeight: 500 }}>{phone}</span> raqamiga kod yubordik
           </div>
         </div>
 
-        {/* OTP inputs */}
         <div className={`code-inputs ${error ? 'animate-shake' : ''}`} onPaste={handlePaste} style={{ marginBottom: 20 }}>
           {code.map((digit, i) => (
             <input
@@ -91,27 +85,26 @@ export default function VerifyPage() {
               onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
               className={`code-digit ${digit ? 'filled' : ''}`}
-              style={error ? { borderColor: '#e51e1e', background: '#1a0505' } : {}}
+              style={error ? { borderColor: 'var(--danger)', background: 'var(--danger-light)' } : {}}
             />
           ))}
         </div>
 
         {error && (
-          <div style={{ color: '#e51e1e', fontSize: 12, textAlign: 'center', marginBottom: 16 }}>
+          <div style={{ color: 'var(--danger)', fontSize: 13, textAlign: 'center', marginBottom: 16, fontWeight: 500 }}>
             {error}
           </div>
         )}
 
-        {/* Resend timer */}
         <div style={{ textAlign: 'center' }}>
           {resendTimer > 0 ? (
-            <span style={{ color: '#6b6b6b', fontSize: 11 }}>
+            <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>
               Kodni qayta yuborish · {formatTimer(resendTimer)}
             </span>
           ) : (
             <button
               onClick={() => { setResendTimer(60); setError(''); setCode(['', '', '', '', '', '']); }}
-              style={{ color: '#e51e1e', fontSize: 11, fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer' }}
+              style={{ color: 'var(--primary)', fontSize: 13, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
             >
               Kodni qayta yuborish
             </button>

@@ -47,6 +47,7 @@ import AdminAudit from './pages/admin/AdminAudit';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminBranches from './pages/admin/AdminBranches';
 import AdminStatistics from './pages/admin/AdminStatistics';
+import AdminLayout from './components/AdminLayout';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, role } = useStore();
@@ -104,20 +105,20 @@ export default function App() {
         <Route path="/courier/settings" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierSettings /></AppShell></ProtectedRoute>} />
 
         {/* Admin routes */}
-        <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminDashboard /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminOrders /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/menu" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminMenu /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/customers" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminCustomers /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminEmployees /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminAnalytics /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/finance" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminFinance /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminInventory /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/banners" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminBanners /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/reviews" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminReviews /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/audit" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminAudit /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminSettings /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/branches" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminBranches /></AppShell></ProtectedRoute>} />
-        <Route path="/admin/statistics" element={<ProtectedRoute allowedRoles={['admin']}><AppShell wide><AdminStatistics /></AppShell></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/menu" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminMenu /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/customers" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminCustomers /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminEmployees /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminAnalytics /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/finance" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminFinance /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminInventory /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/banners" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminBanners /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/reviews" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminReviews /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/audit" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminAudit /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/branches" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminBranches /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/statistics" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminStatistics /></AdminLayout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

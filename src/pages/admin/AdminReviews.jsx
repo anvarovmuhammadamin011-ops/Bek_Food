@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import useStore from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
 import {
-  ChevronLeft,
   Star,
   MessageCircle,
   Eye,
@@ -10,6 +9,8 @@ import {
   Filter,
   ThumbsUp,
   Reply,
+  TrendingUp,
+  ArrowUpRight,
 } from 'lucide-react';
 
 const mockReviews = [
@@ -19,7 +20,7 @@ const mockReviews = [
     avatar: 'AN',
     rating: 5,
     date: '2026-07-25',
-    comment: 'Ajoyib taom! Darvoza qovurilgan mol go\'shtining ta\'mini hech qachon unutmayman. Xizmat juda professional.',
+    comment: "Ajoyib taom! Darvoza qovurilgan mol go'shtining ta'mini hech qachon unutmayman. Xizmat juda professional.",
     orderRef: '#ORD-1024',
     likes: 12,
     hidden: false,
@@ -41,7 +42,7 @@ const mockReviews = [
     avatar: 'SR',
     rating: 5,
     date: '2026-07-23',
-    comment: 'Do\'stlar bilan kelgan edik. Hamma narsa ajoyib edi! Hashamatli muhit va mazali taomlar. Albatta qaytaman.',
+    comment: "Do'stlar bilan kelgan edik. Hamma narsa ajoyib edi! Hashamatli muhit va mazali taomlar. Albatta qaytaman.",
     orderRef: '#ORD-1015',
     likes: 15,
     hidden: false,
@@ -52,7 +53,7 @@ const mockReviews = [
     avatar: 'NA',
     rating: 3,
     date: '2026-07-22',
-    comment: 'Taom yaxshi edi, lekin kutish vaqti juda uzun bo\'ldi. 40 daqiqa kutdik. Shuningdek, Wi-Fi ishlamadi.',
+    comment: "Taom yaxshi edi, lekin kutish vaqti juda uzun bo'ldi. 40 daqiqa kutdik. Shuningdek, Wi-Fi ishlamadi.",
     orderRef: '#ORD-1012',
     likes: 5,
     hidden: false,
@@ -63,7 +64,7 @@ const mockReviews = [
     avatar: 'BT',
     rating: 5,
     date: '2026-07-21',
-    comment: 'Tug\'ilgan kunimni nishonladim. Serverlar juda mehribon edi. Maxsus desert bilan supriz qilishdi. Juda minnatdorman!',
+    comment: "Tug'ilgan kunimni nishonladim. Serverlar juda mehribon edi. Maxsus desert bilan supriz qilishdi. Juda minnatdorman!",
     orderRef: '#ORD-1008',
     likes: 20,
     hidden: false,
@@ -74,7 +75,7 @@ const mockReviews = [
     avatar: 'MH',
     rating: 2,
     date: '2026-07-20',
-    comment: 'Steak men so\'ragandek emas edi. Quruq va qattiq chiqdi. Shikoyat qilganimda, hech qanday javob berishmadi.',
+    comment: "Steak men so'ragandek emas edi. Quruq va qattiq chiqdi. Shikoyat qilganimda, hech qanday javob berishmadi.",
     orderRef: '#ORD-1005',
     likes: 3,
     hidden: true,
@@ -118,7 +119,7 @@ const mockReviews = [
     avatar: 'SQ',
     rating: 4,
     date: '2026-07-16',
-    comment: 'Yashirin dasturda biznes uchrashuvi o\'tkazdik. Professional muhit va sifatli xizmat. Tavsiya qilaman.',
+    comment: "Yashirin dasturda biznes uchrashuvi o'tkazdik. Professional muhit va sifatli xizmat. Tavsiya qilaman.",
     orderRef: '#ORD-0990',
     likes: 9,
     hidden: false,
@@ -129,7 +130,6 @@ const AdminReviews = () => {
   const store = useStore();
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
-  const [filterOpen, setFilterOpen] = useState(false);
   const [replyModal, setReplyModal] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [reviews, setReviews] = useState(mockReviews);
@@ -173,393 +173,250 @@ const AdminReviews = () => {
       <Star
         key={i}
         size={size}
-        fill={i < rating ? '#f59e0b' : 'transparent'}
-        stroke={i < rating ? '#f59e0b' : '#6b7280'}
+        fill={i < rating ? 'var(--warning)' : 'transparent'}
+        stroke={i < rating ? 'var(--warning)' : 'var(--border-strong)'}
+        strokeWidth={1.5}
       />
     ));
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-      padding: '24px',
-      fontFamily: '"Inter", "Segoe UI", sans-serif',
-    }}>
-      {/* Header */}
-      <div
-        className="flex items-center justify-between animate-fade-in"
-        style={{ marginBottom: '32px' }}
-      >
-        <div className="flex items-center" style={{ gap: '16px' }}>
-          <button
-            onClick={() => navigate(-1)}
-            className="btn btn-primary"
-            style={{
-              padding: '10px',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.1)',
-            }}
-          >
-            <ChevronLeft size={20} color="#fff" />
-          </button>
-          <div>
-            <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0 }}>
-              Sharhlar boshqaruvi
-            </h1>
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: '4px 0 0 0' }}>
-              Sharhlarni ko\'ring va boshqaring
-            </p>
+    <div style={{ padding: '28px 32px', minHeight: '100vh', background: 'var(--bg)', fontFamily: 'var(--font-sans, "Inter", "Segoe UI", sans-serif)' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '28px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+            Sharhlar boshqaruvi
+          </h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: '6px 0 0 0' }}>
+            Sharhlarni ko'ring va boshqaring
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '20px 22px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Star size={22} fill="var(--warning)" stroke="var(--warning)" />
+            </div>
+            <div>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                O'rtacha baho
+              </p>
+              <p style={{ fontSize: '26px', fontWeight: 700, color: 'var(--warning)', margin: '2px 0 0 0' }}>
+                {stats.avgRating}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '20px 22px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <MessageCircle size={22} stroke="var(--primary)" />
+            </div>
+            <div>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Jami sharhlar
+              </p>
+              <p style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text)', margin: '2px 0 0 0' }}>
+                {stats.totalReviews}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '20px 22px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <TrendingUp size={22} stroke="var(--success)" />
+            </div>
+            <div>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Yangi sharhlar
+              </p>
+              <p style={{ fontSize: '26px', fontWeight: 700, color: 'var(--success)', margin: '2px 0 0 0' }}>
+                {stats.newReviews}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div style={{ position: 'relative' }}>
-          <button
-            className="btn btn-primary"
-            onClick={() => setFilterOpen(!filterOpen)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 20px',
-              background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: '10px',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: '14px',
-            }}
-          >
-            <Filter size={16} />
-            Filtr
-          </button>
-          {filterOpen && (
-            <div
-              className="animate-fade-in"
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '6px', width: 'fit-content' }}>
+          <Filter size={16} color="var(--text-muted)" style={{ marginLeft: '10px' }} />
+          {filters.map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setActiveFilter(f.key)}
               style={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                marginTop: '8px',
-                background: '#1e293b',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '12px',
-                padding: '8px',
-                minWidth: '160px',
-                zIndex: 100,
-                boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                padding: '8px 18px',
+                border: 'none',
+                borderRadius: '8px',
+                background: activeFilter === f.key ? 'var(--primary)' : 'transparent',
+                color: activeFilter === f.key ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: activeFilter === f.key ? 600 : 500,
+                transition: 'all 0.2s ease',
+                fontFamily: 'inherit',
               }}
             >
-              {filters.map((f) => (
-                <button
-                  key={f.key}
-                  onClick={() => {
-                    setActiveFilter(f.key);
-                    setFilterOpen(false);
-                  }}
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    padding: '10px 16px',
-                    border: 'none',
-                    borderRadius: '8px',
-                    background: activeFilter === f.key ? 'rgba(234,179,8,0.15)' : 'transparent',
-                    color: activeFilter === f.key ? '#f59e0b' : '#fff',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    fontSize: '14px',
-                  }}
-                >
-                  {f.label}
-                </button>
-              ))}
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {filteredReviews.length === 0 ? (
+            <div style={{ padding: '64px 32px', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'var(--surface-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <MessageCircle size={26} stroke="var(--text-muted)" />
+              </div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '15px', margin: 0, fontWeight: 500 }}>
+                Bu kategoriyada sharhlar topilmadi
+              </p>
             </div>
+          ) : (
+            filteredReviews.map((review) => (
+              <div
+                key={review.id}
+                style={{
+                  padding: '22px 24px',
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)',
+                  opacity: review.hidden ? 0.5 : 1,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        borderRadius: '12px',
+                        background: review.rating >= 4
+                          ? 'var(--primary-light)'
+                          : review.rating === 3
+                          ? 'var(--surface-active)'
+                          : 'var(--primary-light)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: review.rating >= 4 ? 'var(--primary)' : review.rating === 3 ? 'var(--text-muted)' : 'var(--danger)',
+                        fontWeight: 700,
+                        fontSize: '15px',
+                        border: '1px solid var(--border)',
+                      }}
+                    >
+                      {review.avatar}
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+                        {review.name}
+                      </h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                        <div style={{ display: 'flex', gap: '1px' }}>
+                          {renderStars(review.rating, 13)}
+                        </div>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          background: review.rating >= 4 ? 'var(--primary-light)' : review.rating === 3 ? 'var(--surface-active)' : 'var(--primary-light)',
+                          color: review.rating >= 4 ? 'var(--primary)' : review.rating === 3 ? 'var(--text-muted)' : 'var(--danger)',
+                        }}>
+                          {review.rating}.0
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+                      {review.date}
+                    </span>
+                    <span style={{
+                      color: 'var(--text-secondary)',
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      background: 'var(--surface-active)',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid var(--border)',
+                    }}>
+                      {review.orderRef}
+                    </span>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '14px', lineHeight: '1.65', color: 'var(--text-secondary)', margin: '0 0 16px 0', paddingLeft: '60px' }}>
+                  {review.comment}
+                </p>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingLeft: '60px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <ThumbsUp size={14} stroke="var(--text-muted)" />
+                    <span style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 500 }}>
+                      {review.likes}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      onClick={() => toggleHidden(review.id)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '7px 14px',
+                        background: review.hidden ? 'var(--primary-light)' : 'var(--surface-active)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '8px',
+                        color: review.hidden ? 'var(--danger)' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        transition: 'all 0.2s ease',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      {review.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
+                      {review.hidden ? 'Yashirin' : "Ko'rsatish"}
+                    </button>
+
+                    <button
+                      onClick={() => setReplyModal(review.id)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '7px 14px',
+                        background: 'var(--primary)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        color: '#FFFFFF',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        transition: 'all 0.2s ease',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      <Reply size={14} />
+                      Javob berish
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>
 
-      {/* Stats */}
-      <div
-        className="flex stagger"
-        style={{ gap: '20px', marginBottom: '32px' }}
-      >
-        {[
-          {
-            label: "O'rtacha baho",
-            value: stats.avgRating,
-            icon: <Star size={22} fill="#f59e0b" stroke="#f59e0b" />,
-            color: '#f59e0b',
-            bg: 'rgba(245,158,11,0.1)',
-          },
-          {
-            label: 'Jami sharhlar',
-            value: stats.totalReviews,
-            icon: <MessageCircle size={22} color="#3b82f6" />,
-            color: '#3b82f6',
-            bg: 'rgba(59,130,246,0.1)',
-          },
-          {
-            label: 'Yangi sharhlar',
-            value: stats.newReviews,
-            icon: <ThumbsUp size={22} color="#10b981" />,
-            color: '#10b981',
-            bg: 'rgba(16,185,129,0.1)',
-          },
-        ].map((stat, i) => (
-          <div
-            key={i}
-            className="card animate-fade-in"
-            style={{
-              flex: 1,
-              padding: '24px',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              animationDelay: `${i * 0.1}s`,
-            }}
-          >
-            <div
-              style={{
-                width: '52px',
-                height: '52px',
-                borderRadius: '14px',
-                background: stat.bg,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {stat.icon}
-            </div>
-            <div>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', margin: 0 }}>
-                {stat.label}
-              </p>
-              <h3 style={{ color: stat.color, fontSize: '28px', fontWeight: 700, margin: '4px 0 0 0' }}>
-                {stat.value}
-              </h3>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Filter Tabs */}
-      <div
-        className="flex animate-fade-in"
-        style={{
-          gap: '8px',
-          marginBottom: '28px',
-          background: 'rgba(255,255,255,0.05)',
-          padding: '6px',
-          borderRadius: '12px',
-          width: 'fit-content',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
-        {filters.map((f) => (
-          <button
-            key={f.key}
-            onClick={() => setActiveFilter(f.key)}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '8px',
-              background: activeFilter === f.key ? 'rgba(234,179,8,0.2)' : 'transparent',
-              color: activeFilter === f.key ? '#f59e0b' : 'rgba(255,255,255,0.6)',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: activeFilter === f.key ? 600 : 400,
-              transition: 'all 0.2s',
-            }}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Reviews List */}
-      <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {filteredReviews.length === 0 ? (
-          <div
-            className="card animate-fade-in"
-            style={{
-              padding: '60px',
-              textAlign: 'center',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '16px',
-            }}
-          >
-            <MessageCircle size={48} color="rgba(255,255,255,0.2)" style={{ margin: '0 auto 16px' }} />
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '16px', margin: 0 }}>
-              Bu kategoriyada sharhlar topilmadi
-            </p>
-          </div>
-        ) : (
-          filteredReviews.map((review, index) => (
-            <div
-              key={review.id}
-              className="card card-hover animate-fade-in"
-              style={{
-                padding: '24px',
-                background: review.hidden
-                  ? 'rgba(255,255,255,0.02)'
-                  : 'rgba(255,255,255,0.05)',
-                border: review.hidden
-                  ? '1px solid rgba(255,255,255,0.04)'
-                  : '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '16px',
-                opacity: review.hidden ? 0.5 : 1,
-                animationDelay: `${index * 0.05}s`,
-                transition: 'all 0.3s',
-              }}
-            >
-              <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
-                <div className="flex items-center" style={{ gap: '14px' }}>
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '14px',
-                      background: review.rating >= 4
-                        ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-                        : review.rating === 3
-                        ? 'linear-gradient(135deg, #6366f1, #4f46e5)'
-                        : 'linear-gradient(135deg, #ef4444, #dc2626)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#fff',
-                      fontWeight: 700,
-                      fontSize: '16px',
-                    }}
-                  >
-                    {review.avatar}
-                  </div>
-                  <div>
-                    <h4 style={{ color: '#fff', fontSize: '16px', fontWeight: 600, margin: 0 }}>
-                      {review.name}
-                    </h4>
-                    <div className="flex items-center" style={{ gap: '8px', marginTop: '4px' }}>
-                      <div className="flex" style={{ gap: '2px' }}>
-                        {renderStars(review.rating, 14)}
-                      </div>
-                      <span
-                        className={`badge ${review.rating >= 4 ? 'badge-green' : review.rating === 3 ? 'badge-yellow' : 'badge-red'}`}
-                        style={{ fontSize: '12px', padding: '2px 8px' }}
-                      >
-                        {review.rating}.0
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center" style={{ gap: '8px' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>
-                    {review.date}
-                  </span>
-                  <span
-                    style={{
-                      color: 'rgba(255,255,255,0.3)',
-                      fontSize: '13px',
-                      background: 'rgba(255,255,255,0.06)',
-                      padding: '4px 10px',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    {review.orderRef}
-                  </span>
-                </div>
-              </div>
-
-              <p
-                style={{
-                  color: 'rgba(255,255,255,0.75)',
-                  fontSize: '15px',
-                  lineHeight: '1.6',
-                  margin: '0 0 16px 0',
-                  paddingLeft: '62px',
-                }}
-              >
-                {review.comment}
-              </p>
-
-              <div
-                className="flex items-center justify-between"
-                style={{ paddingLeft: '62px' }}
-              >
-                <div className="flex items-center" style={{ gap: '6px' }}>
-                  <ThumbsUp size={14} color="rgba(255,255,255,0.4)" />
-                  <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>
-                    {review.likes}
-                  </span>
-                </div>
-
-                <div className="flex items-center" style={{ gap: '8px' }}>
-                  <button
-                    onClick={() => toggleHidden(review.id)}
-                    className="btn btn-primary"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '8px 14px',
-                      background: review.hidden
-                        ? 'rgba(239,68,68,0.15)'
-                        : 'rgba(16,185,129,0.15)',
-                      border: review.hidden
-                        ? '1px solid rgba(239,68,68,0.2)'
-                        : '1px solid rgba(16,185,129,0.2)',
-                      borderRadius: '8px',
-                      color: review.hidden ? '#ef4444' : '#10b981',
-                      cursor: 'pointer',
-                      fontSize: '13px',
-                    }}
-                  >
-                    {review.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
-                    {review.hidden ? 'Yashirin' : 'Ko\'rsatish'}
-                  </button>
-
-                  <button
-                    onClick={() => setReplyModal(review.id)}
-                    className="btn btn-primary"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '8px 14px',
-                      background: 'rgba(59,130,246,0.15)',
-                      border: '1px solid rgba(59,130,246,0.2)',
-                      borderRadius: '8px',
-                      color: '#3b82f6',
-                      cursor: 'pointer',
-                      fontSize: '13px',
-                    }}
-                  >
-                    <Reply size={14} />
-                    Javob berish
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Reply Modal */}
       {replyModal && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(8px)',
+            background: 'rgba(0,0,0,0.3)',
+            backdropFilter: 'blur(6px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -571,97 +428,93 @@ const AdminReviews = () => {
           }}
         >
           <div
-            className="card animate-fade-in"
             onClick={(e) => e.stopPropagation()}
             style={{
-              width: '480px',
-              maxWidth: '90%',
-              padding: '32px',
-              background: 'linear-gradient(135deg, #1e293b, #0f172a)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '20px',
-              boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+              width: '460px',
+              maxWidth: '92%',
+              padding: '28px',
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              boxShadow: 'var(--shadow-lg)',
             }}
           >
-            <div className="flex items-center" style={{ gap: '12px', marginBottom: '24px' }}>
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '12px',
-                  background: 'rgba(59,130,246,0.15)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <MessageCircle size={22} color="#3b82f6" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '22px' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <MessageCircle size={20} stroke="var(--primary)" />
               </div>
               <div>
-                <h3 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0 }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
                   Sharhga javob
                 </h3>
-                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', margin: '2px 0 0 0' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
                   {reviews.find((r) => r.id === replyModal)?.name} ga javob yozing
                 </p>
               </div>
             </div>
 
             <textarea
-              className="input"
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Javobingizni yozing..."
               rows={5}
               style={{
                 width: '100%',
-                padding: '16px',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '12px',
-                color: '#fff',
+                padding: '14px 16px',
+                background: 'var(--bg)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text)',
                 fontSize: '14px',
                 lineHeight: '1.6',
                 resize: 'vertical',
                 outline: 'none',
                 fontFamily: 'inherit',
                 boxSizing: 'border-box',
+                transition: 'border-color 0.2s ease',
               }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
             />
 
-            <div className="flex items-center" style={{ gap: '12px', marginTop: '20px', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '20px', justifyContent: 'flex-end' }}>
               <button
                 onClick={() => {
                   setReplyModal(null);
                   setReplyText('');
                 }}
                 style={{
-                  padding: '10px 24px',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  padding: '10px 22px',
+                  background: 'var(--surface-hover)',
+                  border: '1px solid var(--border)',
                   borderRadius: '10px',
-                  color: 'rgba(255,255,255,0.7)',
+                  color: 'var(--text-secondary)',
                   cursor: 'pointer',
                   fontSize: '14px',
+                  fontWeight: 500,
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s ease',
                 }}
               >
                 Bekor qilish
               </button>
               <button
                 onClick={() => handleReply(replyModal)}
-                className="btn btn-primary"
                 style={{
-                  padding: '10px 28px',
-                  background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                  padding: '10px 24px',
+                  background: 'var(--primary)',
                   border: 'none',
                   borderRadius: '10px',
-                  color: '#fff',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(249, 115, 22, 0.25)',
                 }}
               >
                 <Reply size={16} />

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../store/useStore';
 import {
-  ChevronLeft,
   Store,
   Phone,
   Globe,
@@ -16,6 +15,7 @@ import {
   Image,
   Settings,
   Shield,
+  ChevronDown,
 } from 'lucide-react';
 
 const AdminSettings = () => {
@@ -34,9 +34,9 @@ const AdminSettings = () => {
     openTime: '09:00',
     closeTime: '23:00',
     deliveryPrice: 'Bepul',
-    minOrder: '0 so\'m',
+    minOrder: "0 so'm",
     commission: '2%',
-    currency: 'So\'m',
+    currency: "So'm",
     region: 'Toshkent',
   });
 
@@ -48,14 +48,14 @@ const AdminSettings = () => {
   });
 
   const [appearance, setAppearance] = useState({
-    darkMode: true,
-    language: 'O\'zbek',
+    darkMode: false,
+    language: "O'zbek",
   });
 
   const [seo, setSeo] = useState({
     siteTitle: 'Bekfood - Eng mazali taomlar',
     description: 'Bekfood restorani - sifatli va mazali taomlar, tez yetkazib berish xizmati.',
-    keywords: 'ovqat, restoran, yetkazib berish, Bekfood, Toshkent',
+    keywords: "ovqat, restoran, yetkazib berish, Bekfood, Toshkent",
   });
 
   const [logoPreview, setLogoPreview] = useState(null);
@@ -74,61 +74,54 @@ const AdminSettings = () => {
   };
 
   const handleClearAll = () => {
-    if (window.confirm('Barcha ma\'lumotlarni tozalashni xohlaysizmi?')) {
-      alert('Ma\'lumotlar tozalandi!');
+    if (window.confirm("Barcha ma'lumotlarni tozalashni xohlaysizmi?")) {
+      alert("Ma'lumotlar tozalandi!");
     }
   };
 
   const handleDeleteAccount = () => {
-    if (window.confirm('Hisobingiz o\'chiriladi. Davom etishni xohlaysizmi?')) {
+    if (window.confirm("Hisobingiz o'chiriladi. Davom etishni xohlaysizmi?")) {
       logout();
       navigate('/login');
     }
   };
 
-  const styles = {
+  const Toggle = ({ label, checked, onChange }) => (
+    <div style={s.toggleRow}>
+      <span style={s.toggleLabel}>{label}</span>
+      <div style={s.toggleSwitch} onClick={onChange}>
+        <div style={{ ...s.toggleTrack, background: checked ? 'var(--primary)' : 'var(--border-strong)' }} />
+        <div style={{ ...s.toggleThumb, left: checked ? '22px' : '2px' }} />
+      </div>
+    </div>
+  );
+
+  const s = {
     page: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)',
-      color: '#f5f5f5',
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-      padding: '24px',
+      background: 'var(--bg)',
+      padding: '32px 24px',
       maxWidth: '800px',
       margin: '0 auto',
     },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-      marginBottom: '32px',
-      animation: 'fadeIn 0.5s ease',
-    },
-    backBtn: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '40px',
-      height: '40px',
-      borderRadius: '12px',
-      background: '#2a2a2a',
-      border: '1px solid #3a3a3a',
-      color: '#f5f5f5',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-    },
     title: {
-      fontSize: '28px',
+      fontSize: '26px',
       fontWeight: '700',
-      color: '#f5f5f5',
-      margin: 0,
+      color: 'var(--text)',
+      margin: '0 0 28px 0',
+    },
+    subtitle: {
+      fontSize: '14px',
+      color: 'var(--text-muted)',
+      margin: '-20px 0 28px 0',
     },
     card: {
-      background: '#242424',
-      borderRadius: '16px',
-      border: '1px solid #333',
+      background: 'var(--surface)',
+      borderRadius: 'var(--radius)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-sm)',
       padding: '24px',
       marginBottom: '20px',
-      animation: 'fadeIn 0.5s ease',
     },
     cardHeader: {
       display: 'flex',
@@ -136,7 +129,7 @@ const AdminSettings = () => {
       gap: '12px',
       marginBottom: '20px',
       paddingBottom: '16px',
-      borderBottom: '1px solid #333',
+      borderBottom: '1px solid var(--border)',
     },
     cardIcon: {
       display: 'flex',
@@ -144,22 +137,22 @@ const AdminSettings = () => {
       justifyContent: 'center',
       width: '40px',
       height: '40px',
-      borderRadius: '10px',
-      background: '#c8a97e20',
-      color: '#c8a97e',
+      borderRadius: 'var(--radius-sm)',
+      background: 'var(--primary-light)',
+      color: 'var(--primary)',
     },
     cardTitle: {
-      fontSize: '18px',
+      fontSize: '17px',
       fontWeight: '600',
-      color: '#f5f5f5',
+      color: 'var(--text)',
       margin: 0,
     },
     logoUploadArea: {
       width: '100px',
       height: '100px',
       borderRadius: '50%',
-      background: '#1a1a1a',
-      border: '2px dashed #c8a97e',
+      background: 'var(--surface-hover)',
+      border: '2px dashed var(--border-strong)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -167,7 +160,7 @@ const AdminSettings = () => {
       overflow: 'hidden',
       margin: '0 auto 20px',
       position: 'relative',
-      transition: 'all 0.3s ease',
+      transition: 'border-color 0.2s ease',
     },
     logoImage: {
       width: '100%',
@@ -181,9 +174,9 @@ const AdminSettings = () => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'rgba(0,0,0,0.5)',
+      background: 'rgba(0,0,0,0.45)',
       opacity: 0,
-      transition: 'opacity 0.3s ease',
+      transition: 'opacity 0.2s ease',
     },
     formGroup: {
       marginBottom: '16px',
@@ -192,53 +185,53 @@ const AdminSettings = () => {
       display: 'block',
       fontSize: '13px',
       fontWeight: '500',
-      color: '#aaa',
+      color: 'var(--text-secondary)',
       marginBottom: '8px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px',
     },
     input: {
       width: '100%',
-      padding: '12px 16px',
-      background: '#1a1a1a',
-      border: '1px solid #333',
-      borderRadius: '10px',
-      color: '#f5f5f5',
+      padding: '12px 14px',
+      background: 'var(--surface-hover)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--text)',
       fontSize: '14px',
       outline: 'none',
-      transition: 'all 0.2s ease',
+      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
       boxSizing: 'border-box',
     },
     textarea: {
       width: '100%',
-      padding: '12px 16px',
-      background: '#1a1a1a',
-      border: '1px solid #333',
-      borderRadius: '10px',
-      color: '#f5f5f5',
+      padding: '12px 14px',
+      background: 'var(--surface-hover)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--text)',
       fontSize: '14px',
       outline: 'none',
       resize: 'vertical',
       minHeight: '100px',
       boxSizing: 'border-box',
+      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
     },
     select: {
       width: '100%',
-      padding: '12px 16px',
-      background: '#1a1a1a',
-      border: '1px solid #333',
-      borderRadius: '10px',
-      color: '#f5f5f5',
+      padding: '12px 14px',
+      background: 'var(--surface-hover)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--text)',
       fontSize: '14px',
       outline: 'none',
       cursor: 'pointer',
       appearance: 'none',
-      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c8a97e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
       backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'right 16px center',
+      backgroundPosition: 'right 14px center',
       boxSizing: 'border-box',
+      transition: 'border-color 0.2s ease',
     },
-    timeRow: {
+    twoCol: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
       gap: '16px',
@@ -247,58 +240,59 @@ const AdminSettings = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '14px 0',
-      borderBottom: '1px solid #333',
+      padding: '12px 0',
+      borderBottom: '1px solid var(--border)',
     },
     toggleLabel: {
       fontSize: '14px',
-      color: '#f5f5f5',
+      color: 'var(--text)',
     },
     toggleSwitch: {
       position: 'relative',
       width: '44px',
       height: '24px',
       cursor: 'pointer',
+      flexShrink: 0,
     },
-    toggleTrack: (active) => ({
+    toggleTrack: {
       position: 'absolute',
       inset: 0,
       borderRadius: '12px',
-      background: active ? '#c8a97e' : '#3a3a3a',
-      transition: 'background 0.3s ease',
-    }),
-    toggleThumb: (active) => ({
+      transition: 'background 0.2s ease',
+    },
+    toggleThumb: {
       position: 'absolute',
       top: '2px',
-      left: active ? '22px' : '2px',
       width: '20px',
       height: '20px',
       borderRadius: '50%',
       background: '#fff',
-      transition: 'left 0.3s ease',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-    }),
+      transition: 'left 0.2s ease',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+    },
     saveBtn: {
       width: '100%',
-      padding: '16px',
-      background: 'linear-gradient(135deg, #c8a97e, #b8956a)',
+      padding: '14px',
+      background: 'var(--primary)',
       border: 'none',
-      borderRadius: '12px',
-      color: '#1a1a1a',
-      fontSize: '16px',
+      borderRadius: 'var(--radius-sm)',
+      color: '#fff',
+      fontSize: '15px',
       fontWeight: '600',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: '10px',
-      transition: 'all 0.3s ease',
+      transition: 'opacity 0.2s ease, box-shadow 0.2s ease',
       marginBottom: '20px',
+      boxShadow: '0 2px 8px rgba(249,115,22,0.25)',
     },
     dangerCard: {
-      background: '#242424',
-      borderRadius: '16px',
-      border: '1px solid #5c2a2a',
+      background: 'var(--surface)',
+      borderRadius: 'var(--radius)',
+      border: '1px solid rgba(239,68,68,0.15)',
+      boxShadow: 'var(--shadow-sm)',
       padding: '24px',
       marginBottom: '20px',
     },
@@ -308,7 +302,7 @@ const AdminSettings = () => {
       gap: '12px',
       marginBottom: '20px',
       paddingBottom: '16px',
-      borderBottom: '1px solid #5c2a2a',
+      borderBottom: '1px solid rgba(239,68,68,0.1)',
     },
     dangerIcon: {
       display: 'flex',
@@ -316,22 +310,22 @@ const AdminSettings = () => {
       justifyContent: 'center',
       width: '40px',
       height: '40px',
-      borderRadius: '10px',
-      background: '#e53e3e20',
-      color: '#e53e3e',
+      borderRadius: 'var(--radius-sm)',
+      background: 'rgba(239,68,68,0.08)',
+      color: 'var(--danger)',
     },
     dangerTitle: {
-      fontSize: '18px',
+      fontSize: '17px',
       fontWeight: '600',
-      color: '#f5f5f5',
+      color: 'var(--text)',
       margin: 0,
     },
     dangerBtn: {
       width: '100%',
-      padding: '14px',
-      background: '#e53e3e',
+      padding: '13px',
+      background: 'var(--danger)',
       border: 'none',
-      borderRadius: '10px',
+      borderRadius: 'var(--radius-sm)',
       color: '#fff',
       fontSize: '14px',
       fontWeight: '500',
@@ -341,15 +335,15 @@ const AdminSettings = () => {
       justifyContent: 'center',
       gap: '8px',
       marginBottom: '12px',
-      transition: 'all 0.2s ease',
+      transition: 'opacity 0.2s ease',
     },
     dangerBtnOutline: {
       width: '100%',
-      padding: '14px',
+      padding: '13px',
       background: 'transparent',
-      border: '1px solid #e53e3e',
-      borderRadius: '10px',
-      color: '#e53e3e',
+      border: '1px solid rgba(239,68,68,0.25)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--danger)',
       fontSize: '14px',
       fontWeight: '500',
       cursor: 'pointer',
@@ -357,163 +351,154 @@ const AdminSettings = () => {
       alignItems: 'center',
       justifyContent: 'center',
       gap: '8px',
-      transition: 'all 0.2s ease',
+      transition: 'background 0.2s ease',
     },
     hiddenInput: {
       display: 'none',
-    },
-    twoCol: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '16px',
     },
     uploadArea: {
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
-      padding: '16px',
-      background: '#1a1a1a',
-      border: '1px dashed #333',
-      borderRadius: '10px',
+      padding: '14px',
+      background: 'var(--surface-hover)',
+      border: '1px dashed var(--border-strong)',
+      borderRadius: 'var(--radius-sm)',
       cursor: 'pointer',
-      transition: 'all 0.2s ease',
+      transition: 'border-color 0.2s ease',
     },
     uploadText: {
       fontSize: '13px',
-      color: '#888',
+      color: 'var(--text-muted)',
     },
     uploadIcon: {
-      color: '#c8a97e',
+      color: 'var(--primary)',
     },
-    stagger1: { animationDelay: '0.1s' },
-    stagger2: { animationDelay: '0.2s' },
-    stagger3: { animationDelay: '0.3s' },
-    stagger4: { animationDelay: '0.4s' },
-    stagger5: { animationDelay: '0.5s' },
-    stagger6: { animationDelay: '0.6s' },
-    stagger7: { animationDelay: '0.7s' },
+    logoArea: {
+      className: 'logo-area',
+    },
+    timeHint: {
+      fontSize: '12px',
+      color: 'var(--text-muted)',
+      marginTop: '6px',
+      display: 'block',
+    },
   };
 
-  const Toggle = ({ label, checked, onChange }) => (
-    <div style={styles.toggleRow}>
-      <span style={styles.toggleLabel}>{label}</span>
-      <div style={styles.toggleSwitch} onClick={onChange}>
-        <div style={styles.toggleTrack(checked)} />
-        <div style={styles.toggleThumb(checked)} />
-      </div>
-    </div>
-  );
-
   return (
-    <div style={styles.page}>
+    <div style={s.page}>
       <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+        .admin-settings-input:focus,
+        .admin-settings-textarea:focus,
+        .admin-settings-select:focus {
+          border-color: var(--primary) !important;
+          box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
         }
-        .card-hover:hover {
-          border-color: #c8a97e44 !important;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(200, 169, 126, 0.1);
+        .admin-settings-save:hover {
+          opacity: 0.9;
+          box-shadow: 0 4px 14px rgba(249,115,22,0.35) !important;
         }
-        .card-hover { transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200, 169, 126, 0.3); }
-        .input:focus { border-color: #c8a97e !important; box-shadow: 0 0 0 3px rgba(200, 169, 126, 0.1); }
-        .danger-btn:hover { background: #c53030 !important; }
-        .danger-btn-outline:hover { background: #e53e3e20 !important; }
-        .back-btn:hover { background: #3a3a3a !important; }
-        .logo-area:hover .logo-overlay { opacity: 1 !important; }
-        .upload-area:hover { border-color: #c8a97e !important; }
+        .admin-settings-danger:hover {
+          opacity: 0.9;
+        }
+        .admin-settings-danger-outline:hover {
+          background: rgba(239,68,68,0.05);
+        }
+        .admin-settings-logo-area:hover {
+          border-color: var(--primary) !important;
+        }
+        .admin-settings-logo-area:hover .admin-settings-logo-overlay {
+          opacity: 1 !important;
+        }
+        .admin-settings-upload:hover {
+          border-color: var(--primary) !important;
+        }
+        @media (max-width: 640px) {
+          .admin-settings-two-col {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
-      <header style={styles.header}>
-        <button
-          className="back-btn"
-          style={styles.backBtn}
-          onClick={() => navigate(-1)}
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <h1 style={styles.title}>Sozlamalar</h1>
-      </header>
+      <h1 style={s.title}>Sozlamalar</h1>
 
-      {/* Restaurant Info */}
-      <div
-        className="card card-hover"
-        style={{ ...styles.card, ...styles.stagger1 }}
-      >
-        <div style={styles.cardHeader}>
-          <div style={styles.cardIcon}>
+      <div style={s.card}>
+        <div style={s.cardHeader}>
+          <div style={s.cardIcon}>
             <Store size={20} />
           </div>
-          <h2 style={styles.cardTitle}>Restoran Ma'lumotlari</h2>
+          <h2 style={s.cardTitle}>Restoran Ma'lumotlari</h2>
         </div>
 
-        <div className="logo-area" style={styles.logoUploadArea} onClick={() => document.getElementById('logoInput').click()}>
+        <div
+          className="admin-settings-logo-area"
+          style={s.logoUploadArea}
+          onClick={() => document.getElementById('logoInput').click()}
+        >
           {logoPreview ? (
-            <img src={logoPreview} alt="Logo" style={styles.logoImage} />
+            <img src={logoPreview} alt="Logo" style={s.logoImage} />
           ) : (
-            <Image size={32} color="#c8a97e" />
+            <Image size={32} style={{ color: 'var(--text-muted)', opacity: 0.4 }} />
           )}
-          <div style={styles.logoOverlay}>
-            <Upload size={20} color="#fff" />
+          <div className="admin-settings-logo-overlay" style={s.logoOverlay}>
+            <Upload size={18} color="#fff" />
             <span style={{ fontSize: '11px', color: '#fff', marginTop: '4px' }}>Yuklash</span>
           </div>
           <input
             id="logoInput"
             type="file"
             accept="image/*"
-            style={styles.hiddenInput}
+            style={s.hiddenInput}
             onChange={handleLogoUpload}
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Restoran nomi</label>
+        <div style={s.formGroup}>
+          <label style={s.label}>Restoran nomi</label>
           <input
-            className="input"
-            style={styles.input}
+            className="admin-settings-input"
+            style={s.input}
             value={restaurantInfo.name}
             onChange={(e) => setRestaurantInfo({ ...restaurantInfo, name: e.target.value })}
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Telefon</label>
+        <div style={s.formGroup}>
+          <label style={s.label}>Telefon</label>
           <input
-            className="input"
-            style={styles.input}
+            className="admin-settings-input"
+            style={s.input}
             value={restaurantInfo.phone}
             onChange={(e) => setRestaurantInfo({ ...restaurantInfo, phone: e.target.value })}
           />
         </div>
 
-        <div style={styles.twoCol}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Telegram</label>
+        <div className="admin-settings-two-col" style={s.twoCol}>
+          <div style={s.formGroup}>
+            <label style={s.label}>Telegram</label>
             <input
-              className="input"
-              style={styles.input}
+              className="admin-settings-input"
+              style={s.input}
               value={restaurantInfo.telegram}
               onChange={(e) => setRestaurantInfo({ ...restaurantInfo, telegram: e.target.value })}
             />
           </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Instagram</label>
+          <div style={s.formGroup}>
+            <label style={s.label}>Instagram</label>
             <input
-              className="input"
-              style={styles.input}
+              className="admin-settings-input"
+              style={s.input}
               value={restaurantInfo.instagram}
               onChange={(e) => setRestaurantInfo({ ...restaurantInfo, instagram: e.target.value })}
             />
           </div>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Facebook</label>
+        <div style={s.formGroup}>
+          <label style={s.label}>Facebook</label>
           <input
-            className="input"
-            style={styles.input}
+            className="admin-settings-input"
+            style={s.input}
             value={restaurantInfo.facebook}
             onChange={(e) => setRestaurantInfo({ ...restaurantInfo, facebook: e.target.value })}
             placeholder="Facebook sahifa linki"
@@ -521,80 +506,76 @@ const AdminSettings = () => {
         </div>
       </div>
 
-      {/* Operating Settings */}
-      <div
-        className="card card-hover"
-        style={{ ...styles.card, ...styles.stagger2 }}
-      >
-        <div style={styles.cardHeader}>
-          <div style={styles.cardIcon}>
+      <div style={s.card}>
+        <div style={s.cardHeader}>
+          <div style={s.cardIcon}>
             <Clock size={20} />
           </div>
-          <h2 style={styles.cardTitle}>Ishlash Sozlamalari</h2>
+          <h2 style={s.cardTitle}>Ishlash Sozlamalari</h2>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Ish vaqti</label>
-          <div style={styles.timeRow}>
+        <div style={s.formGroup}>
+          <label style={s.label}>Ish vaqti</label>
+          <div className="admin-settings-two-col" style={s.twoCol}>
             <div>
               <input
-                className="input"
-                style={styles.input}
+                className="admin-settings-input"
+                style={s.input}
                 type="time"
                 value={operatingSettings.openTime}
                 onChange={(e) => setOperatingSettings({ ...operatingSettings, openTime: e.target.value })}
               />
-              <span style={{ fontSize: '11px', color: '#888', marginTop: '4px', display: 'block' }}>Boshlanish</span>
+              <span style={s.timeHint}>Boshlanish</span>
             </div>
             <div>
               <input
-                className="input"
-                style={styles.input}
+                className="admin-settings-input"
+                style={s.input}
                 type="time"
                 value={operatingSettings.closeTime}
                 onChange={(e) => setOperatingSettings({ ...operatingSettings, closeTime: e.target.value })}
               />
-              <span style={{ fontSize: '11px', color: '#888', marginTop: '4px', display: 'block' }}>Tugash</span>
+              <span style={s.timeHint}>Tugash</span>
             </div>
           </div>
         </div>
 
-        <div style={styles.twoCol}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Yetkazish narxi</label>
+        <div className="admin-settings-two-col" style={s.twoCol}>
+          <div style={s.formGroup}>
+            <label style={s.label}>Yetkazish narxi</label>
             <input
-              className="input"
-              style={styles.input}
+              className="admin-settings-input"
+              style={s.input}
               value={operatingSettings.deliveryPrice}
               onChange={(e) => setOperatingSettings({ ...operatingSettings, deliveryPrice: e.target.value })}
             />
           </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Minimal buyurtma</label>
+          <div style={s.formGroup}>
+            <label style={s.label}>Minimal buyurtma</label>
             <input
-              className="input"
-              style={styles.input}
+              className="admin-settings-input"
+              style={s.input}
               value={operatingSettings.minOrder}
               onChange={(e) => setOperatingSettings({ ...operatingSettings, minOrder: e.target.value })}
             />
           </div>
         </div>
 
-        <div style={styles.twoCol}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Komissiya (%)</label>
+        <div className="admin-settings-two-col" style={s.twoCol}>
+          <div style={s.formGroup}>
+            <label style={s.label}>Komissiya (%)</label>
             <input
-              className="input"
-              style={styles.input}
+              className="admin-settings-input"
+              style={s.input}
               value={operatingSettings.commission}
               onChange={(e) => setOperatingSettings({ ...operatingSettings, commission: e.target.value })}
             />
           </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Valyuta</label>
+          <div style={s.formGroup}>
+            <label style={s.label}>Valyuta</label>
             <select
-              className="input"
-              style={styles.select}
+              className="admin-settings-select"
+              style={s.select}
               value={operatingSettings.currency}
               onChange={(e) => setOperatingSettings({ ...operatingSettings, currency: e.target.value })}
             >
@@ -604,27 +585,23 @@ const AdminSettings = () => {
           </div>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Viloyat</label>
+        <div style={{ ...s.formGroup, marginBottom: 0 }}>
+          <label style={s.label}>Viloyat</label>
           <input
-            className="input"
-            style={styles.input}
+            className="admin-settings-input"
+            style={s.input}
             value={operatingSettings.region}
             onChange={(e) => setOperatingSettings({ ...operatingSettings, region: e.target.value })}
           />
         </div>
       </div>
 
-      {/* Notification Settings */}
-      <div
-        className="card card-hover"
-        style={{ ...styles.card, ...styles.stagger3 }}
-      >
-        <div style={styles.cardHeader}>
-          <div style={styles.cardIcon}>
+      <div style={s.card}>
+        <div style={s.cardHeader}>
+          <div style={s.cardIcon}>
             <Bell size={20} />
           </div>
-          <h2 style={styles.cardTitle}>Bildirishnoma Sozlamalari</h2>
+          <h2 style={s.cardTitle}>Bildirishnoma Sozlamalari</h2>
         </div>
 
         <Toggle
@@ -642,37 +619,34 @@ const AdminSettings = () => {
           checked={notifications.telegram}
           onChange={() => setNotifications({ ...notifications, telegram: !notifications.telegram })}
         />
-        <Toggle
-          label="Email notifications"
-          checked={notifications.email}
-          onChange={() => setNotifications({ ...notifications, email: !notifications.email })}
-          style={{ borderBottom: 'none' }}
-        />
+        <div style={{ borderBottom: 'none' }}>
+          <Toggle
+            label="Email notifications"
+            checked={notifications.email}
+            onChange={() => setNotifications({ ...notifications, email: !notifications.email })}
+          />
+        </div>
       </div>
 
-      {/* Appearance */}
-      <div
-        className="card card-hover"
-        style={{ ...styles.card, ...styles.stagger4 }}
-      >
-        <div style={styles.cardHeader}>
-          <div style={styles.cardIcon}>
+      <div style={s.card}>
+        <div style={s.cardHeader}>
+          <div style={s.cardIcon}>
             <Moon size={20} />
           </div>
-          <h2 style={styles.cardTitle}>Ko'rinish</h2>
+          <h2 style={s.cardTitle}>Ko'rinish</h2>
         </div>
 
         <Toggle
           label="Dark Mode"
           checked={appearance.darkMode}
-          onChange={() => {}}
+          onChange={() => setAppearance({ ...appearance, darkMode: !appearance.darkMode })}
         />
 
-        <div style={{ ...styles.formGroup, marginTop: '16px', marginBottom: 0 }}>
-          <label style={styles.label}>Til</label>
+        <div style={{ ...s.formGroup, marginTop: '16px', marginBottom: 0 }}>
+          <label style={s.label}>Til</label>
           <select
-            className="input"
-            style={styles.select}
+            className="admin-settings-select"
+            style={s.select}
             value={appearance.language}
             onChange={(e) => setAppearance({ ...appearance, language: e.target.value })}
           >
@@ -683,61 +657,65 @@ const AdminSettings = () => {
         </div>
 
         <div style={{ marginTop: '16px' }}>
-          <label style={styles.label}>Logo Yuklash</label>
-          <div className="upload-area" style={styles.uploadArea} onClick={() => document.getElementById('logoUpload').click()}>
-            <Upload size={18} style={styles.uploadIcon} />
-            <span style={styles.uploadText}>Logo faylni tanlang</span>
-            <input id="logoUpload" type="file" accept="image/*" style={styles.hiddenInput} />
+          <label style={s.label}>Logo Yuklash</label>
+          <div
+            className="admin-settings-upload"
+            style={s.uploadArea}
+            onClick={() => document.getElementById('logoUpload').click()}
+          >
+            <Upload size={18} style={s.uploadIcon} />
+            <span style={s.uploadText}>Logo faylni tanlang</span>
+            <input id="logoUpload" type="file" accept="image/*" style={s.hiddenInput} />
           </div>
         </div>
 
         <div style={{ marginTop: '16px' }}>
-          <label style={styles.label}>Favicon Yuklash</label>
-          <div className="upload-area" style={styles.uploadArea} onClick={() => document.getElementById('faviconUpload').click()}>
-            <Image size={18} style={styles.uploadIcon} />
-            <span style={styles.uploadText}>Favicon faylni tanlang</span>
-            <input id="faviconUpload" type="file" accept="image/*" style={styles.hiddenInput} />
+          <label style={s.label}>Favicon Yuklash</label>
+          <div
+            className="admin-settings-upload"
+            style={s.uploadArea}
+            onClick={() => document.getElementById('faviconUpload').click()}
+          >
+            <Image size={18} style={s.uploadIcon} />
+            <span style={s.uploadText}>Favicon faylni tanlang</span>
+            <input id="faviconUpload" type="file" accept="image/*" style={s.hiddenInput} />
           </div>
         </div>
       </div>
 
-      {/* SEO Settings */}
-      <div
-        className="card card-hover"
-        style={{ ...styles.card, ...styles.stagger5 }}
-      >
-        <div style={styles.cardHeader}>
-          <div style={styles.cardIcon}>
+      <div style={s.card}>
+        <div style={s.cardHeader}>
+          <div style={s.cardIcon}>
             <Globe size={20} />
           </div>
-          <h2 style={styles.cardTitle}>SEO Sozlamalari</h2>
+          <h2 style={s.cardTitle}>SEO Sozlamalari</h2>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Sarlavha (Title)</label>
+        <div style={s.formGroup}>
+          <label style={s.label}>Sarlavha (Title)</label>
           <input
-            className="input"
-            style={styles.input}
+            className="admin-settings-input"
+            style={s.input}
             value={seo.siteTitle}
             onChange={(e) => setSeo({ ...seo, siteTitle: e.target.value })}
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Tavsif (Description)</label>
+        <div style={s.formGroup}>
+          <label style={s.label}>Tavsif (Description)</label>
           <textarea
-            className="input"
-            style={styles.textarea}
+            className="admin-settings-textarea"
+            style={s.textarea}
             value={seo.description}
             onChange={(e) => setSeo({ ...seo, description: e.target.value })}
           />
         </div>
 
-        <div style={{ ...styles.formGroup, marginBottom: 0 }}>
-          <label style={styles.label}>Kalit so'zlar (Keywords)</label>
+        <div style={{ ...s.formGroup, marginBottom: 0 }}>
+          <label style={s.label}>Kalit so'zlar (Keywords)</label>
           <input
-            className="input"
-            style={styles.input}
+            className="admin-settings-input"
+            style={s.input}
             value={seo.keywords}
             onChange={(e) => setSeo({ ...seo, keywords: e.target.value })}
             placeholder="Kalit so'zlarni vergul bilan ajrating"
@@ -745,31 +723,26 @@ const AdminSettings = () => {
         </div>
       </div>
 
-      {/* Save Button */}
       <button
-        className="btn btn-primary"
-        style={styles.saveBtn}
+        className="admin-settings-save"
+        style={s.saveBtn}
         onClick={handleSave}
       >
         <Save size={18} />
         Saqlash
       </button>
 
-      {/* Danger Zone */}
-      <div
-        className="card card-hover"
-        style={{ ...styles.dangerCard, ...styles.stagger6 }}
-      >
-        <div style={styles.dangerHeader}>
-          <div style={styles.dangerIcon}>
+      <div style={s.dangerCard}>
+        <div style={s.dangerHeader}>
+          <div style={s.dangerIcon}>
             <AlertTriangle size={20} />
           </div>
-          <h2 style={styles.dangerTitle}>Xavfli Zona</h2>
+          <h2 style={s.dangerTitle}>Xavfli Zona</h2>
         </div>
 
         <button
-          className="danger-btn"
-          style={styles.dangerBtn}
+          className="admin-settings-danger"
+          style={s.dangerBtn}
           onClick={handleClearAll}
         >
           <Trash2 size={16} />
@@ -777,8 +750,8 @@ const AdminSettings = () => {
         </button>
 
         <button
-          className="danger-btn-outline"
-          style={styles.dangerBtnOutline}
+          className="admin-settings-danger-outline"
+          style={s.dangerBtnOutline}
           onClick={handleDeleteAccount}
         >
           <AlertTriangle size={16} />

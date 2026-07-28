@@ -13,20 +13,20 @@ export default function SplashScreen() {
   }, [navigate]);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center" style={{ background: '#0a0a0a' }}>
+    <div className="h-full flex flex-col items-center justify-center" style={{ background: 'var(--bg)' }}>
       <div className={`flex flex-col items-center transition-all duration-500 ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`} style={{ transform: phase >= 1 ? 'scale(1)' : 'scale(.95)' }}>
-        <div style={{ width: 64, height: 64, borderRadius: '50%', border: '2px solid #e51e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+        <div style={{ width: 80, height: 80, borderRadius: 'var(--radius-xl)', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, background: 'var(--primary-light)' }}>
           <img
             src="/logo.png"
             alt="BEK FOOD"
-            style={{ width: 40, height: 40, objectFit: 'contain' }}
+            style={{ width: 48, height: 48, objectFit: 'contain' }}
             onError={(e) => {
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
           />
           <div className="hidden" style={{ display: 'none', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600, color: '#e51e1e' }}>BF</span>
+            <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--primary)' }}>BF</span>
           </div>
         </div>
       </div>

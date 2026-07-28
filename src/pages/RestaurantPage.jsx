@@ -20,51 +20,50 @@ export default function RestaurantPage() {
 
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-28">
-      <div className="relative" style={{ height: 256 }}>
+      <div className="relative" style={{ height: 260 }}>
         <img src={restaurant.coverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0a0a0a 0%, transparent 50%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 50%)' }} />
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-          <button onClick={() => navigate(-1)} style={{ background: 'rgba(20,20,20,.85)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)' }}>
-            <ChevronLeft size={20} color="#fff" />
+          <button onClick={() => navigate(-1)} style={{ background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-sm)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,.08)' }}>
+            <ChevronLeft size={20} color="var(--text)" />
           </button>
-          <button onClick={() => toggleFavorite('restaurant', restaurant.id)} style={{ background: 'rgba(20,20,20,.85)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)' }}>
-            <Heart size={18} color={fav ? '#e51e1e' : '#fff'} fill={fav ? '#e51e1e' : 'none'} />
+          <button onClick={() => toggleFavorite('restaurant', restaurant.id)} style={{ background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-sm)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,.08)' }}>
+            <Heart size={18} color={fav ? 'var(--danger)' : 'var(--text-muted)'} fill={fav ? 'var(--danger)' : 'none'} />
           </button>
         </div>
       </div>
 
-      <div className="px-4" style={{ marginTop: -64, position: 'relative', zIndex: 10, paddingBottom: 16 }}>
+      <div className="px-4" style={{ marginTop: -40, position: 'relative', zIndex: 10, paddingBottom: 16 }}>
         <div className="card p-4 animate-slide-up">
-          <div className="flex items-start gap-3 mb-3">
-            <div style={{ width: 56, height: 56, borderRadius: 10, border: '2px solid rgba(255,255,255,0.08)', overflow: 'hidden', flexShrink: 0 }}>
+          <div className="flex items-start" style={{ gap: 14, marginBottom: 12 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 'var(--radius)', border: '2px solid var(--border)', overflow: 'hidden', flexShrink: 0 }}>
               <img src={restaurant.logo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
-              <h1 className="display-3">{restaurant.name}</h1>
-              <div className="flex items-center gap-3 mt-1" style={{ fontSize: 12, color: '#6b6b6b' }}>
-                <span className="flex items-center gap-1"><Star size={12} color="#e51e1e" />{restaurant.rating}</span>
-                <span className="flex items-center gap-1"><Clock size={12} />{restaurant.deliveryTime} min</span>
-                <span className="flex items-center gap-1"><MapPin size={12} />{restaurant.distance}</span>
+              <h1 className="display-3" style={{ fontSize: 20 }}>{restaurant.name}</h1>
+              <div className="flex items-center" style={{ gap: 12, marginTop: 4, fontSize: 12, color: 'var(--text-muted)' }}>
+                <span className="flex items-center" style={{ gap: 4 }}><Star size={13} color="var(--primary)" fill="var(--primary)" />{restaurant.rating}</span>
+                <span className="flex items-center" style={{ gap: 4 }}><Clock size={13} />{restaurant.deliveryTime} min</span>
+                <span className="flex items-center" style={{ gap: 4 }}><MapPin size={13} />{restaurant.distance}</span>
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className={`badge ${restaurant.isOpen ? 'badge-green' : 'badge-red'}`}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: restaurant.isOpen ? '#7fbf7f' : '#e51e1e' }} />
+          <div className="flex items-center" style={{ gap: 8 }}>
+            <span className={`badge ${restaurant.isOpen ? 'badge-success' : 'badge-danger'}`}>
+              <span className="status-dot" style={{ width: 6, height: 6, background: restaurant.isOpen ? 'var(--success)' : 'var(--danger)', borderRadius: '50%', display: 'inline-block' }} />
               {restaurant.isOpen ? 'Ishlamoqda' : 'Yopiq'}
             </span>
-            <span style={{ color: '#6b6b6b', fontSize: 12 }}>{restaurant.workingHours}</span>
+            <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>{restaurant.workingHours}</span>
           </div>
         </div>
 
-        {/* Category tabs */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide" style={{ marginTop: 16, marginBottom: 12, paddingBottom: 2 }}>
+        <div className="flex overflow-x-auto scrollbar-hide" style={{ gap: 8, marginTop: 16, marginBottom: 14, paddingBottom: 2 }}>
           <button onClick={() => setActiveCategory(null)} className="whitespace-nowrap" style={{
-            padding: '6px 12px', borderRadius: 16, fontSize: 11, fontWeight: 500,
-            background: !activeCategory ? '#e51e1e' : '#141414',
-            border: `1px solid ${!activeCategory ? '#e51e1e' : 'rgba(255,255,255,0.08)'}`,
-            color: !activeCategory ? '#fff' : '#b8b8b8',
-            cursor: 'pointer', transition: 'all .15s'
+            padding: '8px 16px', borderRadius: 'var(--radius-full)', fontSize: 12, fontWeight: 500,
+            background: !activeCategory ? 'var(--primary)' : 'var(--surface)',
+            border: `1.5px solid ${!activeCategory ? 'var(--primary)' : 'var(--border)'}`,
+            color: !activeCategory ? '#fff' : 'var(--text-muted)',
+            cursor: 'pointer', transition: 'all .2s', flexShrink: 0,
           }}>
             Hammasi
           </button>
@@ -72,11 +71,11 @@ export default function RestaurantPage() {
             const cat = categories.find((c) => c.id === catId);
             return (
               <button key={catId} onClick={() => setActiveCategory(catId)} className="whitespace-nowrap" style={{
-                padding: '6px 12px', borderRadius: 16, fontSize: 11, fontWeight: 500,
-                background: activeCategory === catId ? '#e51e1e' : '#141414',
-                border: `1px solid ${activeCategory === catId ? '#e51e1e' : 'rgba(255,255,255,0.08)'}`,
-                color: activeCategory === catId ? '#fff' : '#b8b8b8',
-                cursor: 'pointer', transition: 'all .15s'
+                padding: '8px 16px', borderRadius: 'var(--radius-full)', fontSize: 12, fontWeight: 500,
+                background: activeCategory === catId ? 'var(--primary)' : 'var(--surface)',
+                border: `1.5px solid ${activeCategory === catId ? 'var(--primary)' : 'var(--border)'}`,
+                color: activeCategory === catId ? '#fff' : 'var(--text-muted)',
+                cursor: 'pointer', transition: 'all .2s', flexShrink: 0,
               }}>
                 {cat?.name}
               </button>
@@ -84,8 +83,7 @@ export default function RestaurantPage() {
           })}
         </div>
 
-        {/* Foods */}
-        <div className="grid grid-cols-2" style={{ gap: 10, paddingBottom: 32 }}>
+        <div className="grid grid-cols-2" style={{ gap: 12, paddingBottom: 32 }}>
           {filtered.map((food) => <FoodCard key={food.id} food={food} />)}
           {filtered.length === 0 && (
             <div className="empty-state" style={{ gridColumn: '1 / -1' }}>

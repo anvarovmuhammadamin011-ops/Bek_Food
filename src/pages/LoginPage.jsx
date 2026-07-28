@@ -27,48 +27,44 @@ export default function LoginPage() {
 
   return (
     <div className="h-full flex flex-col items-center justify-center px-5" style={{ background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
-      {/* Background gradient effects */}
-      <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: 300, height: 300, background: 'radial-gradient(circle, rgba(229,30,30,.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: '-30%', left: '-20%', width: 250, height: 250, background: 'radial-gradient(circle, rgba(229,30,30,.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: 300, height: 300, background: 'radial-gradient(circle, rgba(249,115,22,.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '-30%', left: '-20%', width: 250, height: 250, background: 'radial-gradient(circle, rgba(249,115,22,.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
       <div style={{ width: '100%', maxWidth: 320, position: 'relative', zIndex: 1 }}>
-        {/* Top indicator */}
         <div className="animate-fade-in" style={{ width: 40, height: 4, background: 'var(--border-strong)', borderRadius: 2, margin: '0 auto 32px' }} />
 
-        {/* Logo */}
         <div className="flex flex-col items-center animate-fade-in-up" style={{ marginBottom: 32 }}>
           <div className="animate-pop-in" style={{
-            width: 72, height: 72, borderRadius: '50%',
-            background: 'linear-gradient(135deg, rgba(229,30,30,.12) 0%, rgba(229,30,30,.04) 100%)',
-            border: '2px solid rgba(229,30,30,.25)',
+            width: 80, height: 80, borderRadius: 'var(--radius-xl)',
+            background: 'var(--primary-light)',
+            border: '2px solid rgba(249,115,22,.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20,
-            boxShadow: '0 0 40px rgba(229,30,30,.1)',
+            boxShadow: '0 8px 30px rgba(249,115,22,.1)',
           }}>
             <img
               src="/logo.png"
               alt="BEK FOOD"
-              style={{ width: 42, height: 42, objectFit: 'contain' }}
+              style={{ width: 48, height: 48, objectFit: 'contain' }}
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';
               }}
             />
             <div className="hidden" style={{ display: 'none', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 600, color: '#e51e1e' }}>BF</span>
+              <span style={{ fontSize: 24, fontWeight: 700, color: 'var(--primary)' }}>BF</span>
             </div>
           </div>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#fff', fontSize: 22, marginBottom: 6, textAlign: 'center', letterSpacing: '-.02em', lineHeight: 1.2 }}>
+          <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 24, marginBottom: 6, textAlign: 'center', letterSpacing: '-.02em', lineHeight: 1.2 }}>
             Bek Food
           </div>
-          <div style={{ color: '#6b6b6b', fontSize: 13, textAlign: 'center', lineHeight: 1.5 }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', lineHeight: 1.5 }}>
             Buyurtma berish uchun telefon raqamingizni kiriting
           </div>
         </div>
 
-        {/* Phone input */}
         <form onSubmit={handleSubmit} className="animate-fade-in-up" style={{ animationDelay: '.1s' }}>
           <div className="input-group" style={{ marginBottom: 16 }}>
-            <span className="input-group-icon" style={{ fontWeight: 600, color: '#b8b8b8' }}>+998</span>
+            <span className="input-group-icon" style={{ fontWeight: 600, color: 'var(--text-muted)' }}>+998</span>
             <input
               type="tel"
               inputMode="numeric"
@@ -76,20 +72,19 @@ export default function LoginPage() {
               onChange={(e) => setPhone(formatPhone(e.target.value))}
               placeholder="__ ___ __ __"
               className="input"
-              style={{ paddingLeft: 60, fontSize: 15, fontWeight: 500, letterSpacing: '.05em' }}
+              style={{ paddingLeft: 60, fontSize: 16, fontWeight: 500, letterSpacing: '.05em' }}
             />
           </div>
 
-          <button type="submit" disabled={loading || phone.length < 9} className="btn btn-primary btn-glow w-full" style={{ borderRadius: 'var(--radius)', minHeight: 50, fontSize: 15, fontWeight: 600 }}>
-            {loading ? <div className="spinner" /> : 'Kod olish'}
+          <button type="submit" disabled={loading || phone.length < 9} className="btn btn-primary w-full">
+            {loading ? <div className="spinner" style={{ borderTopColor: '#fff' }} /> : 'Kod olish'}
           </button>
         </form>
 
-        <div className="animate-fade-in" style={{ color: '#6b6b6b', fontSize: 11, textAlign: 'center', marginTop: 14, marginBottom: 32 }}>
+        <div className="animate-fade-in" style={{ color: 'var(--text-dim)', fontSize: 12, textAlign: 'center', marginTop: 14, marginBottom: 32 }}>
           Kod Telegram orqali yuboriladi
         </div>
 
-        {/* Demo buttons */}
         <div className="animate-fade-in-up" style={{ borderTop: '1px solid var(--border)', paddingTop: 20, animationDelay: '.2s' }}>
           <div className="grid grid-cols-3" style={{ gap: 8 }}>
             {[
@@ -100,15 +95,12 @@ export default function LoginPage() {
               <button
                 key={item.role}
                 onClick={() => { loginAs(item.role); navigate(item.path); }}
-                className="card-interactive"
+                className="card card-hover"
                 style={{
-                  padding: '10px 0', borderRadius: 'var(--radius-sm)',
+                  padding: '12px 0', cursor: 'pointer',
+                  color: 'var(--text-muted)', fontSize: 12, fontWeight: 500,
                   background: 'var(--surface)', border: '1px solid var(--border)',
-                  color: '#6b6b6b', fontSize: 11, fontWeight: 500,
-                  cursor: 'pointer', transition: 'all .3s var(--ease-spring)'
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(229,30,30,.2)'; e.currentTarget.style.color = '#b8b8b8'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = '#6b6b6b'; }}
               >
                 {item.label}
               </button>

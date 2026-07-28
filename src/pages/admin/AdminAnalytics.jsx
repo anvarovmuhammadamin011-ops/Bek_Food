@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import useStore from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
 import {
-  ChevronLeft,
   TrendingUp,
   TrendingDown,
   BarChart3,
@@ -13,6 +12,9 @@ import {
   Bot,
   CreditCard,
   Banknote,
+  ArrowUpRight,
+  ArrowDownRight,
+  Lightbulb,
 } from 'lucide-react';
 
 const periods = [
@@ -30,7 +32,7 @@ const topProducts = [
   { name: 'Qiyma Shashlik', count: 342, pct: 100 },
   { name: 'Tovuq Shashlik', count: 278, pct: 81 },
   { name: 'Lavash', count: 245, pct: 72 },
-  { name: 'Sho\'rva', count: 198, pct: 58 },
+  { name: "Sho'rva", count: 198, pct: 58 },
   { name: 'Kabob', count: 176, pct: 51 },
 ];
 
@@ -64,197 +66,202 @@ const hourlyOrders = [
 ];
 
 const paymentMethods = [
-  { name: 'Naqd', pct: 65, color: '#4ade80' },
-  { name: 'Karta', pct: 20, color: '#60a5fa' },
-  { name: 'Click', pct: 10, color: '#facc15' },
-  { name: 'Payme', pct: 5, color: '#c084fc' },
+  { name: 'Naqd', pct: 65, icon: Banknote },
+  { name: 'Karta', pct: 20, icon: CreditCard },
+  { name: 'Click', pct: 10, icon: CreditCard },
+  { name: 'Payme', pct: 5, icon: CreditCard },
 ];
 
 const categoryPerformance = [
-  { name: 'Shashliklar', pct: 45, color: '#ef4444' },
-  { name: 'Fastfud', pct: 30, color: '#f97316' },
-  { name: 'Ichimliklar', pct: 15, color: '#3b82f6' },
-  { name: 'Desertlar', pct: 5, color: '#a855f7' },
-  { name: 'Gazaklar', pct: 5, color: '#22c55e' },
+  { name: 'Shashliklar', pct: 45 },
+  { name: 'Fastfud', pct: 30 },
+  { name: 'Ichimliklar', pct: 15 },
+  { name: 'Desertlar', pct: 5 },
+  { name: 'Gazaklar', pct: 5 },
 ];
 
 const insights = [
-  'Qiyma Shashlik eng ko\'p sotilmoqda — zaxirani oshiring',
-  'Tovuq shashlik kam sotilmoqda — aksiya tashkil qiling',
-  '12:00–14:00 va 18:00–20:00 band vaqtlar',
-  'O\'rtacha tayyorlash vaqti 18 daqiqa — 15 ga tushiring',
+  "Qiyma Shashlik eng ko'p sotilmoqda — zaxirani oshiring",
+  "Tovuq shashlik kam sotilmoqda — aksiya tashkil qiling",
+  '12:00-14:00 va 18:00-20:00 band vaqtlar',
+  "O'rtacha tayyorlash vaqti 18 daqiqa — 15 ga tushiring",
   'Yangi mijozlarga 10% cashback tavsiya qilinadi',
 ];
 
-const styles = {
+const animateKeyframes = `
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+.stagger-1 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.05s; opacity: 0; }
+.stagger-2 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.1s; opacity: 0; }
+.stagger-3 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.15s; opacity: 0; }
+.stagger-4 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.2s; opacity: 0; }
+.stagger-5 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.25s; opacity: 0; }
+.stagger-6 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.3s; opacity: 0; }
+.stagger-7 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.35s; opacity: 0; }
+.stagger-8 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.4s; opacity: 0; }
+`;
+
+const S = {
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    color: '#e2e8f0',
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
+    background: 'var(--bg)',
     padding: '24px',
     maxWidth: 1400,
     margin: '0 auto',
+    fontFamily: "'Inter', 'Segoe UI', sans-serif",
   },
-  header: {
+  topRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: 16,
-    marginBottom: 32,
+    justifyContent: 'space-between',
+    marginBottom: 24,
+    flexWrap: 'wrap',
+    gap: 12,
   },
-  backBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    color: '#94a3b8',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
+  titleBlock: {},
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: 700,
-    color: '#f8fafc',
+    color: 'var(--text)',
     margin: 0,
+    lineHeight: 1.2,
   },
   subtitle: {
     fontSize: 14,
-    color: '#64748b',
-    marginTop: 2,
+    color: 'var(--text-muted)',
+    marginTop: 4,
   },
   periodBar: {
     display: 'flex',
-    gap: 8,
-    marginBottom: 28,
+    gap: 6,
     flexWrap: 'wrap',
   },
   pill: {
-    padding: '8px 20px',
+    padding: '7px 18px',
     borderRadius: 20,
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.04)',
-    color: '#94a3b8',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text-muted)',
     fontSize: 13,
     fontWeight: 500,
     cursor: 'pointer',
-    transition: 'all 0.25s',
+    transition: 'all 0.2s',
+    outline: 'none',
   },
   pillActive: {
-    background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-    color: '#fff',
-    border: '1px solid #ef4444',
-    boxShadow: '0 0 20px rgba(239,68,68,0.3)',
+    background: 'var(--primary)',
+    color: '#FFFFFF',
+    border: '1px solid var(--primary)',
+    boxShadow: '0 2px 8px rgba(249,115,22,0.25)',
   },
   card: {
-    background: 'rgba(255,255,255,0.05)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: 16,
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius)',
     padding: 24,
-    marginBottom: 24,
+    marginBottom: 20,
+    boxShadow: 'var(--shadow-sm)',
+    transition: 'box-shadow 0.2s, transform 0.2s',
   },
-  cardHover: {
-    transition: 'transform 0.2s, box-shadow 0.2s',
+  metricsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: 16,
+    marginBottom: 20,
+  },
+  metricCard: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    padding: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    boxShadow: 'var(--shadow-sm)',
+  },
+  metricIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  metricLabel: {
+    fontSize: 12,
+    fontWeight: 500,
+    color: 'var(--text-muted)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em',
+  },
+  metricValue: {
+    fontSize: 24,
+    fontWeight: 700,
+    color: 'var(--text)',
+    lineHeight: 1.2,
+  },
+  metricTrend: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 3,
+    fontSize: 12,
+    fontWeight: 600,
+  },
+  trendUp: {
+    color: 'var(--success)',
+    background: 'rgba(34,197,94,0.1)',
+    padding: '2px 8px',
+    borderRadius: 6,
+  },
+  trendDown: {
+    color: 'var(--danger)',
+    background: 'rgba(239,68,68,0.1)',
+    padding: '2px 8px',
+    borderRadius: 6,
   },
   grid2: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-    gap: 24,
-    marginBottom: 24,
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: 20,
+    marginBottom: 20,
   },
   grid3: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: 24,
-    marginBottom: 24,
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: 20,
+    marginBottom: 20,
   },
-  sectionTitle: {
-    fontSize: 16,
+  sectionHead: {
+    fontSize: 15,
     fontWeight: 600,
-    color: '#f1f5f9',
+    color: 'var(--text)',
     marginBottom: 20,
     display: 'flex',
     alignItems: 'center',
     gap: 10,
   },
-  revenueLarge: {
-    fontSize: 42,
-    fontWeight: 800,
-    color: '#f8fafc',
-    lineHeight: 1.1,
-  },
-  trendUp: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 4,
-    padding: '4px 10px',
-    borderRadius: 8,
-    background: 'rgba(74,222,128,0.12)',
-    color: '#4ade80',
-    fontSize: 13,
-    fontWeight: 600,
-  },
-  trendDown: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 4,
-    padding: '4px 10px',
-    borderRadius: 8,
-    background: 'rgba(248,113,113,0.12)',
-    color: '#f87171',
-    fontSize: 13,
-    fontWeight: 600,
-  },
-  badgeRed: {
-    display: 'inline-block',
-    padding: '3px 10px',
-    borderRadius: 6,
-    background: 'rgba(239,68,68,0.15)',
-    color: '#fca5a5',
-    fontSize: 11,
-    fontWeight: 600,
-  },
-  badgeGreen: {
-    display: 'inline-block',
-    padding: '3px 10px',
-    borderRadius: 6,
-    background: 'rgba(74,222,128,0.15)',
-    color: '#86efac',
-    fontSize: 11,
-    fontWeight: 600,
-  },
-  badgeYellow: {
-    display: 'inline-block',
-    padding: '3px 10px',
-    borderRadius: 6,
-    background: 'rgba(250,204,21,0.15)',
-    color: '#fde68a',
-    fontSize: 11,
-    fontWeight: 600,
-  },
   barTrack: {
-    height: 8,
-    borderRadius: 4,
-    background: 'rgba(255,255,255,0.06)',
+    height: 6,
+    borderRadius: 3,
+    background: 'var(--surface-active)',
     overflow: 'hidden',
   },
-  barFill: (pct, color) => ({
+  barFill: (pct) => ({
     height: '100%',
     width: `${pct}%`,
-    borderRadius: 4,
-    background: `linear-gradient(90deg, ${color}, ${color}cc)`,
-    transition: 'width 0.8s ease',
+    borderRadius: 3,
+    background: 'var(--primary)',
+    transition: 'width 0.6s ease',
   }),
   listItem: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '12px 0',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    padding: '11px 0',
+    borderBottom: '1px solid var(--border)',
   },
   rank: (i) => ({
     width: 28,
@@ -265,8 +272,9 @@ const styles = {
     justifyContent: 'center',
     fontSize: 12,
     fontWeight: 700,
-    background: i === 0 ? 'rgba(250,204,21,0.2)' : i === 1 ? 'rgba(148,163,184,0.15)' : i === 2 ? 'rgba(180,83,9,0.15)' : 'rgba(255,255,255,0.06)',
-    color: i === 0 ? '#fde68a' : i === 1 ? '#cbd5e1' : i === 2 ? '#fbbf24' : '#94a3b8',
+    background: i === 0 ? 'var(--primary-light)' : 'var(--surface-active)',
+    color: i === 0 ? 'var(--primary)' : 'var(--text-muted)',
+    flexShrink: 0,
   }),
   heatmapGrid: {
     display: 'grid',
@@ -278,73 +286,38 @@ const styles = {
     return {
       aspectRatio: '1',
       borderRadius: 4,
-      background: intensity === 0
-        ? 'rgba(255,255,255,0.03)'
-        : `rgba(239,68,68,${0.1 + intensity * 0.8})`,
+      background:
+        intensity === 0
+          ? 'var(--surface-active)'
+          : `rgba(249,115,22,${0.1 + intensity * 0.8})`,
       transition: 'background 0.3s',
       cursor: 'pointer',
-      position: 'relative',
     };
   },
   heatmapLabel: {
     fontSize: 10,
-    color: '#64748b',
+    color: 'var(--text-muted)',
     textAlign: 'center',
     marginTop: 4,
   },
   insightItem: {
     display: 'flex',
     alignItems: 'flex-start',
-    gap: 12,
-    padding: '10px 0',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    gap: 10,
+    padding: '9px 0',
+    borderBottom: '1px solid var(--border)',
   },
   insightDot: {
     width: 6,
     height: 6,
     borderRadius: '50%',
-    background: '#ef4444',
+    background: 'var(--primary)',
     marginTop: 6,
     flexShrink: 0,
   },
-  glassCard: {
-    background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08))',
-    backdropFilter: 'blur(16px)',
-    border: '1px solid rgba(139,92,246,0.2)',
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 24,
-  },
-  animate: {
-    animation: 'fadeIn 0.5s ease forwards',
-  },
 };
 
-const animateKeyframes = `
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes stagger1 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger2 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger3 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger4 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger5 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger6 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger7 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-@keyframes stagger8 { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-.animate-fade-in { animation: fadeIn 0.5s ease forwards; }
-.stagger-1 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.05s; opacity: 0; }
-.stagger-2 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.1s; opacity: 0; }
-.stagger-3 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.15s; opacity: 0; }
-.stagger-4 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.2s; opacity: 0; }
-.stagger-5 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.25s; opacity: 0; }
-.stagger-6 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.3s; opacity: 0; }
-.stagger-7 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.35s; opacity: 0; }
-.stagger-8 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.4s; opacity: 0; }
-`;
-
-function MiniLineChart({ data, width = 600, height = 140, color = '#ef4444' }) {
+function MiniLineChart({ data, width = 600, height = 160 }) {
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
@@ -368,16 +341,16 @@ function MiniLineChart({ data, width = 600, height = 140, color = '#ef4444' }) {
   return (
     <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto' }}>
       <defs>
-        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.15" />
+          <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.01" />
         </linearGradient>
       </defs>
-      <polygon points={areaPoints} fill="url(#lineGrad)" />
+      <polygon points={areaPoints} fill="url(#areaGrad)" />
       <polyline
         points={points.join(' ')}
         fill="none"
-        stroke={color}
+        stroke="var(--primary)"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -386,13 +359,13 @@ function MiniLineChart({ data, width = 600, height = 140, color = '#ef4444' }) {
         const x = padX + (i / (data.length - 1)) * chartW;
         const y = padY + chartH - ((v - min) / range) * chartH;
         return (
-          <circle key={i} cx={x} cy={y} r="4" fill={color} stroke="#1a1a2e" strokeWidth="2" />
+          <circle key={i} cx={x} cy={y} r="3.5" fill="var(--primary)" stroke="var(--surface)" strokeWidth="2" />
         );
       })}
       {revenueLabels.map((label, i) => {
         const x = padX + (i / (data.length - 1)) * chartW;
         return (
-          <text key={i} x={x} y={height - 2} textAnchor="middle" fill="#64748b" fontSize="11">
+          <text key={i} x={x} y={height - 2} textAnchor="middle" fill="var(--text-muted)" fontSize="11">
             {label}
           </text>
         );
@@ -407,188 +380,191 @@ export default function AdminAnalytics() {
   const store = useStore();
 
   const maxHourly = Math.max(...hourlyOrders);
-  const maxHourlyIdx = hourlyOrders.indexOf(maxHourly);
+
+  const metrics = [
+    { label: 'Umumiy daromad', value: '12,450,000', suffix: "so'm", trend: '+12.4%', up: true, icon: BarChart3, color: 'var(--primary)', bg: 'var(--primary-light)' },
+    { label: 'Buyurtmalar', value: '1,284', suffix: 'ta', trend: '+8.2%', up: true, icon: Package, color: 'var(--success)', bg: 'rgba(34,197,94,0.1)' },
+    { label: 'Mijozlar', value: '847', suffix: 'nafar', trend: '+5.1%', up: true, icon: Users, color: '#6366F1', bg: 'rgba(99,102,241,0.1)' },
+    { label: 'O\'rtacha buyurtma', value: '96,800', suffix: "so'm", trend: '-2.3%', up: false, icon: CreditCard, color: 'var(--warning)', bg: 'rgba(245,158,11,0.1)' },
+  ];
 
   return (
-    <div style={styles.page}>
+    <div style={S.page}>
       <style>{animateKeyframes}</style>
 
-      {/* Header */}
-      <div className="animate-fade-in" style={styles.header}>
-        <button
-          style={styles.backBtn}
-          onClick={() => navigate(-1)}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-            e.currentTarget.style.color = '#f8fafc';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
-            e.currentTarget.style.color = '#94a3b8';
-          }}
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <div>
-          <h1 style={styles.title}>Analitika</h1>
-          <p style={styles.subtitle}>Biznesingizning batafsil statistikasi</p>
+      <div style={S.topRow} className="animate-fade-in">
+        <div style={S.titleBlock}>
+          <h1 style={S.title}>Analitika</h1>
+          <p style={S.subtitle}>Biznesingizning batafsil statistikasi</p>
+        </div>
+        <div style={S.periodBar}>
+          {periods.map((p) => (
+            <button
+              key={p.id}
+              style={{
+                ...S.pill,
+                ...(activePeriod === p.id ? S.pillActive : {}),
+              }}
+              onClick={() => setActivePeriod(p.id)}
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Period Selector */}
-      <div className="animate-fade-in stagger-1" style={styles.periodBar}>
-        {periods.map((p) => (
-          <button
-            key={p.id}
-            style={{
-              ...styles.pill,
-              ...(activePeriod === p.id ? styles.pillActive : {}),
-            }}
-            onClick={() => setActivePeriod(p.id)}
-          >
-            {p.label}
-          </button>
-        ))}
+      <div style={S.metricsGrid} className="animate-fade-in stagger-1">
+        {metrics.map((m, i) => {
+          const Icon = m.icon;
+          return (
+            <div key={i} style={S.metricCard}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ ...S.metricIconWrap, background: m.bg }}>
+                  <Icon size={20} style={{ color: m.color }} />
+                </div>
+                <div style={{ ...S.metricTrend, ...(m.up ? S.trendUp : S.trendDown) }}>
+                  {m.up ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                  {m.trend}
+                </div>
+              </div>
+              <span style={S.metricLabel}>{m.label}</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span style={S.metricValue}>{m.value}</span>
+                <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{m.suffix}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Revenue Overview */}
-      <div className="card card-hover animate-fade-in stagger-2" style={styles.card}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <div style={styles.sectionTitle}>
-            <BarChart3 size={18} style={{ color: '#ef4444' }} />
+      <div style={S.card} className="animate-fade-in stagger-2">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div style={S.sectionHead}>
+            <BarChart3 size={18} style={{ color: 'var(--primary)' }} />
             Daromad ko'rsatkichlari
           </div>
-          <span style={styles.badgeGreen}>+12.4%</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
-          <span style={styles.revenueLarge}>12,450,000</span>
-          <span style={{ color: '#64748b', fontSize: 16, marginBottom: 4 }}>so'm</span>
-          <span style={styles.trendUp}>
-            <TrendingUp size={14} />
-            +12.4%
-          </span>
+          <div style={{ ...S.metricTrend, ...S.trendUp }}>
+            <TrendingUp size={13} />
+            +12.4% o'tgan haftaga nisbatan
+          </div>
         </div>
         <MiniLineChart data={revenueData} />
       </div>
 
-      {/* Top Lists */}
-      <div style={styles.grid2}>
-        {/* Eng ko'p sotilgan */}
-        <div className="card card-hover animate-fade-in stagger-3" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <Star size={18} style={{ color: '#facc15' }} />
+      <div style={S.grid2}>
+        <div style={S.card} className="animate-fade-in stagger-3">
+          <div style={S.sectionHead}>
+            <Star size={18} style={{ color: 'var(--warning)' }} />
             Eng ko'p sotilgan mahsulotlar
           </div>
           {topProducts.map((item, i) => (
-            <div key={i} style={{ ...styles.listItem, border: i === topProducts.length - 1 ? 'none' : undefined }}>
+            <div key={i} style={{ ...S.listItem, borderBottom: i === topProducts.length - 1 ? 'none' : undefined }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1 }}>
-                <div style={styles.rank(i)}>{i + 1}</div>
+                <div style={S.rank(i)}>{i + 1}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: '#e2e8f0', marginBottom: 6 }}>{item.name}</div>
-                  <div style={styles.barTrack}>
-                    <div style={styles.barFill(item.pct, '#ef4444')} />
+                  <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)', marginBottom: 6 }}>{item.name}</div>
+                  <div style={S.barTrack}>
+                    <div style={S.barFill(item.pct)} />
                   </div>
                 </div>
               </div>
-              <span style={{ fontSize: 14, fontWeight: 600, color: '#94a3b8', marginLeft: 12, whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginLeft: 12, whiteSpace: 'nowrap' }}>
                 {item.count} ta
               </span>
             </div>
           ))}
         </div>
 
-        {/* Eng kam sotilgan */}
-        <div className="card card-hover animate-fade-in stagger-4" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <TrendingDown size={18} style={{ color: '#f87171' }} />
+        <div style={S.card} className="animate-fade-in stagger-4">
+          <div style={S.sectionHead}>
+            <TrendingDown size={18} style={{ color: 'var(--danger)' }} />
             Eng kam sotilgan mahsulotlar
           </div>
           {bottomProducts.map((item, i) => (
-            <div key={i} style={{ ...styles.listItem, border: i === bottomProducts.length - 1 ? 'none' : undefined }}>
+            <div key={i} style={{ ...S.listItem, borderBottom: i === bottomProducts.length - 1 ? 'none' : undefined }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1 }}>
-                <div style={styles.rank(i)}>{i + 1}</div>
+                <div style={S.rank(i)}>{i + 1}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: '#e2e8f0', marginBottom: 6 }}>{item.name}</div>
-                  <div style={styles.barTrack}>
-                    <div style={styles.barFill(item.pct, '#f97316')} />
+                  <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)', marginBottom: 6 }}>{item.name}</div>
+                  <div style={S.barTrack}>
+                    <div style={{ ...S.barFill(item.pct), background: 'var(--danger)' }} />
                   </div>
                 </div>
               </div>
-              <span style={{ fontSize: 14, fontWeight: 600, color: '#94a3b8', marginLeft: 12, whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginLeft: 12, whiteSpace: 'nowrap' }}>
                 {item.count} ta
               </span>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Top mijozlar */}
-        <div className="card card-hover animate-fade-in stagger-5" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <Users size={18} style={{ color: '#60a5fa' }} />
+      <div style={S.grid2}>
+        <div style={S.card} className="animate-fade-in stagger-5">
+          <div style={S.sectionHead}>
+            <Users size={18} style={{ color: '#6366F1' }} />
             Top mijozlar
           </div>
           {topCustomers.map((item, i) => (
-            <div key={i} style={{ ...styles.listItem, border: i === topCustomers.length - 1 ? 'none' : undefined }}>
+            <div key={i} style={{ ...S.listItem, borderBottom: i === topCustomers.length - 1 ? 'none' : undefined }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={styles.rank(i)}>{i + 1}</div>
+                <div style={S.rank(i)}>{i + 1}</div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: '#e2e8f0' }}>{item.name}</div>
-                  <div style={{ fontSize: 12, color: '#64748b' }}>{item.orders} ta buyurtma</div>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)' }}>{item.name}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{item.orders} ta buyurtma</div>
                 </div>
               </div>
-              <span style={{ fontSize: 14, fontWeight: 600, color: '#60a5fa' }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#6366F1' }}>
                 {(item.spent / 1000).toLocaleString()}K
               </span>
             </div>
           ))}
         </div>
 
-        {/* Top kuryerlar */}
-        <div className="card card-hover animate-fade-in stagger-6" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <Package size={18} style={{ color: '#4ade80' }} />
+        <div style={S.card} className="animate-fade-in stagger-6">
+          <div style={S.sectionHead}>
+            <Package size={18} style={{ color: 'var(--success)' }} />
             Top kuryerlar
           </div>
           {topCouriers.map((item, i) => (
-            <div key={i} style={{ ...styles.listItem, border: i === topCouriers.length - 1 ? 'none' : undefined }}>
+            <div key={i} style={{ ...S.listItem, borderBottom: i === topCouriers.length - 1 ? 'none' : undefined }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={styles.rank(i)}>{i + 1}</div>
+                <div style={S.rank(i)}>{i + 1}</div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: '#e2e8f0' }}>{item.name}</div>
-                  <div style={{ fontSize: 12, color: '#64748b' }}>{item.deliveries} ta yetkazish</div>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)' }}>{item.name}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{item.deliveries} ta yetkazish</div>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Star size={12} style={{ color: '#facc15', fill: '#facc15' }} />
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#facc15' }}>{item.rating}</span>
+                <Star size={13} style={{ color: 'var(--warning)', fill: 'var(--warning)' }} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--warning)' }}>{item.rating}</span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Orders by Hour Heatmap */}
-      <div className="card card-hover animate-fade-in stagger-5" style={styles.card}>
-        <div style={styles.sectionTitle}>
-          <Clock size={18} style={{ color: '#a78bfa' }} />
+      <div style={S.card} className="animate-fade-in stagger-7">
+        <div style={S.sectionHead}>
+          <Clock size={18} style={{ color: '#8B5CF6' }} />
           Soatlik buyurtmalar
         </div>
         <div style={{ marginBottom: 8 }}>
-          <div style={styles.heatmapGrid}>
+          <div style={S.heatmapGrid}>
             {hourlyOrders.map((val, i) => (
-              <div key={i} style={styles.heatmapCell(val, maxHourly)} title={`${i}:00 — ${val} ta buyurtma`} />
+              <div key={i} style={S.heatmapCell(val, maxHourly)} title={`${i}:00 — ${val} ta buyurtma`} />
             ))}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(24, 1fr)', gap: 3, marginTop: 6 }}>
             {hourlyOrders.map((_, i) => (
-              <div key={i} style={styles.heatmapLabel}>
+              <div key={i} style={S.heatmapLabel}>
                 {i % 3 === 0 ? i : ''}
               </div>
             ))}
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end', marginTop: 4 }}>
-          <span style={{ fontSize: 11, color: '#64748b' }}>Kam</span>
+          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Kam</span>
           {[0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1].map((o, i) => (
             <div
               key={i}
@@ -596,70 +572,72 @@ export default function AdminAnalytics() {
                 width: 16,
                 height: 16,
                 borderRadius: 3,
-                background: `rgba(239,68,68,${0.1 + o * 0.8})`,
+                background: `rgba(249,115,22,${0.1 + o * 0.8})`,
               }}
             />
           ))}
-          <span style={{ fontSize: 11, color: '#64748b' }}>Ko'p</span>
+          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Ko'p</span>
         </div>
       </div>
 
-      {/* Payment + AI Insights + Category */}
-      <div style={styles.grid3}>
-        {/* Payment Methods */}
-        <div className="card card-hover animate-fade-in stagger-6" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <CreditCard size={18} style={{ color: '#60a5fa' }} />
+      <div style={S.grid3}>
+        <div style={S.card} className="animate-fade-in stagger-5">
+          <div style={S.sectionHead}>
+            <CreditCard size={18} style={{ color: '#6366F1' }} />
             To'lov usullari
           </div>
-          {paymentMethods.map((item, i) => (
-            <div key={i} style={{ marginBottom: i < paymentMethods.length - 1 ? 16 : 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  {item.name === 'Naqd' ? (
-                    <Banknote size={14} style={{ color: item.color }} />
-                  ) : (
-                    <CreditCard size={14} style={{ color: item.color }} />
-                  )}
-                  <span style={{ fontSize: 13, color: '#cbd5e1' }}>{item.name}</span>
+          {paymentMethods.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <div key={i} style={{ marginBottom: i < paymentMethods.length - 1 ? 16 : 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Icon size={14} style={{ color: 'var(--text-muted)' }} />
+                    <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{item.name}</span>
+                  </div>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>{item.pct}%</span>
                 </div>
-                <span style={{ fontSize: 14, fontWeight: 600, color: item.color }}>{item.pct}%</span>
+                <div style={S.barTrack}>
+                  <div style={{ ...S.barFill(item.pct), background: i === 0 ? 'var(--success)' : i === 1 ? '#6366F1' : i === 2 ? 'var(--warning)' : '#8B5CF6' }} />
+                </div>
               </div>
-              <div style={styles.barTrack}>
-                <div style={styles.barFill(item.pct, item.color)} />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* AI Insights */}
-        <div className="animate-fade-in stagger-7" style={styles.glassCard}>
-          <div style={{ ...styles.sectionTitle, color: '#c4b5fd' }}>
-            <Bot size={20} style={{ color: '#a78bfa' }} />
+        <div
+          style={{
+            ...S.card,
+            background: 'linear-gradient(135deg, var(--primary-light), #FFFFFF)',
+            border: '1px solid rgba(249,115,22,0.15)',
+          }}
+          className="animate-fade-in stagger-6"
+        >
+          <div style={{ ...S.sectionHead, color: 'var(--primary)' }}>
+            <Lightbulb size={18} style={{ color: 'var(--primary)' }} />
             Sun'iy intellekt tavsiyalari
           </div>
           {insights.map((text, i) => (
-            <div key={i} style={styles.insightItem}>
-              <div style={styles.insightDot} />
-              <span style={{ fontSize: 13, color: '#d4d4d8', lineHeight: 1.5 }}>{text}</span>
+            <div key={i} style={{ ...S.insightItem, borderBottom: i === insights.length - 1 ? 'none' : undefined }}>
+              <div style={S.insightDot} />
+              <span style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{text}</span>
             </div>
           ))}
         </div>
 
-        {/* Category Performance */}
-        <div className="card card-hover animate-fade-in stagger-8" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <BarChart3 size={18} style={{ color: '#f97316' }} />
+        <div style={S.card} className="animate-fade-in stagger-7">
+          <div style={S.sectionHead}>
+            <BarChart3 size={18} style={{ color: 'var(--primary)' }} />
             Kategoriya samaradorligi
           </div>
           {categoryPerformance.map((item, i) => (
-            <div key={i} style={{ marginBottom: i < categoryPerformance.length - 1 ? 18 : 0 }}>
+            <div key={i} style={{ marginBottom: i < categoryPerformance.length - 1 ? 16 : 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontSize: 13, color: '#cbd5e1' }}>{item.name}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: item.color }}>{item.pct}%</span>
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{item.name}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>{item.pct}%</span>
               </div>
-              <div style={styles.barTrack}>
-                <div style={styles.barFill(item.pct, item.color)} />
+              <div style={S.barTrack}>
+                <div style={{ ...S.barFill(item.pct), background: i === 0 ? 'var(--danger)' : i === 1 ? 'var(--primary)' : i === 2 ? '#6366F1' : i === 3 ? '#8B5CF6' : 'var(--success)' }} />
               </div>
             </div>
           ))}

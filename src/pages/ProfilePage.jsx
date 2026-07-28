@@ -7,20 +7,15 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useStore();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   if (!isAuthenticated) {
     return (
       <div className="h-full flex flex-col items-center justify-center px-8 text-center">
-        <div className="empty-state-icon">
-          <User size={24} />
-        </div>
-        <h2 style={{ color: '#fff', fontSize: 15, fontWeight: 500, marginBottom: 4 }}>Profilingizga kiring</h2>
-        <p className="text-muted" style={{ fontSize: 12, marginBottom: 24 }}>Buyurtma berish uchun kirish kerak</p>
-        <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ borderRadius: 10, padding: '13px 32px' }}>Kirish</button>
+        <div className="empty-state-icon"><User size={28} /></div>
+        <h2 className="heading" style={{ marginBottom: 6 }}>Profilingizga kiring</h2>
+        <p className="body" style={{ marginBottom: 24 }}>Buyurtma berish uchun kirish kerak</p>
+        <button onClick={() => navigate('/login')} className="btn btn-primary">Kirish</button>
       </div>
     );
   }
@@ -36,25 +31,22 @@ export default function ProfilePage() {
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-28">
       <div className="p-4 space-y-4 mt-4">
-        {/* Profile header */}
         <div className="card p-5 text-center animate-fade-in">
-          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #e51e1e, #c41a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: '#fff', boxShadow: '0 4px 20px rgba(229,30,30,.3)' }}>
+          <div style={{ width: 68, height: 68, borderRadius: 'var(--radius-full)', background: 'var(--primary-light)', border: '2px solid rgba(249,115,22,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: 26, fontWeight: 700, color: 'var(--primary)' }}>
             {user?.name?.charAt(0) || 'B'}
           </div>
-          <h2 style={{ color: '#fff', fontSize: 16, fontWeight: 500 }}>{user?.name || 'Foydalanuvchi'}</h2>
-          <p style={{ color: '#6b6b6b', fontSize: 12, marginTop: 2 }}>{user?.phone || '+998901234567'}</p>
+          <h2 style={{ color: 'var(--text)', fontSize: 17, fontWeight: 600 }}>{user?.name || 'Foydalanuvchi'}</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 2 }}>{user?.phone || '+998901234567'}</p>
           {user?.bonus > 0 && (
-            <div style={{ marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 16, background: 'rgba(229,30,30,.15)', color: '#e51e1e', fontSize: 12, fontWeight: 500 }}>
+            <div className="badge badge-primary" style={{ marginTop: 12, padding: '5px 14px', fontSize: 12 }}>
               <Star size={12} />
               {user.bonus.toLocaleString()} so'm bonus
             </div>
           )}
         </div>
 
-        {/* Loyalty Card */}
         <LoyaltyCard points={user?.bonus || 0} tier={user?.bonus > 500 ? 'gold' : user?.bonus > 100 ? 'silver' : 'standard'} />
 
-        {/* Menu */}
         <div className="card animate-fade-in-up" style={{ overflow: 'hidden', animationDelay: '.1s' }}>
           {menu.map((item, i) => (
             <button
@@ -63,20 +55,19 @@ export default function ProfilePage() {
               className="w-full flex items-center justify-between"
               style={{
                 padding: '14px 16px', transition: 'all .2s', cursor: 'pointer', background: 'none', border: 'none',
-                borderBottom: i < menu.length - 1 ? '1px solid var(--border)' : 'none'
+                borderBottom: i < menu.length - 1 ? '1px solid var(--border)' : 'none',
               }}
             >
-              <div className="flex items-center gap-3">
-                <item.icon size={18} color="#6b6b6b" />
-                <span style={{ color: '#fff', fontSize: 14 }}>{item.label}</span>
+              <div className="flex items-center" style={{ gap: 12 }}>
+                <item.icon size={18} color="var(--text-muted)" />
+                <span style={{ color: 'var(--text)', fontSize: 14 }}>{item.label}</span>
               </div>
-              <ChevronRight size={16} color="#6b6b6b" />
+              <ChevronRight size={16} color="var(--text-dim)" />
             </button>
           ))}
         </div>
 
-        {/* Logout */}
-        <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2" style={{ padding: 12, borderRadius: 10, border: '1px solid rgba(229,30,30,.3)', background: 'none', color: '#e51e1e', fontSize: 14, fontWeight: 500, cursor: 'pointer', transition: 'all .2s' }}>
+        <button onClick={handleLogout} className="w-full flex items-center justify-center" style={{ gap: 8, padding: 14, borderRadius: 'var(--radius)', border: '1px solid rgba(239,68,68,.2)', background: 'none', color: 'var(--danger)', fontSize: 14, fontWeight: 500, cursor: 'pointer', transition: 'all .2s' }}>
           <LogOut size={16} />
           Chiqish
         </button>

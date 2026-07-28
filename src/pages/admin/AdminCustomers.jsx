@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
 import {
-  ChevronLeft,
   Users,
   Crown,
   Activity,
@@ -15,27 +14,23 @@ import {
   Ban,
   Eye,
   Search,
-  Filter,
   ArrowUpDown,
   Download,
   X,
-  TrendingUp,
   Heart,
-  AlertTriangle,
-  CheckCircle,
   MessageSquare,
 } from 'lucide-react';
 
 const VIP_TIERS = {
-  oddiy: { label: 'Oddiy', color: '#9ca3af', bg: 'rgba(156,163,175,0.15)', minOrders: 0 },
-  silver: { label: 'Silver', color: '#c0c0c0', bg: 'rgba(192,192,192,0.15)', minOrders: 100 },
-  gold: { label: 'Gold', color: '#ffd700', bg: 'rgba(255,215,0,0.15)', minOrders: 500 },
-  platinum: { label: 'Platinum', color: '#e5e4e2', bg: 'rgba(229,228,226,0.15)', minOrders: 1000 },
+  oddiy: { label: 'Oddiy', color: '#9ca3af', bg: 'rgba(156,163,175,0.08)', minOrders: 0 },
+  silver: { label: 'Silver', color: '#c0c0c0', bg: 'rgba(192,192,192,0.1)', minOrders: 100 },
+  gold: { label: 'Gold', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', minOrders: 500 },
+  platinum: { label: 'Platinum', color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', minOrders: 1000 },
 };
 
 const TIER_FILTER_OPTIONS = ['Hammasi', 'Silver', 'Gold', 'Platinum'];
 const SORT_OPTIONS = [
-  { value: 'name', label: 'Ism bo\'yicha' },
+  { value: 'name', label: "Ism bo'yicha" },
   { value: 'totalOrders', label: 'Buyurtmalar soni' },
   { value: 'lastOrder', label: 'Oxirgi buyurtma' },
 ];
@@ -53,7 +48,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 7180,
     rating: 4.9,
     blacklisted: false,
-    notes: 'VIP mijoz. Har doim 123-stolni so\'raydi.',
+    notes: "VIP mijoz. Har doim 123-stolni so'raydi.",
     orders: [
       { id: 1001, date: '2026-07-27T18:30:00', total: 125000, items: ['T-Bone Steak', 'Caesar Salad', 'Red Wine'] },
       { id: 1002, date: '2026-07-25T19:15:00', total: 89000, items: ['Ribeye Steak', 'French Fries'] },
@@ -74,7 +69,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 6700,
     rating: 4.7,
     blacklisted: false,
-    notes: 'Kechki payt keladi. Uzum sharbat so\'raydi.',
+    notes: "Kechki payt keladi. Uzum sharbat so'raydi.",
     orders: [
       { id: 1006, date: '2026-07-26T20:15:00', total: 98000, items: ['Ribeye Steak', 'Mashed Potatoes'] },
       { id: 1007, date: '2026-07-24T19:00:00', total: 76000, items: ['Filet Mignon', 'Salad'] },
@@ -95,7 +90,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 8250,
     rating: 4.5,
     blacklisted: false,
-    notes: 'Tushlik payt keladi. Go\'sht kam yeydi.',
+    notes: "Tushlik payt keladi. Go'sht kam yeydi.",
     orders: [
       { id: 1011, date: '2026-07-25T12:30:00', total: 45000, items: ['Caesar Salad', 'Soup'] },
       { id: 1012, date: '2026-07-23T13:00:00', total: 62000, items: ['Grilled Chicken', 'Juice'] },
@@ -137,7 +132,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 7470,
     rating: 4.6,
     blacklisted: false,
-    notes: 'Do\'stlari bilan keladi. Ko\'p buyurtma beradi.',
+    notes: "Do'stlari bilan keladi. Ko'p buyurtma beradi.",
     orders: [
       { id: 1021, date: '2026-07-27T19:45:00', total: 178000, items: ['2x Ribeye', 'Grilled Salmon', 'Wine', 'Dessert'] },
       { id: 1022, date: '2026-07-25T20:00:00', total: 145000, items: ['T-Bone', 'Pasta', 'Juice'] },
@@ -179,7 +174,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 7180,
     rating: 4.3,
     blacklisted: false,
-    notes: 'Cheklovlar: yong\'oq allergiya.',
+    notes: "Cheklovlar: yong'oq allergiya.",
     orders: [
       { id: 1031, date: '2026-07-26T14:00:00', total: 58000, items: ['Pasta Carbonara', 'Juice'] },
       { id: 1032, date: '2026-07-23T13:30:00', total: 42000, items: ['Caesar Salad', 'Soup'] },
@@ -221,7 +216,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 7890,
     rating: 4.8,
     blacklisted: false,
-    notes: 'Tadbirlar uchun ko\'p buyurtma beradi.',
+    notes: "Tadbirlar uchun ko'p buyurtma beradi.",
     orders: [
       { id: 1041, date: '2026-07-28T12:00:00', total: 320000, items: ['5x T-Bone', 'Salads', 'Wine bottles'] },
       { id: 1042, date: '2026-07-25T13:00:00', total: 185000, items: ['3x Ribeye', 'Pasta', 'Juice'] },
@@ -242,7 +237,7 @@ const MOCK_CUSTOMERS = [
     avgCheck: 8240,
     rating: 4.9,
     blacklisted: false,
-    notes: 'Restoran do\'sti. Tadbirlarga taklif qilinadi.',
+    notes: "Restoran do'sti. Tadbirlarga taklif qilinadi.",
     orders: [
       { id: 1046, date: '2026-07-28T19:00:00', total: 245000, items: ['Wagyu Steak', 'Lobster', 'Champagne', 'Dessert'] },
       { id: 1047, date: '2026-07-26T20:00:00', total: 178000, items: ['T-Bone', 'Salad', 'Wine'] },
@@ -254,7 +249,7 @@ const MOCK_CUSTOMERS = [
 ];
 
 function formatCurrency(amount) {
-  return new Intl.NumberFormat('uz-UZ').format(amount) + ' so\'m';
+  return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
 }
 
 function formatDate(dateStr) {
@@ -279,15 +274,416 @@ function renderStars(rating) {
   const stars = [];
   for (let i = 0; i < 5; i++) {
     if (i < full) {
-      stars.push(<Star key={i} size={14} fill="#ffd700" stroke="#ffd700" />);
+      stars.push(<Star key={i} size={14} fill="var(--warning)" stroke="var(--warning)" />);
     } else if (i === full && half) {
-      stars.push(<Star key={i} size={14} fill="#ffd700" stroke="#ffd700" style={{ opacity: 0.5 }} />);
+      stars.push(<Star key={i} size={14} fill="var(--warning)" stroke="var(--warning)" style={{ opacity: 0.5 }} />);
     } else {
-      stars.push(<Star key={i} size={14} fill="none" stroke="#4a4a4a" />);
+      stars.push(<Star key={i} size={14} fill="none" stroke="var(--border-strong)" />);
     }
   }
   return stars;
 }
+
+const styles = {
+  page: {
+    minHeight: '100vh',
+    background: 'var(--bg)',
+    color: 'var(--text)',
+    padding: '28px',
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '28px',
+    flexWrap: 'wrap',
+    gap: '12px',
+  },
+  headerLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '14px',
+  },
+  headerTitle: {
+    fontSize: '22px',
+    fontWeight: '700',
+    color: 'var(--text)',
+    margin: 0,
+  },
+  headerSubtitle: {
+    fontSize: '13px',
+    color: 'var(--text-muted)',
+    margin: 0,
+    marginTop: '2px',
+  },
+  exportBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: 'var(--radius-sm)',
+    background: 'var(--primary)',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 2px 8px rgba(249,115,22,0.25)',
+  },
+  statsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '16px',
+    marginBottom: '28px',
+  },
+  statCard: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '14px',
+    transition: 'all 0.2s ease',
+  },
+  statIcon: (bg) => ({
+    width: '48px',
+    height: '48px',
+    borderRadius: '12px',
+    background: bg,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  }),
+  statValue: (color) => ({
+    fontSize: '24px',
+    fontWeight: '700',
+    color: color || 'var(--text)',
+  }),
+  statLabel: {
+    fontSize: '13px',
+    color: 'var(--text-muted)',
+  },
+  tierGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+    gap: '16px',
+    marginBottom: '28px',
+  },
+  tierCard: (tier, isActive) => ({
+    background: isActive ? VIP_TIERS[tier].bg : 'var(--surface)',
+    border: `1.5px solid ${isActive ? VIP_TIERS[tier].color + '55' : 'var(--border)'}`,
+    borderRadius: 'var(--radius-sm)',
+    padding: '18px 20px',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    boxShadow: isActive ? `0 2px 12px ${VIP_TIERS[tier].color}18` : 'var(--shadow-sm)',
+  }),
+  filterBar: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '16px 20px',
+    marginBottom: '20px',
+  },
+  searchInput: {
+    width: '100%',
+    padding: '10px 14px 10px 40px',
+    background: 'var(--bg)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    color: 'var(--text)',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+    boxSizing: 'border-box',
+  },
+  filterTabs: {
+    display: 'flex',
+    gap: '4px',
+    background: 'var(--bg)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '4px',
+    border: '1px solid var(--border)',
+  },
+  filterTab: (active) => ({
+    padding: '8px 16px',
+    borderRadius: '10px',
+    border: 'none',
+    fontSize: '13px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    background: active ? 'var(--primary)' : 'transparent',
+    color: active ? '#fff' : 'var(--text-muted)',
+  }),
+  selectWrap: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  select: {
+    padding: '8px 12px',
+    background: 'var(--bg)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    color: 'var(--text)',
+    fontSize: '13px',
+    outline: 'none',
+    cursor: 'pointer',
+  },
+  customerList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  customerCard: (blacklisted) => ({
+    background: 'var(--surface)',
+    border: `1px solid ${blacklisted ? 'rgba(239,68,68,0.2)' : 'var(--border)'}`,
+    borderRadius: 'var(--radius-sm)',
+    padding: '18px 20px',
+    opacity: blacklisted ? 0.6 : 1,
+    transition: 'all 0.2s ease',
+  }),
+  avatar: (color) => ({
+    width: '50px',
+    height: '50px',
+    borderRadius: '14px',
+    background: VIP_TIERS[color]?.bg || 'var(--bg)',
+    border: `2px solid ${VIP_TIERS[color]?.color || 'var(--border)'}44`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '16px',
+    fontWeight: '700',
+    color: VIP_TIERS[color]?.color || 'var(--text-muted)',
+    flexShrink: 0,
+  }),
+  customerName: {
+    fontWeight: '600',
+    color: 'var(--text)',
+    fontSize: '15px',
+  },
+  customerPhone: {
+    fontSize: '13px',
+    color: 'var(--text-muted)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+    marginTop: '3px',
+  },
+  badge: (tier) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '5px',
+    padding: '5px 12px',
+    borderRadius: '20px',
+    fontSize: '12px',
+    fontWeight: '600',
+    background: VIP_TIERS[tier]?.bg || 'var(--bg)',
+    color: VIP_TIERS[tier]?.color || 'var(--text-muted)',
+    border: `1px solid ${VIP_TIERS[tier]?.color || 'var(--border)'}22`,
+    flexShrink: 0,
+  }),
+  statItem: {
+    textAlign: 'center',
+    minWidth: '80px',
+  },
+  statItemValue: {
+    fontWeight: '700',
+    color: 'var(--text)',
+    fontSize: '15px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '4px',
+  },
+  statItemLabel: {
+    fontSize: '11px',
+    color: 'var(--text-muted)',
+    marginTop: '2px',
+  },
+  actionBtn: (variant) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '8px',
+    borderRadius: '10px',
+    border: '1px solid var(--border)',
+    background: variant === 'danger' ? 'rgba(239,68,68,0.06)' : variant === 'success' ? 'rgba(34,197,94,0.06)' : 'var(--surface)',
+    color: variant === 'danger' ? 'var(--danger)' : variant === 'success' ? 'var(--success)' : 'var(--text-secondary)',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    flexShrink: 0,
+  }),
+  overlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(0,0,0,0.3)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+    backdropFilter: 'blur(4px)',
+  },
+  modal: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius)',
+    width: '90%',
+    maxWidth: '640px',
+    maxHeight: '85vh',
+    overflowY: 'auto',
+    boxShadow: 'var(--shadow-lg)',
+  },
+  modalHeader: {
+    padding: '20px 24px',
+    borderBottom: '1px solid var(--border)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  modalBody: {
+    padding: '24px',
+  },
+  modalFooter: {
+    padding: '16px 24px',
+    borderTop: '1px solid var(--border)',
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'flex-end',
+  },
+  sectionLabel: {
+    fontSize: '13px',
+    color: 'var(--text-muted)',
+    fontWeight: '600',
+    display: 'block',
+    marginBottom: '10px',
+  },
+  tierBtn: (active, color) => ({
+    padding: '8px 16px',
+    borderRadius: '10px',
+    border: `2px solid ${active ? color : 'var(--border)'}`,
+    background: active ? VIP_TIERS[Object.keys(VIP_TIERS).find(k => VIP_TIERS[k].color === color)]?.bg || 'var(--bg)' : 'transparent',
+    color: active ? color : 'var(--text-muted)',
+    fontSize: '13px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  }),
+  modalStatBox: (color) => ({
+    background: 'var(--bg)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '16px',
+    textAlign: 'center',
+    border: '1px solid var(--border)',
+  }),
+  modalStatValue: (color) => ({
+    fontSize: '20px',
+    fontWeight: '700',
+    color: color,
+  }),
+  modalStatLabel: {
+    fontSize: '12px',
+    color: 'var(--text-muted)',
+    marginTop: '4px',
+  },
+  toggleTrack: (active) => ({
+    width: '48px',
+    height: '26px',
+    borderRadius: '13px',
+    border: 'none',
+    cursor: 'pointer',
+    background: active ? 'var(--primary)' : 'var(--border-strong)',
+    position: 'relative',
+    transition: 'background 0.2s',
+    flexShrink: 0,
+  }),
+  toggleKnob: (active) => ({
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+    background: '#fff',
+    position: 'absolute',
+    top: '3px',
+    left: active ? '25px' : '3px',
+    transition: 'left 0.2s',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+  }),
+  textarea: {
+    width: '100%',
+    padding: '10px 14px',
+    background: 'var(--bg)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    color: 'var(--text)',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+    resize: 'vertical',
+    minHeight: '80px',
+    fontFamily: 'inherit',
+    boxSizing: 'border-box',
+  },
+  orderCard: {
+    background: 'var(--bg)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '14px 16px',
+    border: '1px solid var(--border)',
+  },
+  orderItemTag: {
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
+    background: 'var(--surface-active)',
+    padding: '4px 10px',
+    borderRadius: '6px',
+    display: 'inline-block',
+  },
+  cancelBtn: {
+    padding: '10px 20px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--border)',
+    background: 'var(--surface)',
+    color: 'var(--text-secondary)',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  },
+  saveBtn: {
+    padding: '10px 24px',
+    borderRadius: 'var(--radius-sm)',
+    border: 'none',
+    background: 'var(--primary)',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    boxShadow: '0 2px 8px rgba(249,115,22,0.25)',
+    transition: 'all 0.2s',
+  },
+  emptyState: {
+    textAlign: 'center',
+    padding: '60px 20px',
+    color: 'var(--text-muted)',
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+  },
+  favBox: {
+    flex: 1,
+    background: 'var(--bg)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    border: '1px solid var(--border)',
+  },
+};
 
 export default function AdminCustomers() {
   const store = useStore();
@@ -322,7 +718,6 @@ export default function AdminCustomers() {
 
   const filteredCustomers = useMemo(() => {
     let list = [...MOCK_CUSTOMERS];
-
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(c =>
@@ -331,15 +726,12 @@ export default function AdminCustomers() {
         c.favoriteDish.toLowerCase().includes(q)
       );
     }
-
     if (tierFilter !== 'Hammasi') {
       list = list.filter(c => c.vipTier === tierFilter.toLowerCase());
     }
-
     if (sortBy === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
     if (sortBy === 'totalOrders') list.sort((a, b) => b.totalOrders - a.totalOrders);
     if (sortBy === 'lastOrder') list.sort((a, b) => new Date(b.lastOrder) - new Date(a.lastOrder));
-
     return list;
   }, [search, tierFilter, sortBy]);
 
@@ -357,185 +749,118 @@ export default function AdminCustomers() {
     setSelectedCustomer(null);
   };
 
-  const tierCardStyle = (tier) => ({
-    background: VIP_TIERS[tier].bg,
-    border: `1px solid ${VIP_TIERS[tier].color}33`,
-    borderRadius: '12px',
-    padding: '16px 20px',
-    flex: '1',
-    minWidth: '160px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  });
-
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0f0f', color: '#e5e5e5', padding: '24px' }}>
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 16px; transition: all 0.2s ease; }
-        .card-hover:hover { border-color: #c8a97e44; box-shadow: 0 4px 20px rgba(200,169,126,0.08); transform: translateY(-2px); }
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        .btn-primary { background: linear-gradient(135deg, #c8a97e, #a88a5a); color: #0f0f0f; }
-        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .input { width: 100%; padding: 10px 16px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #e5e5e5; font-size: 14px; outline: none; transition: border-color 0.2s; }
-        .input:focus { border-color: #c8a97e; }
-        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
-        .badge-green { background: rgba(34,197,94,0.15); color: #22c55e; }
-        .badge-yellow { background: rgba(250,204,21,0.15); color: #facc15; }
-        .animate-fade-in { animation: fadeIn 0.4s ease forwards; }
-        .stagger > *:nth-child(1) { animation-delay: 0.05s; }
-        .stagger > *:nth-child(2) { animation-delay: 0.1s; }
-        .stagger > *:nth-child(3) { animation-delay: 0.15s; }
-        .stagger > *:nth-child(4) { animation-delay: 0.2s; }
-        .stagger > *:nth-child(5) { animation-delay: 0.25s; }
-        .stagger > *:nth-child(6) { animation-delay: 0.3s; }
-        .stagger > *:nth-child(7) { animation-delay: 0.35s; }
-        .stagger > *:nth-child(8) { animation-delay: 0.4s; }
-        .stagger > *:nth-child(9) { animation-delay: 0.45s; }
-        .stagger > *:nth-child(10) { animation-delay: 0.5s; }
-        .flex { display: flex; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-content { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; width: 90%; max-width: 640px; max-height: 85vh; overflow-y: auto; animation: scaleIn 0.25s ease; }
-        .modal-content::-webkit-scrollbar { width: 6px; }
-        .modal-content::-webkit-scrollbar-track { background: transparent; }
-        .modal-content::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
-      `}</style>
-
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', animation: 'fadeIn 0.3s ease' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button
-            onClick={() => navigate(-1)}
-            className="btn"
-            style={{ background: '#1a1a1a', border: '1px solid #333', color: '#e5e5e5', padding: '10px' }}
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <div>
-            <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#fff', margin: 0 }}>Mijozlar (CRM)</h1>
-            <p style={{ fontSize: '13px', color: '#888', margin: 0 }}>Mijozlarni boshqarish va tahlil qilish</p>
-          </div>
+    <div style={styles.page}>
+      <div style={styles.header}>
+        <div>
+          <h1 style={styles.headerTitle}>Mijozlar (CRM)</h1>
+          <p style={styles.headerSubtitle}>Mijozlarni boshqarish va tahlil qilish</p>
         </div>
-        <button className="btn btn-primary" onClick={() => alert('Export CSV...')}>
+        <button style={styles.exportBtn} onClick={() => alert('Export CSV...')}>
           <Download size={16} />
           Export
         </button>
       </div>
 
-      {/* Stats Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '28px' }} className="stagger">
-        <div className="card animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '20px' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(200,169,126,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Users size={22} color="#c8a97e" />
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={styles.statIcon('var(--primary-light)')}>
+            <Users size={22} style={{ color: 'var(--primary)' }} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#fff' }}>{stats.total}</div>
-            <div style={{ fontSize: '13px', color: '#888' }}>Jami mijozlar</div>
+            <div style={styles.statValue()}>{stats.total}</div>
+            <div style={styles.statLabel}>Jami mijozlar</div>
           </div>
         </div>
-        <div className="card animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '20px' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(255,215,0,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Crown size={22} color="#ffd700" />
+        <div style={styles.statCard}>
+          <div style={styles.statIcon('rgba(245,158,11,0.08)')}>
+            <Crown size={22} style={{ color: 'var(--warning)' }} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#ffd700' }}>{stats.vip}</div>
-            <div style={{ fontSize: '13px', color: '#888' }}>VIP mijozlar</div>
+            <div style={styles.statValue('var(--warning)')}>{stats.vip}</div>
+            <div style={styles.statLabel}>VIP mijozlar</div>
           </div>
         </div>
-        <div className="card animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '20px' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(34,197,94,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Activity size={22} color="#22c55e" />
+        <div style={styles.statCard}>
+          <div style={styles.statIcon('rgba(34,197,94,0.08)')}>
+            <Activity size={22} style={{ color: 'var(--success)' }} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#22c55e' }}>{stats.active}</div>
-            <div style={{ fontSize: '13px', color: '#888' }}>Faol mijozlar</div>
+            <div style={styles.statValue('var(--success)')}>{stats.active}</div>
+            <div style={styles.statLabel}>Faol mijozlar</div>
           </div>
         </div>
-        <div className="card animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '20px' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(59,130,246,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <DollarSign size={22} color="#3b82f6" />
+        <div style={styles.statCard}>
+          <div style={styles.statIcon('rgba(249,115,22,0.08)')}>
+            <DollarSign size={22} style={{ color: 'var(--primary)' }} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#3b82f6' }}>{formatCurrency(stats.avgCheck).replace(" so'm", '')}</div>
-            <div style={{ fontSize: '13px', color: '#888' }}>O'rtacha chek</div>
+            <div style={styles.statValue('var(--primary)')}>
+              {formatCurrency(stats.avgCheck).replace(" so'm", '')}
+            </div>
+            <div style={styles.statLabel}>O'rtacha chek</div>
           </div>
         </div>
       </div>
 
-      {/* VIP Tier Cards */}
-      <div style={{ display: 'flex', gap: '16px', marginBottom: '28px', flexWrap: 'wrap' }} className="stagger">
+      <div style={styles.tierGrid}>
         {['silver', 'gold', 'platinum'].map(tier => (
           <div
             key={tier}
-            className="card animate-fade-in"
-            style={tierCardStyle(tier)}
-            onClick={() => setTierFilter(tierFilter === tier ? 'Hammasi' : tier.charAt(0).toUpperCase() + tier.slice(1))}
+            style={styles.tierCard(tier, tierFilter === tier.charAt(0).toUpperCase() + tier.slice(1))}
+            onClick={() =>
+              setTierFilter(
+                tierFilter === tier.charAt(0).toUpperCase() + tier.slice(1)
+                  ? 'Hammasi'
+                  : tier.charAt(0).toUpperCase() + tier.slice(1)
+              )
+            }
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-              <Crown size={18} color={VIP_TIERS[tier].color} />
-              <span style={{ fontWeight: '600', color: VIP_TIERS[tier].color, fontSize: '15px' }}>{VIP_TIERS[tier].label}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+              <Crown size={18} style={{ color: VIP_TIERS[tier].color }} />
+              <span style={{ fontWeight: '600', color: VIP_TIERS[tier].color, fontSize: '15px' }}>
+                {VIP_TIERS[tier].label}
+              </span>
             </div>
-            <div style={{ fontSize: '28px', fontWeight: '700', color: '#fff' }}>{tierCounts[tier]}</div>
-            <div style={{ fontSize: '12px', color: '#888', marginTop: '2px' }}>{VIP_TIERS[tier].minOrders}+ buyurtma</div>
+            <div style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text)' }}>{tierCounts[tier]}</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
+              {VIP_TIERS[tier].minOrders}+ buyurtma
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Filters */}
-      <div className="card" style={{ marginBottom: '20px', padding: '16px 20px' }}>
+      <div style={styles.filterBar}>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ flex: '1', minWidth: '240px', position: 'relative' }}>
-            <Search size={16} color="#888" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
             <input
-              className="input"
+              style={styles.searchInput}
               type="text"
               placeholder="Ism, telefon yoki taom bo'yicha qidirish..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ paddingLeft: '38px' }}
+              onFocus={e => { e.target.style.borderColor = 'var(--primary)'; }}
+              onBlur={e => { e.target.style.borderColor = 'var(--border)'; }}
             />
           </div>
-          <div style={{ display: 'flex', gap: '6px', background: '#111', borderRadius: '8px', padding: '4px' }}>
+          <div style={styles.filterTabs}>
             {TIER_FILTER_OPTIONS.map(opt => (
               <button
                 key={opt}
                 onClick={() => setTierFilter(opt)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  background: tierFilter === opt ? 'linear-gradient(135deg, #c8a97e, #a88a5a)' : 'transparent',
-                  color: tierFilter === opt ? '#0f0f0f' : '#888',
-                }}
+                style={styles.filterTab(tierFilter === opt)}
               >
                 {opt}
               </button>
             ))}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ArrowUpDown size={14} color="#888" />
+          <div style={styles.selectWrap}>
+            <ArrowUpDown size={14} style={{ color: 'var(--text-muted)' }} />
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              style={{
-                padding: '8px 12px',
-                background: '#111',
-                border: '1px solid #333',
-                borderRadius: '8px',
-                color: '#e5e5e5',
-                fontSize: '13px',
-                outline: 'none',
-                cursor: 'pointer',
-              }}
+              style={styles.select}
             >
               {SORT_OPTIONS.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -545,133 +870,105 @@ export default function AdminCustomers() {
         </div>
       </div>
 
-      {/* Customer List */}
-      <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={styles.customerList}>
         {filteredCustomers.length === 0 && (
-          <div className="card" style={{ textAlign: 'center', padding: '48px 20px', color: '#666' }}>
-            <Users size={48} color="#444" style={{ marginBottom: '12px' }} />
+          <div style={styles.emptyState}>
+            <Users size={48} style={{ color: 'var(--border-strong)', marginBottom: '12px' }} />
             <p style={{ fontSize: '16px', margin: 0 }}>Mijozlar topilmadi</p>
           </div>
         )}
-        {filteredCustomers.map((customer, idx) => {
+        {filteredCustomers.map(customer => {
           const tierInfo = VIP_TIERS[customer.vipTier];
           return (
-            <div
-              key={customer.id}
-              className="card card-hover animate-fade-in"
-              style={{
-                padding: '18px 20px',
-                opacity: customer.blacklisted ? 0.5 : 1,
-                border: customer.blacklisted ? '1px solid #ef444433' : undefined,
-              }}
-            >
+            <div key={customer.id} style={styles.customerCard(customer.blacklisted)}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                {/* Avatar */}
-                <div style={{
-                  width: '52px',
-                  height: '52px',
-                  borderRadius: '14px',
-                  background: `linear-gradient(135deg, ${tierInfo.color}33, ${tierInfo.color}11)`,
-                  border: `2px solid ${tierInfo.color}55`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '18px',
-                  fontWeight: '700',
-                  color: tierInfo.color,
-                  flexShrink: 0,
-                }}>
+                <div style={styles.avatar(customer.vipTier)}>
                   {customer.name.split(' ').map(n => n[0]).join('')}
                 </div>
 
-                {/* Name & Phone */}
                 <div style={{ minWidth: '160px', flex: '1' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontWeight: '600', color: '#fff', fontSize: '15px' }}>{customer.name}</span>
-                    {customer.blacklisted && <Ban size={14} color="#ef4444" />}
+                    <span style={styles.customerName}>{customer.name}</span>
+                    {customer.blacklisted && <Ban size={14} style={{ color: 'var(--danger)' }} />}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
-                    <Phone size={12} color="#666" />
-                    <span style={{ fontSize: '13px', color: '#888' }}>{customer.phone}</span>
+                  <div style={styles.customerPhone}>
+                    <Phone size={12} />
+                    <span>{customer.phone}</span>
                   </div>
                 </div>
 
-                {/* VIP Badge */}
-                <span className={`badge ${customer.vipTier === 'gold' ? 'badge-yellow' : customer.vipTier === 'platinum' ? 'badge-green' : customer.vipTier === 'silver' ? '' : ''}`}
-                  style={customer.vipTier === 'silver' ? { background: 'rgba(192,192,192,0.15)', color: '#c0c0c0' } : customer.vipTier === 'oddiy' ? { background: 'rgba(156,163,175,0.15)', color: '#9ca3af' } : {}}
-                >
+                <span style={styles.badge(customer.vipTier)}>
                   <Crown size={12} />
                   {tierInfo.label}
                 </span>
 
-                {/* Stats */}
                 <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', flex: '1', justifyContent: 'flex-end' }}>
-                  <div style={{ textAlign: 'center', minWidth: '80px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                      <ShoppingCart size={13} color="#c8a97e" />
-                      <span style={{ fontWeight: '700', color: '#fff', fontSize: '15px' }}>{customer.totalOrders.toLocaleString()}</span>
+                  <div style={styles.statItem}>
+                    <div style={styles.statItemValue}>
+                      <ShoppingCart size={13} style={{ color: 'var(--primary)' }} />
+                      {customer.totalOrders.toLocaleString()}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#666' }}>buyurtmalar</div>
+                    <div style={styles.statItemLabel}>buyurtmalar</div>
                   </div>
-                  <div style={{ textAlign: 'center', minWidth: '100px' }}>
-                    <div style={{ fontWeight: '700', color: '#c8a97e', fontSize: '15px' }}>{formatCurrency(customer.totalSpent)}</div>
-                    <div style={{ fontSize: '11px', color: '#666' }}>umumiy xarajat</div>
-                  </div>
-                  <div style={{ textAlign: 'center', minWidth: '90px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                      <Clock size={13} color="#888" />
-                      <span style={{ fontSize: '13px', color: '#aaa' }}>{formatDate(customer.lastOrder)}</span>
+                  <div style={styles.statItem}>
+                    <div style={{ ...styles.statItemValue, color: 'var(--primary)' }}>
+                      {formatCurrency(customer.totalSpent)}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#666' }}>oxirgi buyurtma</div>
+                    <div style={styles.statItemLabel}>umumiy xarajat</div>
                   </div>
-                  <div style={{ textAlign: 'center', minWidth: '100px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                      <Heart size={13} color="#ef4444" />
-                      <span style={{ fontSize: '13px', color: '#aaa' }}>{customer.favoriteDish}</span>
+                  <div style={{ ...styles.statItem, minWidth: '90px' }}>
+                    <div style={styles.statItemValue}>
+                      <Clock size={13} style={{ color: 'var(--text-muted)' }} />
+                      <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                        {formatDate(customer.lastOrder)}
+                      </span>
                     </div>
-                    <div style={{ fontSize: '11px', color: '#666' }}>sevimli taom</div>
+                    <div style={styles.statItemLabel}>oxirgi buyurtma</div>
                   </div>
-                  <div style={{ textAlign: 'center', minWidth: '70px' }}>
-                    <div style={{ fontWeight: '600', color: '#fff', fontSize: '14px' }}>{formatCurrency(customer.avgCheck).replace(" so'm", '')}</div>
-                    <div style={{ fontSize: '11px', color: '#666' }}>o'rtacha chek</div>
+                  <div style={{ ...styles.statItem, minWidth: '100px' }}>
+                    <div style={styles.statItemValue}>
+                      <Heart size={13} style={{ color: 'var(--danger)' }} />
+                      <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                        {customer.favoriteDish}
+                      </span>
+                    </div>
+                    <div style={styles.statItemLabel}>sevimli taom</div>
+                  </div>
+                  <div style={styles.statItem}>
+                    <div style={{ fontWeight: '600', color: 'var(--text)', fontSize: '14px' }}>
+                      {formatCurrency(customer.avgCheck).replace(" so'm", '')}
+                    </div>
+                    <div style={styles.statItemLabel}>o'rtacha chek</div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     {renderStars(customer.rating)}
-                    <span style={{ fontSize: '13px', color: '#ffd700', marginLeft: '4px' }}>{customer.rating}</span>
+                    <span style={{ fontSize: '13px', color: 'var(--warning)', marginLeft: '4px' }}>
+                      {customer.rating}
+                    </span>
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                   <button
-                    className="btn"
-                    style={{ background: '#222', border: '1px solid #333', color: '#e5e5e5', padding: '8px 12px', fontSize: '12px' }}
+                    style={styles.actionBtn('default')}
                     onClick={() => openDetail(customer)}
                     title="Ko'rish"
                   >
-                    <Eye size={15} />
+                    <Eye size={16} />
                   </button>
                   <button
-                    className="btn"
-                    style={{ background: '#222', border: '1px solid #333', color: '#c8a97e', padding: '8px 12px', fontSize: '12px' }}
+                    style={styles.actionBtn('default')}
                     onClick={() => openDetail(customer)}
                     title="Tahrirlash"
                   >
-                    <Edit size={15} />
+                    <Edit size={16} />
                   </button>
                   <button
-                    className="btn"
-                    style={{
-                      background: customer.blacklisted ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
-                      border: `1px solid ${customer.blacklisted ? '#22c55e33' : '#ef444433'}`,
-                      color: customer.blacklisted ? '#22c55e' : '#ef4444',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                    }}
+                    style={styles.actionBtn(customer.blacklisted ? 'success' : 'danger')}
                     onClick={() => openDetail(customer)}
                     title={customer.blacklisted ? 'Blockdan chiqarish' : 'Blocklash'}
                   >
-                    <Ban size={15} />
+                    <Ban size={16} />
                   </button>
                 </div>
               </div>
@@ -680,65 +977,60 @@ export default function AdminCustomers() {
         })}
       </div>
 
-      {/* Customer Detail Modal */}
       {showModal && selectedCustomer && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ padding: '0' }}>
-            {/* Modal Header */}
-            <div style={{
-              padding: '20px 24px',
-              borderBottom: '1px solid #2a2a2a',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              background: '#111',
-              borderRadius: '16px 16px 0 0',
-            }}>
+        <div style={styles.overlay} onClick={closeModal}>
+          <div style={styles.modal} onClick={e => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{
-                  width: '56px',
-                  height: '56px',
+                  width: '52px',
+                  height: '52px',
                   borderRadius: '14px',
-                  background: `linear-gradient(135deg, ${VIP_TIERS[selectedCustomer.vipTier].color}33, ${VIP_TIERS[selectedCustomer.vipTier].color}11)`,
-                  border: `2px solid ${VIP_TIERS[selectedCustomer.vipTier].color}55`,
+                  background: VIP_TIERS[selectedCustomer.vipTier].bg,
+                  border: `2px solid ${VIP_TIERS[selectedCustomer.vipTier].color}44`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '20px',
+                  fontSize: '18px',
                   fontWeight: '700',
                   color: VIP_TIERS[selectedCustomer.vipTier].color,
                 }}>
                   {selectedCustomer.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#fff' }}>{selectedCustomer.name}</h2>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                    <Phone size={13} color="#888" />
-                    <span style={{ fontSize: '13px', color: '#888' }}>{selectedCustomer.phone}</span>
+                  <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--text)' }}>
+                    {selectedCustomer.name}
+                  </h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                    <Phone size={13} style={{ color: 'var(--text-muted)' }} />
+                    <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                      {selectedCustomer.phone}
+                    </span>
                   </div>
                 </div>
               </div>
-              <button onClick={closeModal} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', padding: '8px' }}>
+              <button
+                onClick={closeModal}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '8px', borderRadius: '8px', transition: 'background 0.2s' }}
+              >
                 <X size={20} />
               </button>
             </div>
 
-            {/* Modal Body */}
-            <div style={{ padding: '24px' }}>
-              {/* VIP Tier Selector */}
+            <div style={styles.modalBody}>
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ fontSize: '13px', color: '#888', fontWeight: '600', display: 'block', marginBottom: '8px' }}>VIP Daraja</label>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <label style={styles.sectionLabel}>VIP Daraja</label>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {Object.entries(VIP_TIERS).map(([key, val]) => (
                     <button
                       key={key}
                       onClick={() => setEditTier(key)}
                       style={{
                         padding: '8px 16px',
-                        borderRadius: '8px',
-                        border: `2px solid ${editTier === key ? val.color : '#333'}`,
+                        borderRadius: '10px',
+                        border: `2px solid ${editTier === key ? val.color : 'var(--border)'}`,
                         background: editTier === key ? val.bg : 'transparent',
-                        color: editTier === key ? val.color : '#888',
+                        color: editTier === key ? val.color : 'var(--text-muted)',
                         fontSize: '13px',
                         fontWeight: '600',
                         cursor: 'pointer',
@@ -751,120 +1043,122 @@ export default function AdminCustomers() {
                 </div>
               </div>
 
-              {/* Stats Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-                <div style={{ background: '#111', borderRadius: '10px', padding: '14px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '22px', fontWeight: '700', color: '#c8a97e' }}>{selectedCustomer.totalOrders.toLocaleString()}</div>
-                  <div style={{ fontSize: '12px', color: '#888' }}>Jami buyurtmalar</div>
+                <div style={styles.modalStatBox('var(--primary)')}>
+                  <div style={styles.modalStatValue('var(--primary)')}>
+                    {selectedCustomer.totalOrders.toLocaleString()}
+                  </div>
+                  <div style={styles.modalStatLabel}>Jami buyurtmalar</div>
                 </div>
-                <div style={{ background: '#111', borderRadius: '10px', padding: '14px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '22px', fontWeight: '700', color: '#22c55e' }}>{formatCurrency(selectedCustomer.totalSpent)}</div>
-                  <div style={{ fontSize: '12px', color: '#888' }}>Umumiy xarajat</div>
+                <div style={styles.modalStatBox('var(--success)')}>
+                  <div style={styles.modalStatValue('var(--success)')}>
+                    {formatCurrency(selectedCustomer.totalSpent)}
+                  </div>
+                  <div style={styles.modalStatLabel}>Umumiy xarajat</div>
                 </div>
-                <div style={{ background: '#111', borderRadius: '10px', padding: '14px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '22px', fontWeight: '700', color: '#3b82f6' }}>{formatCurrency(selectedCustomer.avgCheck).replace(" so'm", '')}</div>
-                  <div style={{ fontSize: '12px', color: '#888' }}>O'rtacha chek</div>
+                <div style={styles.modalStatBox('var(--primary)')}>
+                  <div style={styles.modalStatValue('var(--primary)')}>
+                    {formatCurrency(selectedCustomer.avgCheck).replace(" so'm", '')}
+                  </div>
+                  <div style={styles.modalStatLabel}>O'rtacha chek</div>
                 </div>
               </div>
 
-              {/* Favorite & Rating */}
               <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
-                <div style={{ flex: 1, background: '#111', borderRadius: '10px', padding: '14px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Heart size={18} color="#ef4444" />
+                <div style={styles.favBox}>
+                  <Heart size={18} style={{ color: 'var(--danger)', flexShrink: 0 }} />
                   <div>
-                    <div style={{ fontSize: '12px', color: '#888' }}>Sevimli taom</div>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#fff' }}>{selectedCustomer.favoriteDish}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Sevimli taom</div>
+                    <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text)' }}>
+                      {selectedCustomer.favoriteDish}
+                    </div>
                   </div>
                 </div>
-                <div style={{ flex: 1, background: '#111', borderRadius: '10px', padding: '14px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ display: 'flex', gap: '2px' }}>{renderStars(selectedCustomer.rating)}</div>
+                <div style={styles.favBox}>
+                  <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>{renderStars(selectedCustomer.rating)}</div>
                   <div>
-                    <div style={{ fontSize: '12px', color: '#888' }}>Reyting</div>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#ffd700' }}>{selectedCustomer.rating} / 5.0</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Reyting</div>
+                    <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--warning)' }}>
+                      {selectedCustomer.rating} / 5.0
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Blacklist Toggle */}
-              <div style={{ marginBottom: '24px', background: '#111', borderRadius: '10px', padding: '16px' }}>
+              <div style={{ marginBottom: '24px', background: 'var(--bg)', borderRadius: 'var(--radius-sm)', padding: '16px', border: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Ban size={18} color={selectedCustomer.blacklisted ? '#ef4444' : '#666'} />
+                    <Ban size={18} style={{ color: selectedCustomer.blacklisted ? 'var(--danger)' : 'var(--text-muted)' }} />
                     <div>
-                      <div style={{ fontSize: '14px', fontWeight: '600', color: '#fff' }}>Block ro'yxati</div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>{selectedCustomer.blacklisted ? 'Bloklangan' : 'Faol'}</div>
+                      <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text)' }}>Block ro'yxati</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                        {selectedCustomer.blacklisted ? 'Bloklangan' : 'Faol'}
+                      </div>
                     </div>
                   </div>
                   <button
                     onClick={() => setShowBlacklistInput(!showBlacklistInput)}
-                    style={{
-                      width: '48px',
-                      height: '26px',
-                      borderRadius: '13px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      background: selectedCustomer.blacklisted ? '#ef4444' : '#333',
-                      position: 'relative',
-                      transition: 'background 0.2s',
-                    }}
+                    style={styles.toggleTrack(selectedCustomer.blacklisted)}
                   >
-                    <div style={{
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: '50%',
-                      background: '#fff',
-                      position: 'absolute',
-                      top: '3px',
-                      left: selectedCustomer.blacklisted ? '25px' : '3px',
-                      transition: 'left 0.2s',
-                    }} />
+                    <div style={styles.toggleKnob(selectedCustomer.blacklisted)} />
                   </button>
                 </div>
                 {showBlacklistInput && (
                   <div style={{ marginTop: '12px' }}>
                     <input
-                      className="input"
+                      style={styles.searchInput}
                       type="text"
                       placeholder="Sabab kiriting..."
                       value={blacklistReason}
                       onChange={e => setBlacklistReason(e.target.value)}
+                      onFocus={e => { e.target.style.borderColor = 'var(--primary)'; }}
+                      onBlur={e => { e.target.style.borderColor = 'var(--border)'; }}
                     />
                   </div>
                 )}
               </div>
 
-              {/* Notes */}
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ fontSize: '13px', color: '#888', fontWeight: '600', display: 'block', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <label style={{ ...styles.sectionLabel, display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <MessageSquare size={14} /> Eslatmalar
                 </label>
                 <textarea
-                  className="input"
+                  style={styles.textarea}
                   rows={3}
                   value={editNotes}
                   onChange={e => setEditNotes(e.target.value)}
-                  style={{ resize: 'vertical', minHeight: '80px' }}
+                  onFocus={e => { e.target.style.borderColor = 'var(--primary)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'var(--border)'; }}
                 />
               </div>
 
-              {/* Order History */}
               <div>
-                <h3 style={{ fontSize: '15px', fontWeight: '600', color: '#fff', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Clock size={16} color="#c8a97e" />
+                <h3 style={{
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  color: 'var(--text)',
+                  marginBottom: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}>
+                  <Clock size={16} style={{ color: 'var(--primary)' }} />
                   Oxirgi buyurtmalar
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {selectedCustomer.orders.map(order => (
-                    <div key={order.id} style={{ background: '#111', borderRadius: '10px', padding: '14px 16px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                        <span style={{ fontSize: '13px', color: '#888' }}>{formatShortDate(order.date)}</span>
-                        <span style={{ fontSize: '14px', fontWeight: '700', color: '#c8a97e' }}>{formatCurrency(order.total)}</span>
+                    <div key={order.id} style={styles.orderCard}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                          {formatShortDate(order.date)}
+                        </span>
+                        <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--primary)' }}>
+                          {formatCurrency(order.total)}
+                        </span>
                       </div>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         {order.items.map((item, i) => (
-                          <span key={i} style={{ fontSize: '12px', color: '#aaa', background: '#1a1a1a', padding: '3px 8px', borderRadius: '4px' }}>
-                            {item}
-                          </span>
+                          <span key={i} style={styles.orderItemTag}>{item}</span>
                         ))}
                       </div>
                     </div>
@@ -873,12 +1167,9 @@ export default function AdminCustomers() {
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div style={{ padding: '16px 24px', borderTop: '1px solid #2a2a2a', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-              <button className="btn" style={{ background: '#222', border: '1px solid #333', color: '#e5e5e5' }} onClick={closeModal}>
-                Bekor qilish
-              </button>
-              <button className="btn btn-primary" onClick={() => { alert("Saqlandi!"); closeModal(); }}>
+            <div style={styles.modalFooter}>
+              <button style={styles.cancelBtn} onClick={closeModal}>Bekor qilish</button>
+              <button style={styles.saveBtn} onClick={() => { alert('Saqlandi!'); closeModal(); }}>
                 Saqlash
               </button>
             </div>

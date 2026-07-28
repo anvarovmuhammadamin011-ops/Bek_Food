@@ -1,18 +1,51 @@
-import React, { useState } from 'react';
-import useStore from '../../store/useStore';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useStore from '../../store/useStore';
 import {
   ChevronLeft,
   ChevronRight,
   Bell,
   Globe,
-  Moon,
+  Sun,
   LogOut,
   Store,
   Clock,
   MapPin,
   Settings,
+  User,
+  Phone,
+  Save,
 } from 'lucide-react';
+
+const Toggle = ({ enabled, onToggle }) => (
+  <div
+    onClick={onToggle}
+    style={{
+      width: 40,
+      height: 22,
+      borderRadius: 11,
+      background: enabled ? 'var(--primary)' : 'var(--surface-active)',
+      position: 'relative',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease',
+      flexShrink: 0,
+    }}
+  >
+    <div
+      style={{
+        width: 18,
+        height: 18,
+        borderRadius: '50%',
+        background: '#fff',
+        position: 'absolute',
+        top: 2,
+        left: enabled ? 20 : 2,
+        transition: 'left 0.2s ease',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+      }}
+    />
+  </div>
+);
 
 const SellerSettings = () => {
   const { user, logout } = useStore();
@@ -21,424 +54,359 @@ const SellerSettings = () => {
   const [restaurantName, setRestaurantName] = useState('Bekfood Restoran');
   const [phone, setPhone] = useState('+998 90 123 45 67');
   const [workTime, setWorkTime] = useState('10:00 - 23:00');
-  const [minOrder, setMinOrder] = useState('0 so\'m');
+  const [minOrder, setMinOrder] = useState("0 so'm");
   const [deliveryPrice, setDeliveryPrice] = useState('Bepul');
   const [deliveryRadius, setDeliveryRadius] = useState('5 km');
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
-
-  const Toggle = ({ enabled, onToggle }) => (
-    <div
-      onClick={onToggle}
-      style={{
-        width: '40px',
-        height: '22px',
-        borderRadius: '11px',
-        backgroundColor: enabled ? '#c8a97e' : '#3a3a3a',
-        position: 'relative',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s ease',
-        flexShrink: 0,
-      }}
-    >
-      <div
-        style={{
-          width: '18px',
-          height: '18px',
-          borderRadius: '50%',
-          backgroundColor: '#fff',
-          position: 'absolute',
-          top: '2px',
-          left: enabled ? '20px' : '2px',
-          transition: 'left 0.3s ease',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-        }}
-      />
-    </div>
-  );
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      backgroundColor: '#1a1a1a',
-      color: '#f0e6d3',
-      fontFamily: "'Inter', -apple-system, sans-serif",
-      paddingBottom: '100px',
+  const s = {
+    page: {
+      minHeight: '100%',
+      background: 'var(--bg)',
+      paddingBottom: 100,
     },
     header: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '20px',
-      backgroundColor: '#1a1a1a',
-      borderBottom: '1px solid #2a2a2a',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
+      padding: '16px 16px 12px',
+    },
+    headerLeft: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
     },
     backBtn: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '4px',
-      color: '#c8a97e',
-      fontSize: '14px',
-      cursor: 'pointer',
-      background: 'none',
-      border: 'none',
-    },
-    title: {
-      fontSize: '20px',
-      fontWeight: '700',
-      color: '#f0e6d3',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-    },
-    placeholder: {
-      width: '60px',
-    },
-    content: {
-      padding: '20px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '20px',
-      animation: 'fadeIn 0.5s ease',
-    },
-    card: {
-      backgroundColor: '#2a2a2a',
-      borderRadius: '16px',
-      padding: '24px',
-      border: '1px solid #3a3a3a',
-    },
-    cardHover: {
-      backgroundColor: '#2a2a2a',
-      borderRadius: '16px',
-      padding: '24px',
-      border: '1px solid #3a3a3a',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
-    },
-    profileSection: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-    },
-    avatar: {
-      width: '70px',
-      height: '70px',
-      borderRadius: '50%',
-      backgroundColor: '#c8a97e',
+      width: 36,
+      height: 36,
+      borderRadius: 'var(--radius-sm)',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: '28px',
-      fontWeight: '700',
-      color: '#1a1a1a',
+      cursor: 'pointer',
+      color: 'var(--text)',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: 0,
+      letterSpacing: '-0.01em',
+    },
+    placeholder: {
+      width: 36,
+    },
+    content: {
+      padding: '0 16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+    },
+    card: {
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
+      padding: 20,
+    },
+    profileRow: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 14,
+    },
+    avatar: {
+      width: 56,
+      height: 56,
+      borderRadius: '50%',
+      background: 'var(--primary-light)',
+      border: '2px solid var(--primary)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       flexShrink: 0,
     },
-    userInfo: {
-      flex: 1,
-    },
     userName: {
-      fontSize: '18px',
-      fontWeight: '700',
-      color: '#f0e6d3',
-      marginBottom: '4px',
+      fontSize: 16,
+      fontWeight: 700,
+      color: 'var(--text)',
+      margin: '0 0 2px 0',
     },
     userPhone: {
-      fontSize: '14px',
-      color: '#8a8a8a',
-      marginBottom: '6px',
+      fontSize: 13,
+      color: 'var(--text-muted)',
+      margin: '0 0 6px 0',
     },
     roleBadge: {
       display: 'inline-block',
-      padding: '4px 12px',
-      backgroundColor: 'rgba(200, 169, 126, 0.15)',
-      color: '#c8a97e',
-      borderRadius: '20px',
-      fontSize: '12px',
-      fontWeight: '600',
+      padding: '3px 10px',
+      background: 'var(--primary-light)',
+      color: 'var(--primary)',
+      borderRadius: 999,
+      fontSize: 11,
+      fontWeight: 600,
     },
     sectionTitle: {
-      fontSize: '16px',
-      fontWeight: '700',
-      color: '#c8a97e',
-      marginBottom: '20px',
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--primary)',
+      marginBottom: 16,
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
+      gap: 8,
     },
-    inputGroup: {
-      marginBottom: '16px',
+    fieldGroup: {
+      marginBottom: 14,
     },
-    inputLabel: {
+    fieldLabel: {
       display: 'block',
-      fontSize: '13px',
-      color: '#8a8a8a',
-      marginBottom: '6px',
-      fontWeight: '500',
+      fontSize: 12,
+      fontWeight: 600,
+      color: 'var(--text-secondary)',
+      marginBottom: 6,
     },
-    input: {
+    fieldInput: {
       width: '100%',
-      padding: '12px 16px',
-      backgroundColor: '#1a1a1a',
-      border: '1px solid #3a3a3a',
-      borderRadius: '12px',
-      color: '#f0e6d3',
-      fontSize: '14px',
+      padding: '10px 12px',
+      background: 'var(--bg)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--text)',
+      fontSize: 13,
       outline: 'none',
-      transition: 'border-color 0.3s ease',
+      transition: 'border-color 0.15s',
       boxSizing: 'border-box',
     },
     menuItem: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '16px 0',
-      borderBottom: '1px solid #3a3a3a',
+      padding: '14px 0',
+      borderBottom: '1px solid var(--border)',
     },
     menuItemLast: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '16px 0',
+      padding: '14px 0',
     },
     menuItemLeft: {
       display: 'flex',
       alignItems: 'center',
-      gap: '12px',
+      gap: 12,
     },
     menuItemIcon: {
-      width: '40px',
-      height: '40px',
-      borderRadius: '12px',
-      backgroundColor: 'rgba(200, 169, 126, 0.1)',
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      background: 'var(--primary-light)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      color: '#c8a97e',
+      color: 'var(--primary)',
+      flexShrink: 0,
     },
     menuItemText: {
-      fontSize: '15px',
-      fontWeight: '500',
-      color: '#f0e6d3',
+      fontSize: 14,
+      fontWeight: 500,
+      color: 'var(--text)',
     },
     menuItemValue: {
-      fontSize: '14px',
-      color: '#8a8a8a',
+      fontSize: 13,
+      color: 'var(--text-muted)',
+    },
+    saveBtn: {
+      width: '100%',
+      padding: '12px',
+      background: 'var(--primary)',
+      border: 'none',
+      borderRadius: 'var(--radius-sm)',
+      color: '#fff',
+      fontSize: 14,
+      fontWeight: 600,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      transition: 'opacity 0.15s',
     },
     logoutBtn: {
       width: '100%',
-      padding: '16px',
-      backgroundColor: 'transparent',
-      border: '2px solid #e74c3c',
-      borderRadius: '12px',
-      color: '#e74c3c',
-      fontSize: '16px',
-      fontWeight: '600',
+      padding: '12px',
+      background: 'var(--surface)',
+      border: '1px solid var(--danger)',
+      borderRadius: 'var(--radius-sm)',
+      color: 'var(--danger)',
+      fontSize: 14,
+      fontWeight: 600,
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '8px',
-      transition: 'all 0.3s ease',
-    },
-    btnPrimary: {
-      width: '100%',
-      padding: '14px',
-      backgroundColor: '#c8a97e',
-      border: 'none',
-      borderRadius: '12px',
-      color: '#1a1a1a',
-      fontSize: '15px',
-      fontWeight: '600',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px',
-      transition: 'all 0.3s ease',
+      gap: 8,
+      transition: 'all 0.15s',
     },
     chevron: {
-      color: '#5a5a5a',
+      color: 'var(--text-muted)',
     },
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>
-          <ChevronLeft size={20} />
-          <span>Orqaga</span>
-        </button>
-        <div style={styles.title}>
-          <Settings size={20} />
-          Sozlamalar
+    <div style={s.page}>
+      <div style={s.header}>
+        <div style={s.headerLeft}>
+          <button onClick={() => navigate(-1)} style={s.backBtn}>
+            <ChevronLeft size={18} />
+          </button>
+          <h1 style={s.title}>Sozlamalar</h1>
         </div>
-        <div style={styles.placeholder}></div>
+        <div style={s.placeholder} />
       </div>
 
-      <div style={styles.content}>
-        {/* Profile Section */}
-        <div className="card animate-fade-in" style={styles.card}>
-          <div style={styles.profileSection}>
-            <div style={styles.avatar}>
-              {user?.name?.charAt(0) || 'S'}
+      <div style={s.content}>
+        <div style={s.card}>
+          <div style={s.profileRow}>
+            <div style={s.avatar}>
+              <User size={24} style={{ color: 'var(--primary)' }} />
             </div>
-            <div style={styles.userInfo}>
-              <div style={styles.userName}>{user?.name || 'Seller'}</div>
-              <div style={styles.userPhone}>{user?.phone || '+998 90 123 45 67'}</div>
-              <span style={styles.roleBadge}>Sotuvchi</span>
+            <div>
+              <div style={s.userName}>{user?.name || 'Seller'}</div>
+              <div style={s.userPhone}>{user?.phone || '+998 90 123 45 67'}</div>
+              <span style={s.roleBadge}>Sotuvchi</span>
             </div>
           </div>
         </div>
 
-        {/* Restaurant Settings */}
-        <div className="card animate-fade-in" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <Store size={18} />
+        <div style={s.card}>
+          <div style={s.sectionTitle}>
+            <Store size={16} />
             Restoran Sozlamalari
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Restoran nomi</label>
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>Restoran nomi</label>
             <input
-              className="input"
+              style={s.fieldInput}
               type="text"
               value={restaurantName}
               onChange={(e) => setRestaurantName(e.target.value)}
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Telefon</label>
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>
+              <Phone size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+              Telefon
+            </label>
             <input
-              className="input"
+              style={s.fieldInput}
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>
-              <Clock size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>
+              <Clock size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
               Ish vaqti
             </label>
             <input
-              className="input"
+              style={s.fieldInput}
               type="text"
               value={workTime}
               onChange={(e) => setWorkTime(e.target.value)}
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Minimal buyurtma</label>
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>Minimal buyurtma</label>
             <input
-              className="input"
+              style={s.fieldInput}
               type="text"
               value={minOrder}
               onChange={(e) => setMinOrder(e.target.value)}
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Yetkazish narxi</label>
+          <div style={s.fieldGroup}>
+            <label style={s.fieldLabel}>Yetkazish narxi</label>
             <input
-              className="input"
+              style={s.fieldInput}
               type="text"
               value={deliveryPrice}
               onChange={(e) => setDeliveryPrice(e.target.value)}
-              style={styles.input}
             />
           </div>
 
-          <div style={{ ...styles.inputGroup, marginBottom: 0 }}>
-            <label style={styles.inputLabel}>
-              <MapPin size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+          <div style={{ ...s.fieldGroup, marginBottom: 0 }}>
+            <label style={s.fieldLabel}>
+              <MapPin size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
               Yetkazish radiusi
             </label>
             <input
-              className="input"
+              style={s.fieldInput}
               type="text"
               value={deliveryRadius}
               onChange={(e) => setDeliveryRadius(e.target.value)}
-              style={styles.input}
             />
           </div>
         </div>
 
-        {/* Menu Settings */}
-        <div className="card animate-fade-in" style={styles.card}>
-          <div style={styles.sectionTitle}>
-            <Settings size={18} />
+        <div style={s.card}>
+          <div style={s.sectionTitle}>
+            <Settings size={16} />
             Umumiy Sozlamalar
           </div>
 
-          <div style={styles.menuItem}>
-            <div style={styles.menuItemLeft}>
-              <div style={styles.menuItemIcon}>
-                <Bell size={20} />
+          <div style={s.menuItem}>
+            <div style={s.menuItemLeft}>
+              <div style={s.menuItemIcon}>
+                <Bell size={18} />
               </div>
-              <span style={styles.menuItemText}>Bildirishnomalar</span>
+              <span style={s.menuItemText}>Bildirishnomalar</span>
             </div>
             <Toggle enabled={notifications} onToggle={() => setNotifications(!notifications)} />
           </div>
 
-          <div style={styles.menuItem}>
-            <div style={styles.menuItemLeft}>
-              <div style={styles.menuItemIcon}>
-                <Globe size={20} />
+          <div style={s.menuItem}>
+            <div style={s.menuItemLeft}>
+              <div style={s.menuItemIcon}>
+                <Globe size={18} />
               </div>
-              <span style={styles.menuItemText}>Til</span>
+              <span style={s.menuItemText}>Til</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={styles.menuItemValue}>O'zbek</span>
-              <ChevronRight size={18} style={styles.chevron} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={s.menuItemValue}>O'zbek</span>
+              <ChevronRight size={16} style={s.chevron} />
             </div>
           </div>
 
-          <div style={styles.menuItemLast}>
-            <div style={styles.menuItemLeft}>
-              <div style={styles.menuItemIcon}>
-                <Moon size={20} />
+          <div style={s.menuItemLast}>
+            <div style={s.menuItemLeft}>
+              <div style={s.menuItemIcon}>
+                <Sun size={18} />
               </div>
-              <span style={styles.menuItemText}>Dark Mode</span>
+              <span style={s.menuItemText}>Yorug' rejim</span>
             </div>
             <Toggle enabled={darkMode} onToggle={() => setDarkMode(!darkMode)} />
           </div>
         </div>
 
-        {/* Save Button */}
-        <button className="btn btn-primary" style={styles.btnPrimary}>
-          <Settings size={18} />
+        <button style={s.saveBtn}>
+          <Save size={16} />
           Saqlash
         </button>
 
-        {/* Logout Button */}
-        <button
-          style={styles.logoutBtn}
-          onClick={handleLogout}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#e74c3c';
-            e.currentTarget.style.color = '#fff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = '#e74c3c';
-          }}
-        >
-          <LogOut size={18} />
+        <button style={s.logoutBtn} onClick={handleLogout}>
+          <LogOut size={16} />
           Tizimdan chiqish
         </button>
       </div>

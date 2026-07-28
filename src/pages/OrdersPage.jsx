@@ -4,12 +4,12 @@ import { Clock, CheckCircle, XCircle, RotateCcw, Star } from 'lucide-react';
 import useStore from '../store/useStore';
 
 const statusConfig = {
-  pending: { label: 'Kutilmoqda', color: '#eab308', bg: 'rgba(234,179,8,.15)' },
-  preparing: { label: 'Tayyorlanmoqda', color: '#e51e1e', bg: 'rgba(229,30,30,.15)' },
-  ready: { label: 'Tayyor', color: '#7fbf7f', bg: 'rgba(127,191,127,.15)' },
-  onTheWay: { label: "Yo'lda", color: '#e51e1e', bg: 'rgba(229,30,30,.15)' },
-  delivered: { label: 'Yetkazildi', color: '#7fbf7f', bg: 'rgba(127,191,127,.15)' },
-  cancelled: { label: 'Bekor qilindi', color: '#6b6b6b', bg: 'rgba(255,255,255,.05)' },
+  pending: { label: 'Kutilmoqda', color: 'var(--warning)', bg: 'var(--warning-light)' },
+  preparing: { label: 'Tayyorlanmoqda', color: 'var(--primary)', bg: 'var(--primary-light)' },
+  ready: { label: 'Tayyor', color: 'var(--success)', bg: 'var(--success-light)' },
+  onTheWay: { label: "Yo'lda", color: 'var(--primary)', bg: 'var(--primary-light)' },
+  delivered: { label: 'Yetkazildi', color: 'var(--success)', bg: 'var(--success-light)' },
+  cancelled: { label: 'Bekor qilindi', color: 'var(--text-dim)', bg: 'var(--surface-active)' },
 };
 
 export default function OrdersPage() {
@@ -25,20 +25,19 @@ export default function OrdersPage() {
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-28">
       <div className="p-4">
-        <h1 className="heading text-center" style={{ marginBottom: 12 }}>Buyurtmalar</h1>
-        <div className="flex gap-2">
+        <h1 className="heading text-center" style={{ marginBottom: 14 }}>Buyurtmalar</h1>
+        <div className="flex" style={{ gap: 8 }}>
           {[
             { id: 'active', label: 'Faol', count: active.length },
             { id: 'completed', label: 'Tarix', count: completed.length },
             { id: 'cancelled', label: 'Bekor', count: cancelled.length },
           ].map((t) => (
-            <button key={t.id} onClick={() => setTab(t.id)}
-              className="flex-1" style={{
-                padding: '8px 0', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all .15s',
-                background: tab === t.id ? '#e51e1e' : '#141414',
-                color: tab === t.id ? '#fff' : '#6b6b6b',
-                border: `1px solid ${tab === t.id ? '#e51e1e' : 'rgba(255,255,255,0.08)'}`
-              }}>
+            <button key={t.id} onClick={() => setTab(t.id)} className="flex-1" style={{
+              padding: '10px 0', borderRadius: 'var(--radius-sm)', fontSize: 13, fontWeight: 500, cursor: 'pointer', transition: 'all .2s',
+              background: tab === t.id ? 'var(--primary)' : 'var(--surface)',
+              color: tab === t.id ? '#fff' : 'var(--text-muted)',
+              border: `1.5px solid ${tab === t.id ? 'var(--primary)' : 'var(--border)'}`,
+            }}>
               {t.label} {t.count > 0 && `(${t.count})`}
             </button>
           ))}
@@ -49,10 +48,10 @@ export default function OrdersPage() {
         {displayed.length === 0 && (
           <div className="empty-state py-16">
             <div className="empty-state-icon">
-              {tab === 'active' ? <Clock size={20} /> : tab === 'completed' ? <CheckCircle size={20} /> : <XCircle size={20} />}
+              {tab === 'active' ? <Clock size={24} /> : tab === 'completed' ? <CheckCircle size={24} /> : <XCircle size={24} />}
             </div>
-            <h3 style={{ color: '#fff', fontWeight: 500, marginBottom: 4 }}>Buyurtma yo'q</h3>
-            <p style={{ color: '#6b6b6b', fontSize: 12 }}>Hozircha buyurtmalar mavjud emas</p>
+            <h3 className="heading">Buyurtma yo'q</h3>
+            <p className="body">Hozircha buyurtmalar mavjud emas</p>
           </div>
         )}
 
@@ -60,35 +59,35 @@ export default function OrdersPage() {
           const st = statusConfig[order.status] || statusConfig.pending;
           return (
             <div key={order.id} className="card p-4 animate-slide-up">
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start justify-between" style={{ marginBottom: 12 }}>
                 <div>
-                  <p style={{ color: '#6b6b6b', fontSize: 12 }}>Buyurtma #{String(order.id).slice(-4)}</p>
-                  <p style={{ color: '#6b6b6b', fontSize: 12, marginTop: 2 }}>{new Date(order.createdAt).toLocaleDateString()}</p>
+                  <p className="caption">Buyurtma #{String(order.id).slice(-4)}</p>
+                  <p className="caption" style={{ marginTop: 2 }}>{new Date(order.createdAt).toLocaleDateString()}</p>
                 </div>
-                <span className="badge" style={{ color: st.color, background: st.bg, fontSize: 10, padding: '4px 8px' }}>{st.label}</span>
+                <span className="badge" style={{ color: st.color, background: st.bg }}>{st.label}</span>
               </div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center" style={{ gap: 4, marginBottom: 12 }}>
                 <div className="flex" style={{ marginRight: -4 }}>
                   {order.items.slice(0, 3).map((item, i) => (
-                    <img key={i} src={item.food.image} alt="" style={{ width: 28, height: 28, borderRadius: 8, border: '2px solid #0a0a0a', objectFit: 'cover' }} />
+                    <img key={i} src={item.food.image} alt="" style={{ width: 32, height: 32, borderRadius: 'var(--radius-xs)', border: '2px solid var(--bg)', objectFit: 'cover' }} />
                   ))}
                 </div>
-                <p style={{ color: '#6b6b6b', fontSize: 12 }}>{order.items.length} ta mahsulot</p>
+                <p className="caption">{order.items.length} ta mahsulot</p>
               </div>
               <div className="flex items-center justify-between">
                 <span className="price-sm">{order.total.toLocaleString()} so'm</span>
-                <div className="flex gap-2">
+                <div className="flex" style={{ gap: 6 }}>
                   {tab === 'active' && (
-                    <button onClick={() => navigate('/tracking')} style={{ padding: '6px 12px', borderRadius: 8, background: 'rgba(229,30,30,.15)', color: '#e51e1e', fontSize: 12, fontWeight: 500, border: 'none', cursor: 'pointer' }}>
+                    <button onClick={() => navigate('/tracking')} className="btn btn-primary btn-xs">
                       Kuzatish
                     </button>
                   )}
                   {tab === 'completed' && (
-                    <button style={{ padding: 6, borderRadius: 8, background: '#141414', border: '1px solid rgba(255,255,255,0.08)', color: '#6b6b6b', cursor: 'pointer' }}>
+                    <button className="btn btn-ghost btn-icon" style={{ width: 32, height: 32, minHeight: 32 }}>
                       <Star size={14} />
                     </button>
                   )}
-                  <button style={{ padding: 6, borderRadius: 8, background: '#141414', border: '1px solid rgba(255,255,255,0.08)', color: '#6b6b6b', cursor: 'pointer' }}>
+                  <button className="btn btn-ghost btn-icon" style={{ width: 32, height: 32, minHeight: 32 }}>
                     <RotateCcw size={14} />
                   </button>
                 </div>
