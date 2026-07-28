@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, BellRing, ShoppingBag, Gift } from 'lucide-react';
 import useStore from '../store/useStore';
@@ -31,10 +31,10 @@ export default function NotificationsPage() {
   const { notifications, markNotifRead, clearNotifs } = useStore();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useState(() => {
     const t = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(t);
-  }, []);
+  });
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 

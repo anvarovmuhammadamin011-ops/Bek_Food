@@ -76,7 +76,7 @@ function FoodCard({ food }) {
       <div className="relative h-[140px] overflow-hidden bg-surfaceActive">
         {!imgLoaded && (
           <div className="absolute inset-0 z-10">
-            <Skeleton variant="rect" width="100%" height="100%" />
+            <Skeleton variant="rectangular" width="100%" height="100%" />
           </div>
         )}
         <motion.img
@@ -298,7 +298,7 @@ export default function HomePage() {
           transition={{ delay: 0.1, duration: 0.5 }}
         >
           {loading ? (
-            <Skeleton variant="rect" height="180px" width="100%" className="rounded-[20px]" />
+            <Skeleton variant="rectangular" height="180px" width="100%" className="rounded-[20px]" />
           ) : (
             <PromoCarousel banners={banners} />
           )}
@@ -313,7 +313,7 @@ export default function HomePage() {
           {loading ? (
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Skeleton key={i} variant="rect" width="100px" height="38px" className="rounded-full" />
+                <Skeleton key={i} variant="rectangular" width="100px" height="38px" className="rounded-full" />
               ))}
             </div>
           ) : (
@@ -519,19 +519,19 @@ export default function HomePage() {
                 {[1, 2, 3].map((s) => (
                   <div key={s}>
                     <div className="flex items-center gap-2.5 mb-4">
-                      <Skeleton variant="rect" width="32px" height="32px" className="rounded-[10px]" />
+                      <Skeleton variant="rectangular" width="32px" height="32px" className="rounded-[10px]" />
                       <Skeleton variant="text" width="160px" height="22px" />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       {[1, 2, 3, 4].map((i) => (
                         <div key={i} className="bg-surface rounded-[20px] overflow-hidden border border-border">
-                          <Skeleton variant="rect" height="140px" width="100%" />
+                          <Skeleton variant="rectangular" height="140px" width="100%" />
                           <div className="p-3.5 space-y-2">
                             <Skeleton variant="text" width="80%" height="16px" />
                             <Skeleton variant="text" width="60%" height="12px" />
                             <div className="flex items-center justify-between pt-1">
                               <Skeleton variant="text" width="60px" height="20px" />
-                              <Skeleton variant="circle" width="32px" height="32px" />
+                              <Skeleton variant="circular" width="32px" height="32px" />
                             </div>
                           </div>
                         </div>

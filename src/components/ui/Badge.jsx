@@ -2,8 +2,7 @@
 
 import { forwardRef, memo } from 'react';
 import { motion } from 'framer-motion';
-import { cva } from 'class-variance-authority';
-import { cn } from '../../utils/cn';
+import { cva, cn } from '../../utils/cn';
 
 const badgeVariants = cva(
   'inline-flex items-center gap-1.5 font-semibold transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]',

@@ -1,3 +1,37 @@
+export function cva(base, config) {
+  return function variantClasses(props = {}) {
+    const classes = [base];
+    if (!config || !config.variants) return classes.filter(Boolean).join(' ');
+    for (const [key, value] of Object.entries(props)) {
+      const variantMap = config.variants[key];
+      if (!variantMap) continue;
+      if (value && variantMap[value]) {
+        classes.push(variantMap[value]);
+      }
+    }
+    if (config.defaultVariants) {
+      for (const [key, value] of Object.entries(config.defaultVariants)) {
+        if (props[key] === undefined || props[key] === null) {
+          const variantMap = config.variants[key];
+          if (variantMap && variantMap[value]) {
+            classes.push(variantMap[value]);
+          }
+        }
+      }
+    }
+    if (config.compoundVariants) {
+      for (const compound of config.compoundVariants) {
+        const matches = Object.entries(compound).every(([key, val]) => {
+          if (key === 'className') return true;
+          return props[key] === val;
+        });
+        if (matches) classes.push(compound.className);
+      }
+    }
+    return classes.filter(Boolean).join(' ');
+  };
+}
+
 export function cn(...inputs) {
   const output = [];
   for (const input of inputs) {

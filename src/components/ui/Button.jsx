@@ -2,8 +2,7 @@
 
 import { forwardRef } from 'react';
 import { motion } from 'framer-motion';
-import { cva } from 'class-variance-authority';
-import { cn } from '../../utils/cn';
+import { cva, cn } from '../../utils/cn';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100',
