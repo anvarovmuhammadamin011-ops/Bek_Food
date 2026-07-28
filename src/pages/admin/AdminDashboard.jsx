@@ -1,21 +1,13 @@
 import { useState, useEffect } from 'react';
 import useStore from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  DollarSign,
-  Package,
-  Clock,
-  XCircle,
-  ChefHat,
-  Truck,
-  TrendingUp,
-  Users,
-  BarChart3,
-  ArrowRight,
-  ShoppingCart,
-  Star,
-  Menu,
+  DollarSign, Package, Clock, ChefHat, Truck, TrendingUp, Users,
+  BarChart3, ArrowRight, ShoppingCart, Menu, Star, XCircle
 } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
 
 const useCountUp = (target, duration = 1200) => {
   const [value, setValue] = useState(0);
@@ -35,38 +27,23 @@ const useCountUp = (target, duration = 1200) => {
   return value;
 };
 
-const formatCurrency = (n) =>
-  n.toLocaleString('uz-UZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
 const Sparkline = ({ data, width = 120, height = 40 }) => {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = max - min || 1;
-  const points = data
-    .map((v, i) => {
-      const x = (i / (data.length - 1)) * width;
-      const y = height - ((v - min) / range) * (height - 8) - 4;
-      return `${x},${y}`;
-    })
-    .join(' ');
-  const areaPoints = `0,${height} ${points} ${width},${height}`;
+  const max = Math.max(...data), min = Math.min(...data), range = max - min || 1;
+  const pts = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * width;
+    const y = height - ((v - min) / range) * (height - 8) - 4;
+    return `${x},${y}`;
+  }).join(' ');
   return (
     <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height }}>
       <defs>
-        <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.2" />
           <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <polygon points={areaPoints} fill="url(#sparkGrad)" />
-      <polyline
-        points={points}
-        fill="none"
-        stroke="var(--primary)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <polygon points={`0,${height} ${pts} ${width},${height}`} fill="url(#sg)" />
+      <polyline points={pts} fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 };
@@ -77,21 +54,13 @@ const BarChart = ({ data, labels, height = 200 }) => {
     <div style={{ width: '100%', overflow: 'hidden' }}>
       <svg viewBox="0 0 700 240" style={{ width: '100%', height }}>
         <defs>
-          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--primary)" />
-            <stop offset="100%" stopColor="var(--primary-hover)" />
+            <stop offset="100%" stopColor="#ea580c" />
           </linearGradient>
         </defs>
         {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
-          <line
-            key={i}
-            x1="0"
-            y1={20 + (1 - p) * 180}
-            x2="700"
-            y2={20 + (1 - p) * 180}
-            stroke="var(--border)"
-            strokeWidth="1"
-          />
+          <line key={i} x1="0" y1={20 + (1 - p) * 180} x2="700" y2={20 + (1 - p) * 180} stroke="var(--border)" strokeWidth="1" />
         ))}
         {data.map((v, i) => {
           const barH = (v / max) * 160;
@@ -99,36 +68,12 @@ const BarChart = ({ data, labels, height = 200 }) => {
           const y = 200 - barH;
           return (
             <g key={i}>
-              <rect
-                x={x}
-                y={y}
-                width={60}
-                height={barH}
-                rx="4"
-                fill="url(#barGrad)"
-                opacity="0.85"
-              />
-              <text
-                x={x + 30}
-                y={18}
-                textAnchor="middle"
-                fill="var(--text-muted)"
-                fontSize="10"
-                fontFamily="var(--font-sans)"
-              >
-                {labels[i]}
-              </text>
-              <text
-                x={x + 30}
-                y={y - 5}
-                textAnchor="middle"
-                fill="var(--text-secondary)"
-                fontSize="9"
-                fontWeight="600"
-                fontFamily="var(--font-sans)"
-              >
-                {formatCurrency(v)}
-              </text>
+              <rect x={x} y={y} width={60} height={barH} rx="4" fill="url(#bg)" opacity="0.85">
+                <animate attributeName="height" from="0" to={barH} dur="0.6s" fill="freeze" begin={`${i * 0.08}s`} />
+                <animate attributeName="y" from="200" to={y} dur="0.6s" fill="freeze" begin={`${i * 0.08}s`} />
+              </rect>
+              <text x={x + 30} y={18} textAnchor="middle" fill="var(--text-muted)" fontSize="10">{labels[i]}</text>
+              <text x={x + 30} y={y - 5} textAnchor="middle" fill="var(--text-secondary)" fontSize="9" fontWeight="600">{v.toLocaleString()}</text>
             </g>
           );
         })}
@@ -137,7 +82,10 @@ const BarChart = ({ data, labels, height = 200 }) => {
   );
 };
 
-const AdminDashboard = () => {
+const container = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const item = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
+
+export default function AdminDashboard() {
   const store = useStore();
   const navigate = useNavigate();
   const user = store?.user || { name: 'Admin' };
@@ -157,17 +105,16 @@ const AdminDashboard = () => {
   const tax = 17500000;
 
   const kpis = [
-    { label: 'Buyurtmalar soni', value: 1247, icon: Package, colorVar: '--primary', trend: '+12%' },
-    { label: 'Faol buyurtmalar', value: 23, icon: Clock, colorVar: '--warning', trend: '+5%' },
-    { label: 'Bekor qilingan', value: 18, icon: XCircle, colorVar: '--danger', trend: '-3%' },
-    { label: "O'rtacha summa", value: 68000, icon: DollarSign, colorVar: '--success', trend: '+8%' },
-    { label: "O'rtacha tayyorlash", value: 15, icon: ChefHat, colorVar: '--primary', trend: '-2%', suffix: ' daq' },
-    { label: "O'rtacha yetkazish", value: 28, icon: Truck, colorVar: '--primary', trend: '+1%', suffix: ' daq' },
+    { label: 'Buyurtmalar soni', value: 1247, icon: Package, trend: '+12%' },
+    { label: 'Faol buyurtmalar', value: 23, icon: Clock, trend: '+5%' },
+    { label: 'Bekor qilingan', value: 18, icon: XCircle, trend: '-3%' },
+    { label: "O'rtacha summa", value: 68000, icon: DollarSign, trend: '+8%' },
+    { label: "O'rtacha tayyorlash", value: 15, icon: ChefHat, trend: '-2%', suffix: ' daq' },
+    { label: "O'rtacha yetkazish", value: 28, icon: Truck, trend: '+1%', suffix: ' daq' },
   ];
 
   const weeklyData = [18000000, 22000000, 19500000, 25000000, 21000000, 28000000, 24000000];
   const weekLabels = ['Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan', 'Yak'];
-
   const topProducts = [
     { rank: 1, name: 'Bekfood Set', sold: 342, revenue: 45200000 },
     { rank: 2, name: 'Lavash Classic', sold: 289, revenue: 28900000 },
@@ -175,7 +122,6 @@ const AdminDashboard = () => {
     { rank: 4, name: 'Burger King', sold: 198, revenue: 23760000 },
     { rank: 5, name: 'Pizza Margherita', sold: 167, revenue: 21710000 },
   ];
-
   const quickActions = [
     { label: 'Buyurtmalar', path: '/admin/orders', icon: ShoppingCart, desc: 'Barcha buyurtmalar' },
     { label: 'Menyu', path: '/admin/menu', icon: Menu, desc: 'Menyuni boshqarish' },
@@ -193,294 +139,215 @@ const AdminDashboard = () => {
         ];
         const item = types[Math.floor(Math.random() * types.length)];
         const now = new Date();
-        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        return [{ time: timeStr, text: item.text, type: item.type }, ...prev].slice(0, 5);
+        const ts = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        return [{ time: ts, text: item.text, type: item.type }, ...prev].slice(0, 5);
       });
     }, 8000);
     return () => clearInterval(interval);
   }, []);
 
-  const activityTypeColor = (type) => {
-    switch (type) {
-      case 'create': return 'var(--primary)';
-      case 'ready': return 'var(--success)';
-      case 'delivered': return '#8B5CF6';
-      case 'accepted': return 'var(--warning)';
-      case 'preparing': return 'var(--primary)';
-      default: return 'var(--text-muted)';
-    }
-  };
+  const activityDotColor = (type) => ({
+    create: 'var(--primary)',
+    ready: 'var(--success)',
+    delivered: '#8B5CF6',
+    accepted: 'var(--warning)',
+    preparing: 'var(--primary)',
+  }[type] || 'var(--text-muted)');
 
   return (
-    <div className="page-enter" style={{ padding: '0 0 48px', maxWidth: 1400, margin: '0 auto' }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.div variants={item} initial="hidden" animate="visible" style={{ padding: '28px 0 24px' }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text)', margin: '0 0 4px' }}>Dashboard</h1>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: 0 }}>
+          Xush kelibsiz, <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user.name || 'Admin'}</span>
+        </p>
+      </motion.div>
 
-      <style>{`
-        .dash-kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .dash-two-col { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
-        .dash-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .dash-live-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .dash-qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .dash-time-pill { padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); transition: all 0.2s; font-family: var(--font-sans); }
-        .dash-time-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .dash-time-pill:hover:not(.active) { border-color: var(--border-strong); color: var(--text); }
-        .dash-activity-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .dash-activity-item:last-child { border-bottom: none; }
-        .dash-activity-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-        .dash-rank { width: 28px; height: 28px; border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-        .dash-qa-card { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-        .dash-qa-card:hover { border-color: var(--primary); background: var(--surface-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-        .dash-revenue-bar { height: 5px; border-radius: 999px; background: var(--surface-active); overflow: hidden; }
-        .dash-revenue-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), #FB923C); }
-        .dash-live-indicator { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: livePulse 2s ease-in-out infinite; }
-        @media (max-width: 1100px) { .dash-two-col { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); } .dash-hero-stats { grid-template-columns: 1fr; } .dash-qa-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 480px) { .dash-kpi-grid { grid-template-columns: 1fr; } .dash-time-pills { flex-wrap: wrap; gap: 6px !important; } }
-      `}</style>
-
-      <div style={{ padding: '32px 0 24px' }}>
-        <h1 className="display-2" style={{ marginBottom: 4 }}>Dashboard</h1>
-        <p className="body">Xush kelibsiz, <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user.name || 'Admin'}</span></p>
-      </div>
-
-      <div className="dash-time-pills flex items-center" style={{ gap: 8, marginBottom: 28, flexWrap: 'wrap' }}>
-        {[
-          { key: 'today', label: 'Bugun' },
-          { key: 'week', label: 'Bu hafta' },
-          { key: 'month', label: 'Bu oy' },
-          { key: 'year', label: 'Bu yil' },
-        ].map((f) => (
-          <button
-            key={f.key}
-            className={`dash-time-pill ${timeFilter === f.key ? 'active' : ''}`}
-            onClick={() => setTimeFilter(f.key)}
-          >
-            {f.label}
-          </button>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 28, flexWrap: 'wrap' }}>
+        {[{ key: 'today', label: 'Bugun' }, { key: 'week', label: 'Bu hafta' }, { key: 'month', label: 'Bu oy' }, { key: 'year', label: 'Bu yil' }].map((f) => (
+          <button key={f.key} onClick={() => setTimeFilter(f.key)}
+            style={{
+              padding: '7px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              border: '1px solid ' + (timeFilter === f.key ? 'var(--primary)' : 'var(--border)'),
+              background: timeFilter === f.key ? 'var(--primary)' : 'var(--surface)',
+              color: timeFilter === f.key ? '#fff' : 'var(--text-muted)',
+              transition: 'all 0.2s',
+            }}
+          >{f.label}</button>
         ))}
       </div>
 
-      <div className="space-y-6">
-
-        <div className="card card-elevated animate-fade-in-up" style={{ padding: '28px 32px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
-            <p className="overline">Jami tushum</p>
-            <div className="badge badge-success" style={{ gap: 4 }}>
-              <TrendingUp size={13} />
-              +24.5%
-            </div>
-          </div>
-          <div className="flex items-center justify-between" style={{ flexWrap: 'wrap', gap: 20 }}>
-            <div>
-              <p className="display-1" style={{ color: 'var(--text)', marginBottom: 4 }}>
-                {formatCurrency(revenueAnimated)} <span className="heading" style={{ color: 'var(--text-muted)', fontWeight: 500 }}>so'm</span>
-              </p>
-              <p className="caption">Oldingi davr: {formatCurrency(103200000)} so'm</p>
-            </div>
-            <div style={{ width: 160 }}>
-              <Sparkline data={[30, 45, 38, 52, 48, 61, 55, 70, 65, 78, 72, 85]} width={160} height={50} />
-            </div>
-          </div>
-          <div style={{ borderTop: '1px solid var(--border)', marginTop: 24, paddingTop: 20 }}>
-            <div className="dash-hero-stats">
-              {[
-                { label: 'Sof foyda', value: formatCurrency(profit) + " so'm", color: 'var(--success)' },
-                { label: 'Xarajatlar', value: formatCurrency(expenses) + " so'm", color: 'var(--primary)' },
-                { label: 'Soliq', value: formatCurrency(tax) + " so'm", color: 'var(--warning)' },
-              ].map((s, i) => (
-                <div key={i} style={{ textAlign: 'center' }}>
-                  <p className="overline" style={{ marginBottom: 4 }}>{s.label}</p>
-                  <p className="heading" style={{ fontWeight: 700, color: s.color }}>{s.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="dash-kpi-grid stagger">
-          {kpis.map((kpi, i) => {
-            const Icon = kpi.icon;
-            return (
-              <div key={i} className="card card-hover" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 20px' }}>
-                <div
-                  style={{
-                    width: 42,
-                    height: 42,
-                    borderRadius: 'var(--radius-sm)',
-                    background: `color-mix(in srgb, var(${kpi.colorVar}) 10%, transparent)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Icon size={19} style={{ color: `var(${kpi.colorVar})` }} />
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <p className="caption" style={{ marginBottom: 2 }}>{kpi.label}</p>
-                  <p className="price-lg">{formatCurrency(kpi.value)}{kpi.suffix || ''}</p>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: kpi.trend.startsWith('+') ? 'var(--success)' : 'var(--danger)',
-                    }}
-                  >
-                    {kpi.trend}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="dash-two-col">
-          <div className="space-y-6">
-
-            <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>
-              <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
+      <motion.div variants={container} initial="hidden" animate="visible" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <motion.div variants={item}>
+          <Card padding="lg" variant="elevated">
+            <CardHeader align="between">
+              <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Jami tushum</p>
+              <Badge variant="success" size="sm"><TrendingUp size={13} /> +24.5%</Badge>
+            </CardHeader>
+            <CardContent>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
                 <div>
-                  <h3 className="heading" style={{ marginBottom: 2 }}>Haftalik tushum</h3>
-                  <p className="caption">Bu haftaning kunlik tushumlari</p>
+                  <p style={{ fontSize: 32, fontWeight: 700, color: 'var(--text)', margin: '0 0 4px' }}>
+                    {revenueAnimated.toLocaleString()} <span style={{ fontSize: 16, color: 'var(--text-muted)', fontWeight: 500 }}>so'm</span>
+                  </p>
+                  <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Oldingi davr: {103200000 .toLocaleString()} so'm</p>
                 </div>
-                <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-xs)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <BarChart3 size={16} style={{ color: 'var(--primary)' }} />
-                </div>
+                <div style={{ width: 160 }}><Sparkline data={[30, 45, 38, 52, 48, 61, 55, 70, 65, 78, 72, 85]} width={160} height={50} /></div>
               </div>
-              <BarChart data={weeklyData} labels={weekLabels} height={180} />
-            </div>
-
-            <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>
-              <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
-                <div>
-                  <h3 className="heading" style={{ marginBottom: 2 }}>Eng ko'p sotilgan</h3>
-                  <p className="caption">Top 5 mahsulot</p>
-                </div>
-                <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-xs)', background: 'var(--warning-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Star size={16} style={{ color: 'var(--warning)' }} />
-                </div>
-              </div>
-              <div className="space-y-4">
-                {topProducts.map((p) => {
-                  const pct = (p.revenue / topProducts[0].revenue) * 100;
-                  return (
-                    <div key={p.rank} className="flex items-center" style={{ gap: 12 }}>
-                      <div
-                        className="dash-rank"
-                        style={{
-                          background: p.rank === 1 ? 'var(--primary)' : p.rank <= 3 ? 'var(--primary-light)' : 'var(--surface-active)',
-                          color: p.rank === 1 ? '#fff' : p.rank <= 3 ? 'var(--primary)' : 'var(--text-muted)',
-                        }}
-                      >
-                        {p.rank}
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div className="flex items-center justify-between" style={{ marginBottom: 5 }}>
-                          <p className="text-sm font-semibold truncate" style={{ color: 'var(--text)' }}>
-                            {p.name}
-                          </p>
-                          <span className="caption" style={{ flexShrink: 0, marginLeft: 8 }}>
-                            {p.sold} dona
-                          </span>
-                        </div>
-                        <div className="dash-revenue-bar">
-                          <div className="dash-revenue-bar-fill" style={{ width: `${pct}%` }} />
-                        </div>
-                        <p className="text-xs" style={{ color: 'var(--text-dim)', marginTop: 4 }}>
-                          {formatCurrency(p.revenue)} so'm
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-
-            <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>
-              <div className="flex items-center" style={{ gap: 10, marginBottom: 20 }}>
-                <div className="dash-live-indicator" />
-                <h3 className="heading">Jonli kuzatish</h3>
-              </div>
-
-              <div className="dash-live-stats" style={{ marginBottom: 20 }}>
+            </CardContent>
+            <div style={{ borderTop: '1px solid var(--border)', marginTop: 16, paddingTop: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
                 {[
-                  { label: 'Tayyorlanmoqda', value: 3, color: 'var(--warning)' },
-                  { label: "Kuryer yo'lda", value: 2, color: '#3B82F6' },
-                  { label: 'Navbatda', value: 5, color: '#8B5CF6' },
+                  { label: 'Sof foyda', value: profit.toLocaleString() + " so'm", color: 'var(--success)' },
+                  { label: 'Xarajatlar', value: expenses.toLocaleString() + " so'm", color: 'var(--primary)' },
+                  { label: 'Soliq', value: tax.toLocaleString() + " so'm", color: 'var(--warning)' },
                 ].map((s, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      background: 'var(--surface-hover)',
-                      borderRadius: 'var(--radius-sm)',
-                      padding: '10px 8px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <p style={{ fontSize: 20, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.value}</p>
-                    <p className="text-xs" style={{ color: 'var(--text-muted)', marginTop: 4 }}>{s.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div>
-                <p className="overline" style={{ marginBottom: 10 }}>So'nggi faoliyat</p>
-                {liveActivity.map((a, i) => (
-                  <div key={i} className="dash-activity-item" style={{ animation: `fadeIn 0.3s ease ${i * 0.05}s both` }}>
-                    <span style={{ fontSize: 12, color: 'var(--text-dim)', fontWeight: 600, minWidth: 40, fontFamily: 'var(--font-sans)', fontVariantNumeric: 'tabular-nums' }}>
-                      {a.time}
-                    </span>
-                    <div className="dash-activity-dot" style={{ background: activityTypeColor(a.type) }} />
-                    <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{a.text}</span>
+                  <div key={i} style={{ textAlign: 'center' }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', margin: '0 0 4px' }}>{s.label}</p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: s.color, margin: 0 }}>{s.value}</p>
                   </div>
                 ))}
               </div>
             </div>
+          </Card>
+        </motion.div>
 
-            <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>
-              <h3 className="heading" style={{ marginBottom: 16 }}>Tezkor harakatlar</h3>
-              <div className="dash-qa-grid">
-                {quickActions.map((action, i) => {
-                  const Icon = action.icon;
-                  return (
-                    <div
-                      key={i}
-                      className="dash-qa-card"
-                      onClick={() => navigate(action.path)}
-                    >
-                      <div
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: 'var(--radius-xs)',
-                          background: 'var(--primary-light)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          flexShrink: 0,
-                        }}
-                      >
-                        <Icon size={17} style={{ color: 'var(--primary)' }} />
+        <motion.div variants={item}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {kpis.map((kpi, i) => {
+              const Icon = kpi.icon;
+              return (
+                <motion.div key={i} variants={item}>
+                  <Card padding="md" hoverable>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                      <div style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Icon size={19} style={{ color: 'var(--primary)' }} />
                       </div>
                       <div style={{ minWidth: 0 }}>
-                        <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{action.label}</p>
-                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{action.desc}</p>
+                        <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '0 0 2px' }}>{kpi.label}</p>
+                        <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', margin: 0 }}>{kpi.value.toLocaleString()}{kpi.suffix || ''}</p>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: kpi.trend.startsWith('+') ? 'var(--success)' : 'var(--danger)' }}>{kpi.trend}</span>
                       </div>
-                      <ArrowRight size={14} style={{ color: 'var(--text-dim)', marginLeft: 'auto', flexShrink: 0 }} />
                     </div>
-                  );
-                })}
-              </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        <motion.div variants={item}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <Card padding="lg">
+                <CardHeader align="between">
+                  <div>
+                    <CardTitle>Haftalik tushum</CardTitle>
+                    <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '2px 0 0' }}>Bu haftaning kunlik tushumlari</p>
+                  </div>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <BarChart3 size={16} style={{ color: 'var(--primary)' }} />
+                  </div>
+                </CardHeader>
+                <CardContent><BarChart data={weeklyData} labels={weekLabels} height={180} /></CardContent>
+              </Card>
+
+              <Card padding="lg">
+                <CardHeader align="between">
+                  <div>
+                    <CardTitle>Eng ko'p sotilgan</CardTitle>
+                    <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '2px 0 0' }}>Top 5 mahsulot</p>
+                  </div>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(245,158,11,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Star size={16} style={{ color: 'var(--warning)' }} />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {topProducts.map((p) => {
+                      const pct = (p.revenue / topProducts[0].revenue) * 100;
+                      return (
+                        <div key={p.rank} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div style={{ width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0, background: p.rank === 1 ? 'var(--primary)' : p.rank <= 3 ? 'var(--primary-light)' : 'var(--surface-active)', color: p.rank === 1 ? '#fff' : p.rank <= 3 ? 'var(--primary)' : 'var(--text-muted)' }}>{p.rank}</div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{p.name}</span>
+                              <span style={{ fontSize: 11, color: 'var(--text-muted)', flexShrink: 0 }}>{p.sold} dona</span>
+                            </div>
+                            <div style={{ height: 5, borderRadius: 999, background: 'var(--surface-active)', overflow: 'hidden' }}>
+                              <div style={{ height: '100%', borderRadius: 999, background: 'linear-gradient(90deg, var(--primary), #FB923C)', width: pct + '%' }} />
+                            </div>
+                            <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: '4px 0 0' }}>{p.revenue.toLocaleString()} so'm</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <Card padding="lg">
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--success)' }} />
+                    <CardTitle>Jonli kuzatish</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 20 }}>
+                    {[
+                      { label: 'Tayyorlanmoqda', value: 3, color: 'var(--warning)' },
+                      { label: "Kuryer yo'lda", value: 2, color: '#3B82F6' },
+                      { label: 'Navbatda', value: 5, color: '#8B5CF6' },
+                    ].map((s, i) => (
+                      <div key={i} style={{ background: 'var(--surface-active)', borderRadius: 12, padding: '10px 8px', textAlign: 'center' }}>
+                        <p style={{ fontSize: 20, fontWeight: 700, color: s.color, margin: 0, lineHeight: 1 }}>{s.value}</p>
+                        <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: '4px 0 0' }}>{s.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>So'nggi faoliyat</p>
+                  {liveActivity.map((a, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: i < liveActivity.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                      <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, minWidth: 40, fontVariantNumeric: 'tabular-nums' }}>{a.time}</span>
+                      <div style={{ width: 7, height: 7, borderRadius: '50%', background: activityDotColor(a.type), flexShrink: 0 }} />
+                      <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{a.text}</span>
+                    </motion.div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card padding="lg">
+                <CardTitle style={{ marginBottom: 16 }}>Tezkor harakatlar</CardTitle>
+                <CardContent>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    {quickActions.map((action, i) => {
+                      const Icon = action.icon;
+                      return (
+                        <motion.div key={i} whileHover={{ y: -2, borderColor: 'var(--primary)' }}
+                          style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 16, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer', transition: 'all 0.2s' }}
+                          onClick={() => navigate(action.path)}>
+                          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <Icon size={17} style={{ color: 'var(--primary)' }} />
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', margin: 0 }}>{action.label}</p>
+                            <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: '2px 0 0' }}>{action.desc}</p>
+                          </div>
+                          <ArrowRight size={14} style={{ color: 'var(--text-muted)', marginLeft: 'auto', flexShrink: 0 }} />
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </div>
-
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
-};
-
-export default AdminDashboard;
+}

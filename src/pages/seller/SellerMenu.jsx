@@ -1,559 +1,17 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../store/useStore';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn, formatPrice } from '../../utils/cn';
+
 import {
-  ChevronLeft,
-  Plus,
-  Edit,
-  Trash2,
-  Star,
-  Flame,
-  X,
-  Check,
-  Image,
-  LayoutGrid,
-  UtensilsCrossed,
-  ShoppingBag,
-  BarChart3,
-  Settings,
+  ChevronLeft, Plus, Edit, Trash2, Star, Flame, X, Check, Image,
+  LayoutGrid, UtensilsCrossed, ShoppingBag, BarChart3, Settings, ToggleLeft, ToggleRight, Search
 } from 'lucide-react';
 
 const emptyProduct = {
-  name: '',
-  description: '',
-  price: '',
-  discountPrice: '',
-  categoryId: '',
-  image: '',
-  isPopular: false,
-  isNew: false,
-  spiceLevel: 0,
-};
-
-const styles = {
-  root: {
-    minHeight: '100%',
-    background: 'var(--bg)',
-    paddingBottom: 100,
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '20px 20px 0',
-  },
-  headerLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    boxShadow: 'var(--shadow-sm)',
-    transition: 'all 0.2s',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 700,
-    color: 'var(--text)',
-    margin: 0,
-    letterSpacing: '-0.02em',
-  },
-  headerSub: {
-    fontSize: 12,
-    color: 'var(--text-muted)',
-    margin: '2px 0 0 0',
-  },
-  addBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '10px 16px',
-    borderRadius: 'var(--radius-sm)',
-    background: 'var(--primary)',
-    color: '#fff',
-    border: 'none',
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(249,115,22,0.3)',
-    transition: 'all 0.2s',
-  },
-  categoryScroll: {
-    overflowX: 'auto',
-    WebkitOverflowScrolling: 'touch',
-    padding: '16px 0 4px',
-    margin: '0 20px',
-  },
-  categoryRow: {
-    display: 'flex',
-    gap: 8,
-    minWidth: 'max-content',
-  },
-  catChip: (active) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '8px 16px',
-    borderRadius: 20,
-    border: active ? '1.5px solid var(--primary)' : '1.5px solid var(--border)',
-    background: active ? 'var(--primary-light)' : 'var(--surface)',
-    color: active ? 'var(--primary)' : 'var(--text-muted)',
-    fontSize: 13,
-    fontWeight: 600,
-    whiteSpace: 'nowrap',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    boxShadow: active ? '0 2px 8px rgba(249,115,22,0.15)' : 'none',
-    flexShrink: 0,
-  }),
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 12,
-    padding: '0 20px',
-  },
-  card: {
-    background: 'var(--surface)',
-    borderRadius: 'var(--radius)',
-    border: '1px solid var(--border)',
-    overflow: 'hidden',
-    boxShadow: 'var(--shadow-sm)',
-    transition: 'all 0.2s',
-  },
-  cardImgWrap: {
-    position: 'relative',
-    width: '100%',
-    paddingTop: '70%',
-    overflow: 'hidden',
-  },
-  cardImg: {
-    position: 'absolute',
-    inset: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  cardImgGradient: {
-    position: 'absolute',
-    inset: 0,
-    background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.05) 100%)',
-  },
-  badge: (bg, color) => ({
-    fontSize: 10,
-    padding: '3px 8px',
-    borderRadius: 6,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 3,
-    fontWeight: 600,
-    background: bg,
-    color: color,
-  }),
-  cardBody: {
-    padding: '10px 12px 12px',
-  },
-  cardCat: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 4,
-    marginBottom: 4,
-  },
-  cardCatIcon: {
-    fontSize: 12,
-  },
-  cardCatName: {
-    fontSize: 11,
-    fontWeight: 500,
-    color: 'var(--text-muted)',
-  },
-  cardTitle: {
-    fontSize: 13,
-    fontWeight: 700,
-    color: 'var(--text)',
-    margin: '0 0 6px 0',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    lineHeight: 1.3,
-  },
-  cardPrice: {
-    color: 'var(--primary)',
-    fontSize: 14,
-    fontWeight: 700,
-    fontVariantNumeric: 'tabular-nums',
-  },
-  cardPriceOld: {
-    color: 'var(--text-muted)',
-    fontSize: 11,
-    textDecoration: 'line-through',
-    fontVariantNumeric: 'tabular-nums',
-  },
-  cardActions: {
-    display: 'flex',
-    gap: 6,
-    marginTop: 10,
-  },
-  editBtn: {
-    flex: 1,
-    height: 32,
-    borderRadius: 8,
-    border: '1px solid var(--border)',
-    background: 'var(--surface-hover)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    cursor: 'pointer',
-    color: 'var(--text-secondary)',
-    fontSize: 11,
-    fontWeight: 600,
-    transition: 'all 0.2s',
-  },
-  deleteBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    border: '1px solid var(--border)',
-    background: 'var(--surface-hover)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    color: 'var(--danger)',
-    transition: 'all 0.2s',
-    flexShrink: 0,
-  },
-  emptyState: {
-    padding: '48px 24px',
-    textAlign: 'center',
-  },
-  emptyIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: '50%',
-    background: 'var(--surface-hover)',
-    border: '1px dashed var(--border-strong)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 16px',
-  },
-  emptyText: {
-    color: 'var(--text-muted)',
-    fontSize: 14,
-    fontWeight: 500,
-    margin: '0 0 16px 0',
-  },
-  emptyBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '10px 20px',
-    borderRadius: 'var(--radius-sm)',
-    background: 'var(--primary)',
-    color: '#fff',
-    border: 'none',
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(249,115,22,0.3)',
-  },
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    background: 'rgba(0,0,0,0.3)',
-    backdropFilter: 'blur(8px)',
-  },
-  modal: {
-    position: 'relative',
-    width: '100%',
-    maxWidth: 480,
-    maxHeight: '90vh',
-    background: 'var(--surface)',
-    borderRadius: '20px 20px 0 0',
-    border: '1px solid var(--border)',
-    borderBottom: 'none',
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    boxShadow: 'var(--shadow-lg)',
-  },
-  modalHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '16px 20px',
-    borderBottom: '1px solid var(--border)',
-  },
-  modalTitle: {
-    fontSize: 16,
-    fontWeight: 700,
-    color: 'var(--text)',
-    margin: 0,
-  },
-  modalCloseBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    background: 'var(--surface-hover)',
-    border: '1px solid var(--border)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-  },
-  modalBody: {
-    padding: '16px 20px',
-    overflowY: 'auto',
-    flex: 1,
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 14,
-  },
-  label: {
-    display: 'block',
-    color: 'var(--text-secondary)',
-    fontSize: 12,
-    fontWeight: 600,
-    marginBottom: 6,
-  },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    borderRadius: 'var(--radius-sm)',
-    border: '1.5px solid var(--border)',
-    background: 'var(--surface-hover)',
-    color: 'var(--text)',
-    fontSize: 14,
-    outline: 'none',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-    boxSizing: 'border-box',
-  },
-  textarea: {
-    width: '100%',
-    padding: '10px 14px',
-    borderRadius: 'var(--radius-sm)',
-    border: '1.5px solid var(--border)',
-    background: 'var(--surface-hover)',
-    color: 'var(--text)',
-    fontSize: 14,
-    outline: 'none',
-    minHeight: 72,
-    resize: 'none',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-    boxSizing: 'border-box',
-  },
-  select: {
-    width: '100%',
-    padding: '10px 14px',
-    borderRadius: 'var(--radius-sm)',
-    border: '1.5px solid var(--border)',
-    background: 'var(--surface-hover)',
-    color: 'var(--text)',
-    fontSize: 14,
-    outline: 'none',
-    transition: 'border-color 0.2s',
-    boxSizing: 'border-box',
-  },
-  grid2: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 10,
-  },
-  spiceBtn: (active) => ({
-    flex: 1,
-    height: 40,
-    borderRadius: 10,
-    border: active ? '1.5px solid var(--primary)' : '1.5px solid var(--border)',
-    background: active ? 'var(--primary-light)' : 'var(--surface-hover)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    fontSize: 16,
-    transition: 'all 0.2s',
-  }),
-  toggleCard: (active, color) => ({
-    padding: 12,
-    borderRadius: 12,
-    border: active ? `1.5px solid ${color}` : '1.5px solid var(--border)',
-    background: active ? `${color}10` : 'var(--surface-hover)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  }),
-  toggleIcon: (active, color) => ({
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    background: active ? color : 'var(--surface-active)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  }),
-  toggleLabel: (active) => ({
-    color: active ? 'var(--text)' : 'var(--text-muted)',
-    fontSize: 12,
-    fontWeight: 600,
-  }),
-  modalFooter: {
-    padding: '14px 20px',
-    borderTop: '1px solid var(--border)',
-    display: 'flex',
-    gap: 10,
-  },
-  cancelBtn: {
-    flex: 1,
-    borderRadius: 'var(--radius-sm)',
-    padding: '10px 0',
-    fontSize: 13,
-    fontWeight: 600,
-    background: 'var(--surface-hover)',
-    border: '1.5px solid var(--border)',
-    color: 'var(--text-secondary)',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
-  saveBtn: {
-    flex: 1,
-    borderRadius: 'var(--radius-sm)',
-    padding: '10px 0',
-    fontSize: 13,
-    fontWeight: 600,
-    background: 'var(--primary)',
-    border: 'none',
-    color: '#fff',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    boxShadow: '0 2px 8px rgba(249,115,22,0.3)',
-    transition: 'all 0.2s',
-  },
-  saveBtnDisabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  },
-  deleteConfirmOverlay: {
-    position: 'absolute',
-    inset: 0,
-    background: 'rgba(0,0,0,0.3)',
-    backdropFilter: 'blur(8px)',
-  },
-  deleteConfirmCard: {
-    position: 'relative',
-    width: '100%',
-    maxWidth: 320,
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    borderRadius: 'var(--radius)',
-    padding: '24px 20px',
-    textAlign: 'center',
-    boxShadow: 'var(--shadow-lg)',
-  },
-  deleteConfirmIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: '50%',
-    background: '#FEF2F2',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 16px',
-  },
-  deleteConfirmTitle: {
-    fontSize: 16,
-    fontWeight: 700,
-    color: 'var(--text)',
-    margin: '0 0 8px 0',
-  },
-  deleteConfirmText: {
-    color: 'var(--text-muted)',
-    fontSize: 13,
-    margin: '0 0 20px 0',
-    lineHeight: 1.5,
-  },
-  deleteConfirmBtn: {
-    flex: 1,
-    borderRadius: 'var(--radius-sm)',
-    padding: '10px 0',
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    transition: 'all 0.2s',
-  },
-  bottomNav: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 100,
-    background: 'rgba(255,255,255,0.85)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderTop: '1px solid var(--border)',
-    padding: '6px 0 env(safe-area-inset-bottom, 8px)',
-  },
-  bottomNavRow: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  navItem: (active) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 2,
-    padding: '6px 12px',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    color: active ? 'var(--primary)' : 'var(--text-muted)',
-    transition: 'color 0.2s',
-  }),
-  navLabel: (active) => ({
-    fontSize: 10,
-    fontWeight: active ? 700 : 500,
-    color: 'inherit',
-  }),
-  imgPreview: {
-    marginTop: 8,
-    width: '100%',
-    height: 100,
-    borderRadius: 10,
-    overflow: 'hidden',
-    border: '1px solid var(--border)',
-  },
-};
-
-const focusHandlers = {
-  onFocus: (e) => {
-    e.target.style.borderColor = 'var(--primary)';
-    e.target.style.boxShadow = '0 0 0 3px rgba(249,115,22,0.1)';
-  },
-  onBlur: (e) => {
-    e.target.style.borderColor = 'var(--border)';
-    e.target.style.boxShadow = 'none';
-  },
+  name: '', description: '', price: '', discountPrice: '', categoryId: '',
+  image: '', isPopular: false, isNew: false, spiceLevel: 0, available: true,
 };
 
 export default function SellerMenu() {
@@ -561,568 +19,309 @@ export default function SellerMenu() {
   const { foods, categories, addProduct, updateProduct, deleteProduct } = useStore();
 
   const [activeCategory, setActiveCategory] = useState('all');
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyProduct);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   const filteredFoods = useMemo(() => {
-    if (activeCategory === 'all') return foods;
-    return foods.filter((f) => f.categoryId === Number(activeCategory));
-  }, [foods, activeCategory]);
+    let result = foods;
+    if (activeCategory !== 'all') result = result.filter(f => f.categoryId === Number(activeCategory));
+    if (search) result = result.filter(f => f.name.toLowerCase().includes(search.toLowerCase()));
+    return result;
+  }, [foods, activeCategory, search]);
 
-  const getCategoryName = (id) => {
-    const cat = categories.find((c) => c.id === id);
-    return cat ? cat.name : '';
-  };
+  const hasUnavailable = foods.filter(f => f.available === false).length > 0;
 
-  const getCategoryIcon = (id) => {
-    const cat = categories.find((c) => c.id === id);
-    return cat ? cat.icon : '';
-  };
+  const getCategoryName = (id) => { const cat = categories.find(c => c.id === id); return cat ? cat.name : ''; };
 
-  const openAddModal = () => {
-    setEditingId(null);
-    setForm(emptyProduct);
-    setModalOpen(true);
-  };
-
+  const openAddModal = () => { setEditingId(null); setForm(emptyProduct); setModalOpen(true); };
   const openEditModal = (food) => {
     setEditingId(food.id);
     setForm({
-      name: food.name || '',
-      description: food.description || '',
-      price: String(food.price || ''),
+      name: food.name || '', description: food.description || '', price: String(food.price || ''),
       discountPrice: food.discountPrice ? String(food.discountPrice) : '',
-      categoryId: String(food.categoryId || ''),
-      image: food.image || '',
-      isPopular: food.isPopular || false,
-      isNew: food.isNew || false,
-      spiceLevel: food.spiceLevel || 0,
+      categoryId: String(food.categoryId || ''), image: food.image || '',
+      isPopular: food.isPopular || false, isNew: food.isNew || false,
+      spiceLevel: food.spiceLevel || 0, available: food.available !== false,
     });
     setModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setEditingId(null);
-    setForm(emptyProduct);
-  };
+  const closeModal = () => { setModalOpen(false); setEditingId(null); setForm(emptyProduct); };
+  const updateField = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
   const handleSave = () => {
     if (!form.name.trim() || !form.price || !form.categoryId) return;
-
     const productData = {
-      name: form.name.trim(),
-      description: form.description.trim(),
-      price: Number(form.price),
+      name: form.name.trim(), description: form.description.trim(), price: Number(form.price),
       discountPrice: form.discountPrice ? Number(form.discountPrice) : undefined,
       categoryId: Number(form.categoryId),
       image: form.image.trim() || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop',
-      isPopular: form.isPopular,
-      isNew: form.isNew,
-      spiceLevel: form.spiceLevel,
-      calories: 0,
-      ingredients: [],
-      restaurantId: 1,
+      isPopular: form.isPopular, isNew: form.isNew, spiceLevel: form.spiceLevel,
+      available: form.available, calories: 0, ingredients: [], restaurantId: 1,
     };
-
-    if (editingId) {
-      updateProduct(editingId, productData);
-    } else {
-      addProduct(productData);
-    }
+    if (editingId) updateProduct(editingId, productData);
+    else addProduct(productData);
     closeModal();
   };
 
-  const handleDelete = (id) => {
-    deleteProduct(id);
-    setDeleteConfirmId(null);
-  };
+  const handleDelete = (id) => { deleteProduct(id); setDeleteConfirmId(null); };
 
-  const updateField = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const toggleAvailability = (food) => {
+    updateProduct(food.id, { ...food, available: food.available === false ? true : false });
   };
 
   const canSave = form.name.trim() && form.price && form.categoryId;
 
+  const navItems = [
+    { label: 'KDS', icon: LayoutGrid, path: '/seller' },
+    { label: 'Buyurtmalar', icon: ShoppingBag, path: '/seller/orders' },
+    { label: 'Menyu', icon: UtensilsCrossed, path: '/seller/menu' },
+    { label: 'Statistika', icon: BarChart3, path: '/seller/analytics' },
+    { label: 'Sozlamalar', icon: Settings, path: '/seller/settings' },
+  ];
+
   return (
-    <div style={styles.root}>
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <button
-            style={styles.backBtn}
-            onClick={() => navigate(-1)}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--surface-hover)';
-              e.currentTarget.style.borderColor = 'var(--border-strong)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--surface)';
-              e.currentTarget.style.borderColor = 'var(--border)';
-            }}
-          >
-            <ChevronLeft size={20} color="var(--text-secondary)" />
+    <div className="min-h-full bg-bg pb-24">
+      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-border">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center hover:border-borderStrong transition-all">
+              <ChevronLeft size={18} className="text-text" />
+            </button>
+            <div>
+              <h1 className="text-lg font-bold text-text">Menyu</h1>
+              <p className="text-xs text-textMuted">{foods.length} ta mahsulot</p>
+            </div>
+          </div>
+          <button onClick={openAddModal} className="flex items-center gap-1.5 px-4 py-2.5 bg-primary text-white font-semibold rounded-xl shadow-primary hover:brightness-110 active:scale-[0.97] transition-all text-sm">
+            <Plus size={16} /> Qo'shish
           </button>
-          <div>
-            <h1 style={styles.headerTitle}>Menyu boshqaruvi</h1>
-            <p style={styles.headerSub}>{foods.length} ta mahsulot</p>
+        </div>
+
+        <div className="px-4 pb-2">
+          <div className="relative">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-textMuted pointer-events-none" />
+            <input className="w-full pl-9 pr-3 py-2.5 bg-surface border border-border rounded-xl text-sm text-text outline-none transition-all focus:border-primary/40" placeholder="Qidirish..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
-        <button
-          style={styles.addBtn}
-          onClick={openAddModal}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(249,115,22,0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(249,115,22,0.3)';
-          }}
-        >
-          <Plus size={16} />
-          Qo'shish
-        </button>
-      </div>
 
-      <div style={styles.categoryScroll}>
-        <div style={styles.categoryRow}>
-          <button
-            onClick={() => setActiveCategory('all')}
-            style={styles.catChip(activeCategory === 'all')}
-          >
-            <LayoutGrid size={14} />
-            Barchasi ({foods.length})
-          </button>
-          {categories.map((cat) => {
-            const count = foods.filter((f) => f.categoryId === cat.id).length;
+        <div className="flex gap-2 px-4 pb-3 overflow-x-auto scrollbar-hide">
+          <button onClick={() => setActiveCategory('all')}
+            className={cn('px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all flex-shrink-0',
+              activeCategory === 'all' ? 'bg-primary text-white border-primary' : 'bg-surface text-textMuted border-border'
+            )}
+          >Barchasi ({foods.length})</button>
+          {categories.map(cat => {
+            const count = foods.filter(f => f.categoryId === cat.id).length;
             return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(String(cat.id))}
-                style={styles.catChip(activeCategory === String(cat.id))}
-              >
-                <span>{cat.icon}</span>
-                {cat.name} ({count})
-              </button>
+              <button key={cat.id} onClick={() => setActiveCategory(String(cat.id))}
+                className={cn('px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all flex-shrink-0',
+                  activeCategory === String(cat.id) ? 'bg-primary text-white border-primary' : 'bg-surface text-textMuted border-border'
+                )}
+              >{cat.icon} {cat.name} ({count})</button>
             );
           })}
         </div>
       </div>
 
-      {filteredFoods.length === 0 ? (
-        <div style={styles.emptyState}>
-          <div style={styles.emptyIcon}>
-            <Image size={28} color="var(--text-muted)" />
+      <div className="px-4 pt-3">
+        {hasUnavailable && (
+          <div className="flex items-center gap-2 px-3 py-2.5 bg-warning/5 border border-warning/20 rounded-xl mb-3">
+            <Flame size={16} className="text-warning" />
+            <span className="text-xs font-semibold text-warning">Nofaol mahsulotlar mavjud</span>
           </div>
-          <p style={styles.emptyText}>Mahsulotlar topilmadi</p>
-          <button style={styles.emptyBtn} onClick={openAddModal}>
-            <Plus size={16} />
-            Yangi qo'shish
-          </button>
-        </div>
-      ) : (
-        <div style={{ ...styles.grid, marginTop: 16 }}>
-          {filteredFoods.map((food) => (
-            <div
-              key={food.id}
-              style={styles.card}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <div style={styles.cardImgWrap}>
-                <img src={food.image} alt={food.name} style={styles.cardImg} />
-                <div style={styles.cardImgGradient} />
+        )}
 
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 8,
-                    left: 8,
-                    zIndex: 2,
-                    display: 'flex',
-                    gap: 4,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  {food.isPopular && (
-                    <span style={styles.badge('#FFF7ED', 'var(--primary)')}>
-                      <Star size={10} fill="currentColor" />
-                      Top
-                    </span>
-                  )}
-                  {food.isNew && (
-                    <span style={styles.badge('#F0FDF4', '#16A34A')}>
-                      <Flame size={10} />
-                      Yangi
-                    </span>
-                  )}
-                  {food.discountPrice && (
-                    <span style={styles.badge('#FEF3C7', '#D97706')}>
-                      -{Math.round(((food.price - food.discountPrice) / food.price) * 100)}%
-                    </span>
-                  )}
-                </div>
-
-                {food.spiceLevel > 0 && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 8,
-                      right: 8,
-                      zIndex: 2,
-                      fontSize: 11,
-                      background: 'rgba(255,255,255,0.9)',
-                      borderRadius: 6,
-                      padding: '2px 6px',
-                      backdropFilter: 'blur(4px)',
-                    }}
-                  >
-                    {Array.from({ length: food.spiceLevel }).map((_, i) => (
-                      <Flame key={i} size={12} color="#EF4444" fill="#EF4444" style={{ marginRight: 1 }} />
-                    ))}
+        {filteredFoods.length === 0 ? (
+          <div className="bg-surface border border-border rounded-2xl p-10 text-center">
+            <Image size={48} className="mx-auto mb-3 text-borderStrong" />
+            <p className="font-bold text-text">Mahsulotlar yo'q</p>
+            <p className="text-sm text-textMuted mt-1">Yangi qo'shing</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredFoods.map(food => (
+              <motion.div key={food.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className={cn('bg-surface border rounded-2xl overflow-hidden transition-all', food.available === false ? 'border-warning/30 opacity-70' : 'border-border')}
+              >
+                <div className="flex gap-3 p-3">
+                  <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surfaceHover">
+                    <img src={food.image} alt={food.name} className="w-full h-full object-cover" />
                   </div>
-                )}
-              </div>
-
-              <div style={styles.cardBody}>
-                <div style={styles.cardCat}>
-                  <span style={styles.cardCatIcon}>{getCategoryIcon(food.categoryId)}</span>
-                  <span style={styles.cardCatName}>{getCategoryName(food.categoryId)}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-xs text-textMuted">{getCategoryName(food.categoryId)}</span>
+                      {food.isPopular && <Badge variant="primary" size="xs"><Star size={8} fill="currentColor" />Top</Badge>}
+                      {food.isNew && <Badge variant="success" size="xs"><Flame size={8} />Yangi</Badge>}
+                      {food.discountPrice && <Badge variant="warning" size="xs">-{Math.round(((food.price - food.discountPrice) / food.price) * 100)}%</Badge>}
+                      {food.available === false && <Badge variant="danger" size="xs">Nofaol</Badge>}
+                    </div>
+                    <h3 className="font-bold text-text truncate">{food.name}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      {food.discountPrice ? (
+                        <>
+                          <span className="font-extrabold text-primary tabular-nums">{formatPrice(food.discountPrice)} so'm</span>
+                          <span className="text-xs text-textMuted line-through">{formatPrice(food.price)}</span>
+                        </>
+                      ) : (
+                        <span className="font-extrabold text-primary tabular-nums">{formatPrice(food.price)} so'm</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-
-                <h3 style={styles.cardTitle}>{food.name}</h3>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  {food.discountPrice ? (
-                    <>
-                      <span style={styles.cardPrice}>
-                        {food.discountPrice.toLocaleString()} so'm
-                      </span>
-                      <span style={styles.cardPriceOld}>
-                        {food.price.toLocaleString()}
-                      </span>
-                    </>
-                  ) : (
-                    <span style={styles.cardPrice}>
-                      {food.price.toLocaleString()} so'm
-                    </span>
-                  )}
-                </div>
-
-                <div style={styles.cardActions}>
-                  <button
-                    style={styles.editBtn}
-                    onClick={() => openEditModal(food)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'var(--surface-active)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'var(--surface-hover)';
-                    }}
+                <div className="flex items-center gap-1 px-3 pb-3">
+                  <button onClick={() => toggleAvailability(food)}
+                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-border text-textMuted hover:text-text hover:border-borderStrong transition-all text-xs font-semibold flex-1"
                   >
-                    <Edit size={12} />
-                    Tahrirlash
+                    {food.available === false ? <ToggleLeft size={14} /> : <ToggleRight size={14} />}
+                    {food.available === false ? 'Faollashtirish' : 'Nofaol'}
                   </button>
-                  <button
-                    style={styles.deleteBtn}
-                    onClick={() => setDeleteConfirmId(food.id)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#FEF2F2';
-                      e.currentTarget.style.borderColor = '#FECACA';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'var(--surface-hover)';
-                      e.currentTarget.style.borderColor = 'var(--border)';
-                    }}
+                  <button onClick={() => openEditModal(food)}
+                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-border text-textMuted hover:text-text hover:border-borderStrong transition-all text-xs font-semibold flex-1"
+                  >
+                    <Edit size={14} /> Tahrirlash
+                  </button>
+                  <button onClick={() => setDeleteConfirmId(food.id)}
+                    className="flex items-center justify-center px-3 py-2 rounded-lg border border-danger/20 text-danger hover:bg-danger/5 transition-all"
                   >
                     <Trash2 size={14} />
                   </button>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeModal} className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-lg bg-surface rounded-t-3xl border border-border border-b-0 overflow-hidden shadow-lg max-h-[90vh] flex flex-col"
+            >
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                <h2 className="font-bold text-text">{editingId ? 'Tahrirlash' : 'Yangi mahsulot'}</h2>
+                <button onClick={closeModal} className="w-8 h-8 rounded-xl bg-surfaceHover border border-border flex items-center justify-center"><X size={16} className="text-textMuted" /></button>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {modalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-          }}
-        >
-          <div onClick={closeModal} style={styles.overlay} />
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>
-                {editingId ? 'Mahsulotni tahrirlash' : 'Yangi mahsulot'}
-              </h2>
-              <button style={styles.modalCloseBtn} onClick={closeModal}>
-                <X size={16} color="var(--text-muted)" />
-              </button>
-            </div>
-
-            <div style={styles.modalBody}>
-              <div style={styles.formGroup}>
+              <div className="p-5 overflow-y-auto flex-1 space-y-4">
                 <div>
-                  <label style={styles.label}>Nomi *</label>
-                  <input
-                    style={styles.input}
-                    placeholder="Mahsulot nomi"
-                    value={form.name}
-                    onChange={(e) => updateField('name', e.target.value)}
-                    {...focusHandlers}
-                  />
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Nomi *</label>
+                  <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" placeholder="Mahsulot nomi" value={form.name} onChange={(e) => updateField('name', e.target.value)} />
                 </div>
-
                 <div>
-                  <label style={styles.label}>Tavsif</label>
-                  <textarea
-                    style={styles.textarea}
-                    placeholder="Qisqacha tavsif"
-                    value={form.description}
-                    onChange={(e) => updateField('description', e.target.value)}
-                    rows={2}
-                    {...focusHandlers}
-                  />
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Tavsif</label>
+                  <textarea className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all resize-none min-h-[60px]" placeholder="Qisqacha tavsif" value={form.description} onChange={(e) => updateField('description', e.target.value)} rows={2} />
                 </div>
-
-                <div style={styles.grid2}>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label style={styles.label}>Narxi (so'm) *</label>
-                    <input
-                      style={styles.input}
-                      type="number"
-                      placeholder="25000"
-                      value={form.price}
-                      onChange={(e) => updateField('price', e.target.value)}
-                      {...focusHandlers}
-                    />
+                    <label className="block text-xs font-semibold text-textSecondary mb-1.5">Narxi (so'm) *</label>
+                    <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="number" placeholder="25000" value={form.price} onChange={(e) => updateField('price', e.target.value)} />
                   </div>
                   <div>
-                    <label style={styles.label}>Chegirma narxi</label>
-                    <input
-                      style={styles.input}
-                      type="number"
-                      placeholder="20000"
-                      value={form.discountPrice}
-                      onChange={(e) => updateField('discountPrice', e.target.value)}
-                      {...focusHandlers}
-                    />
+                    <label className="block text-xs font-semibold text-textSecondary mb-1.5">Chegirma narxi</label>
+                    <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="number" placeholder="20000" value={form.discountPrice} onChange={(e) => updateField('discountPrice', e.target.value)} />
                   </div>
                 </div>
-
                 <div>
-                  <label style={styles.label}>Kategoriya *</label>
-                  <select
-                    style={styles.select}
-                    value={form.categoryId}
-                    onChange={(e) => updateField('categoryId', e.target.value)}
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Kategoriya *</label>
+                  <select className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all appearance-none"
+                    value={form.categoryId} onChange={(e) => updateField('categoryId', e.target.value)}
                   >
-                    <option value="">Kategoriyani tanlang</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.icon} {cat.name}
-                      </option>
-                    ))}
+                    <option value="">Tanlang</option>
+                    {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>)}
                   </select>
                 </div>
-
                 <div>
-                  <label style={styles.label}>Rasm URL</label>
-                  <input
-                    style={styles.input}
-                    placeholder="https://..."
-                    value={form.image}
-                    onChange={(e) => updateField('image', e.target.value)}
-                    {...focusHandlers}
-                  />
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Rasm URL</label>
+                  <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" placeholder="https://..." value={form.image} onChange={(e) => updateField('image', e.target.value)} />
                   {form.image && (
-                    <div style={styles.imgPreview}>
-                      <img
-                        src={form.image}
-                        alt="Preview"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
+                    <div className="mt-2 w-full h-20 rounded-xl overflow-hidden border border-border">
+                      <img src={form.image} alt="" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                     </div>
                   )}
                 </div>
-
                 <div>
-                  <label style={styles.label}>Achchiqlik darajasi</label>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    {[0, 1, 2, 3].map((level) => (
-                      <button
-                        key={level}
-                        onClick={() => updateField('spiceLevel', level)}
-                        style={styles.spiceBtn(form.spiceLevel === level)}
-                      >
-                        {level === 0 ? (
-                          <X size={16} color="var(--text-muted)" />
-                        ) : (
-                          Array.from({ length: level }).map((_, i) => (
-                            <Flame key={i} size={14} color="var(--danger)" fill="var(--danger)" />
-                          ))
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Achchiqlik</label>
+                  <div className="flex gap-2">
+                    {[0, 1, 2, 3].map(level => (
+                      <button key={level} onClick={() => updateField('spiceLevel', level)}
+                        className={cn('flex-1 py-2.5 rounded-xl border text-sm font-semibold transition-all',
+                          form.spiceLevel === level ? 'bg-primary/10 text-primary border-primary/30' : 'bg-surfaceHover text-textMuted border-border'
                         )}
+                      >
+                        {level === 0 ? 'None' : Array.from({ length: level }).map((_, i) => <Flame key={i} size={14} className="inline text-danger" fill="currentColor" />)}
                       </button>
                     ))}
                   </div>
                 </div>
-
-                <div style={styles.grid2}>
-                  <button
-                    onClick={() => updateField('isPopular', !form.isPopular)}
-                    style={styles.toggleCard(form.isPopular, 'var(--primary)')}
+                <div className="grid grid-cols-2 gap-3">
+                  <button onClick={() => updateField('isPopular', !form.isPopular)}
+                    className={cn('flex items-center justify-center gap-2 py-3 rounded-xl border text-xs font-semibold transition-all',
+                      form.isPopular ? 'bg-primary/10 text-primary border-primary/30' : 'bg-surfaceHover text-textMuted border-border'
+                    )}
                   >
-                    <div style={styles.toggleIcon(form.isPopular, 'var(--primary)')}>
-                      {form.isPopular ? (
-                        <Check size={14} color="#fff" />
-                      ) : (
-                        <Star size={14} color="var(--text-muted)" />
-                      )}
-                    </div>
-                    <span style={styles.toggleLabel(form.isPopular)}>Top mahsulot</span>
+                    <Star size={14} fill={form.isPopular ? 'currentColor' : 'none'} /> Top
                   </button>
-
-                  <button
-                    onClick={() => updateField('isNew', !form.isNew)}
-                    style={styles.toggleCard(form.isNew, 'var(--success)')}
+                  <button onClick={() => updateField('isNew', !form.isNew)}
+                    className={cn('flex items-center justify-center gap-2 py-3 rounded-xl border text-xs font-semibold transition-all',
+                      form.isNew ? 'bg-success/10 text-success border-success/30' : 'bg-surfaceHover text-textMuted border-border'
+                    )}
                   >
-                    <div style={styles.toggleIcon(form.isNew, 'var(--success)')}>
-                      {form.isNew ? (
-                        <Check size={14} color="#fff" />
-                      ) : (
-                        <Flame size={14} color="var(--text-muted)" />
-                      )}
-                    </div>
-                    <span style={styles.toggleLabel(form.isNew)}>Yangi mahsulot</span>
+                    <Flame size={14} fill={form.isNew ? 'currentColor' : 'none'} /> Yangi
                   </button>
                 </div>
               </div>
-            </div>
-
-            <div style={styles.modalFooter}>
-              <button
-                style={styles.cancelBtn}
-                onClick={closeModal}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--surface-active)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--surface-hover)'; }}
-              >
-                Bekor qilish
-              </button>
-              <button
-                style={{ ...styles.saveBtn, ...(!canSave ? styles.saveBtnDisabled : {}) }}
-                onClick={handleSave}
-                disabled={!canSave}
-                onMouseEnter={(e) => {
-                  if (canSave) {
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(249,115,22,0.4)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(249,115,22,0.3)';
-                }}
-              >
-                <Check size={16} />
-                {editingId ? 'Saqlash' : "Qo'shish"}
-              </button>
-            </div>
+              <div className="flex gap-3 px-5 py-4 border-t border-border">
+                <button onClick={closeModal} className="flex-1 py-2.5 rounded-xl border border-border bg-surfaceHover text-textSecondary font-semibold text-sm hover:bg-surfaceActive transition-all">Bekor qilish</button>
+                <button onClick={handleSave} disabled={!canSave}
+                  className={cn('flex-1 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm shadow-primary hover:brightness-110 transition-all flex items-center justify-center gap-2',
+                    !canSave && 'opacity-50 cursor-not-allowed'
+                  )}
+                ><Check size={16} /> {editingId ? 'Saqlash' : "Qo'shish"}</button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
-      {deleteConfirmId && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 1100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 24,
-          }}
-        >
-          <div
-            onClick={() => setDeleteConfirmId(null)}
-            style={styles.deleteConfirmOverlay}
-          />
-          <div style={styles.deleteConfirmCard}>
-            <div style={styles.deleteConfirmIcon}>
-              <Trash2 size={24} color="var(--danger)" />
-            </div>
-            <h3 style={styles.deleteConfirmTitle}>Mahsulotni o'chirish?</h3>
-            <p style={styles.deleteConfirmText}>
-              Bu mahsulot butunlay o'chiriladi. Amalni qaytarib bo'lmaydi.
-            </p>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                style={{ ...styles.deleteConfirmBtn, background: 'var(--surface-hover)', border: '1.5px solid var(--border)', color: 'var(--text-secondary)' }}
-                onClick={() => setDeleteConfirmId(null)}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--surface-active)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--surface-hover)'; }}
-              >
-                Bekor qilish
-              </button>
-              <button
-                style={{ ...styles.deleteConfirmBtn, background: 'var(--danger)', border: 'none', color: '#fff', boxShadow: '0 2px 8px rgba(239,68,68,0.3)' }}
-                onClick={() => handleDelete(deleteConfirmId)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(239,68,68,0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(239,68,68,0.3)';
-                }}
-              >
-                <Trash2 size={14} />
-                O'chirish
-              </button>
-            </div>
+      <AnimatePresence>
+        {deleteConfirmId && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteConfirmId(null)} className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative bg-surface border border-border rounded-2xl p-6 max-w-xs w-full text-center shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mx-auto mb-3"><Trash2 size={22} className="text-danger" /></div>
+              <h3 className="font-bold text-text mb-1">Mahsulotni o'chirish?</h3>
+              <p className="text-sm text-textMuted mb-4">Bu amalni qaytarib bo'lmaydi</p>
+              <div className="flex gap-2">
+                <button onClick={() => setDeleteConfirmId(null)} className="flex-1 py-2.5 rounded-xl border border-border bg-surfaceHover text-textSecondary font-semibold text-sm hover:bg-surfaceActive transition-all">Bekor</button>
+                <button onClick={() => handleDelete(deleteConfirmId)} className="flex-1 py-2.5 rounded-xl bg-danger text-white font-semibold text-sm shadow-danger hover:brightness-110 transition-all">O'chirish</button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
-      <div style={styles.bottomNav}>
-        <div style={styles.bottomNavRow}>
-          <button style={styles.navItem(false)} onClick={() => navigate('/seller')}>
-            <LayoutGrid size={20} />
-            <span style={styles.navLabel(false)}>Bosh sahifa</span>
-          </button>
-          <button style={styles.navItem(true)}>
-            <UtensilsCrossed size={20} />
-            <span style={styles.navLabel(true)}>Menyu</span>
-          </button>
-          <button style={styles.navItem(false)} onClick={() => navigate('/seller/orders')}>
-            <ShoppingBag size={20} />
-            <span style={styles.navLabel(false)}>Buyurtmalar</span>
-          </button>
-          <button style={styles.navItem(false)} onClick={() => navigate('/seller/analytics')}>
-            <BarChart3 size={20} />
-            <span style={styles.navLabel(false)}>Statistika</span>
-          </button>
-          <button style={styles.navItem(false)} onClick={() => navigate('/seller/settings')}>
-            <Settings size={20} />
-            <span style={styles.navLabel(false)}>Sozlamalar</span>
-          </button>
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around h-14 max-w-lg mx-auto">
+          {navItems.map((item) => {
+            const active = item.path === '/seller/menu';
+            return (
+              <button key={item.path} onClick={() => navigate(item.path)}
+                className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full border-none bg-transparent cursor-pointer transition-all"
+                style={{ color: active ? 'var(--primary)' : 'var(--text-muted)' }}
+              >
+                <item.icon size={22} strokeWidth={active ? 2.2 : 1.8} />
+                <span className="text-[10px] font-semibold" style={{ fontWeight: active ? 700 : 500 }}>{item.label}</span>
+                {active && <div className="w-1 h-1 rounded-full bg-primary mt-0.5" />}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </nav>
     </div>
   );
 }

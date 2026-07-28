@@ -1,18 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ChevronLeft,
-  Plus,
-  Pencil,
-  AlertTriangle,
-  Check,
-  Package,
-  ArrowUp,
-  ArrowDown,
-  X,
-  Search,
-} from 'lucide-react';
 import useStore from '../../store/useStore';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn, formatPrice } from '../../utils/cn';
+
+import {
+  ChevronLeft, Plus, Pencil, AlertTriangle, Check, Package,
+  ArrowUp, ArrowDown, X, Search, Home, ShoppingBag, UtensilsCrossed, BarChart3, Settings
+} from 'lucide-react';
 
 const UNITS = ['kg', 'dona', 'liter'];
 
@@ -22,22 +17,10 @@ function getStatus(quantity, minQuantity) {
   return 'ok';
 }
 
-function getProgressPercent(quantity, minQuantity) {
-  const target = minQuantity * 3;
-  return Math.min(100, Math.round((quantity / target) * 100));
-}
-
-function getProgressColor(quantity, minQuantity) {
-  const pct = getProgressPercent(quantity, minQuantity);
-  if (pct > 50) return 'var(--success)';
-  if (pct >= 20) return 'var(--warning)';
-  return 'var(--danger)';
-}
-
 function getStatusBadge(status) {
-  if (status === 'critical') return { label: 'Tugadi', color: 'var(--danger)', bg: '#FEF2F2' };
-  if (status === 'low') return { label: 'Kam qoldi', color: 'var(--warning)', bg: '#FFFBEB' };
-  return { label: 'Yetarli', color: 'var(--success)', bg: '#F0FDF4' };
+  if (status === 'critical') return { label: 'Tugadi', variant: 'danger' };
+  if (status === 'low') return { label: 'Kam qoldi', variant: 'warning' };
+  return { label: 'Yetarli', variant: 'success' };
 }
 
 export default function SellerInventory() {
@@ -50,63 +33,38 @@ export default function SellerInventory() {
   const [editItem, setEditItem] = useState(null);
   const [form, setForm] = useState({ name: '', quantity: '', unit: 'kg', minQuantity: '' });
 
-  const enriched = inventory.map((item) => ({
+  const enriched = inventory.map(item => ({
     ...item,
     status: item.status || getStatus(item.quantity, item.minQuantity),
   }));
 
-  const filtered = enriched.filter((item) => {
-    if (filter === 'low' && item.status !== 'low') return false;
-    if (filter === 'critical' && item.status !== 'critical') return false;
-    if (filter === 'ok' && item.status !== 'ok') return false;
+  const filtered = enriched.filter(item => {
+    if (filter !== 'all' && item.status !== filter) return false;
     if (search && !item.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
 
   const totalItems = enriched.length;
-  const lowCount = enriched.filter((i) => i.status === 'low').length;
-  const criticalCount = enriched.filter((i) => i.status === 'critical').length;
-  const okCount = enriched.filter((i) => i.status === 'ok').length;
+  const lowCount = enriched.filter(i => i.status === 'low').length;
+  const criticalCount = enriched.filter(i => i.status === 'critical').length;
+  const okCount = enriched.filter(i => i.status === 'ok').length;
   const hasCritical = criticalCount > 0;
 
-  const openAdd = () => {
-    setEditItem(null);
-    setForm({ name: '', quantity: '', unit: 'kg', minQuantity: '' });
-    setModal(true);
-  };
-
-  const openEdit = (item) => {
-    setEditItem(item);
-    setForm({
-      name: item.name,
-      quantity: String(item.quantity),
-      unit: item.unit,
-      minQuantity: String(item.minQuantity),
-    });
-    setModal(true);
-  };
+  const openAdd = () => { setEditItem(null); setForm({ name: '', quantity: '', unit: 'kg', minQuantity: '' }); setModal(true); };
+  const openEdit = (item) => { setEditItem(item); setForm({ name: item.name, quantity: String(item.quantity), unit: item.unit, minQuantity: String(item.minQuantity) }); setModal(true); };
 
   const handleSave = () => {
     if (!form.name || !form.quantity || !form.minQuantity) return;
     const qty = Number(form.quantity);
     const min = Number(form.minQuantity);
-    const data = {
-      name: form.name,
-      quantity: qty,
-      unit: form.unit,
-      minQuantity: min,
-      status: getStatus(qty, min),
-    };
-    if (editItem) {
-      updateInventory(editItem.id, data);
-    } else {
-      addInventory(data);
-    }
+    const data = { name: form.name, quantity: qty, unit: form.unit, minQuantity: min, status: getStatus(qty, min) };
+    if (editItem) updateInventory(editItem.id, data);
+    else addInventory(data);
     setModal(false);
   };
 
   const adjustQty = (id, delta) => {
-    const item = enriched.find((i) => i.id === id);
+    const item = enriched.find(i => i.id === id);
     if (!item) return;
     const newQty = Math.max(0, item.quantity + delta);
     updateInventory(id, { quantity: newQty, status: getStatus(newQty, item.minQuantity) });
@@ -118,553 +76,187 @@ export default function SellerInventory() {
     { key: 'critical', label: 'Tugadi' },
   ];
 
-  const s = {
-    page: {
-      minHeight: '100%',
-      background: 'var(--bg)',
-      paddingBottom: 100,
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '16px 16px 12px',
-    },
-    headerLeft: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 12,
-    },
-    backBtn: {
-      width: 36,
-      height: 36,
-      borderRadius: 'var(--radius-sm)',
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      color: 'var(--text)',
-      transition: 'background 0.15s',
-    },
-    title: {
-      fontSize: 20,
-      fontWeight: 700,
-      color: 'var(--text)',
-      margin: 0,
-      letterSpacing: '-0.01em',
-    },
-    addBtn: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 6,
-      padding: '8px 14px',
-      borderRadius: 'var(--radius-sm)',
-      background: 'var(--primary)',
-      color: '#fff',
-      border: 'none',
-      fontSize: 13,
-      fontWeight: 600,
-      cursor: 'pointer',
-      transition: 'opacity 0.15s',
-    },
-    searchWrap: {
-      padding: '0 16px',
-      marginBottom: 12,
-    },
-    searchInner: {
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-    },
-    searchIcon: {
-      position: 'absolute',
-      left: 12,
-      color: 'var(--text-muted)',
-      pointerEvents: 'none',
-    },
-    searchInput: {
-      width: '100%',
-      padding: '10px 12px 10px 38px',
-      borderRadius: 'var(--radius-sm)',
-      border: '1px solid var(--border)',
-      background: 'var(--surface)',
-      color: 'var(--text)',
-      fontSize: 13,
-      outline: 'none',
-      transition: 'border-color 0.15s',
-      boxSizing: 'border-box',
-    },
-    filters: {
-      display: 'flex',
-      gap: 8,
-      padding: '0 16px',
-      marginBottom: 12,
-    },
-    filterBtn: (active) => ({
-      padding: '6px 14px',
-      borderRadius: 999,
-      border: `1px solid ${active ? 'var(--primary)' : 'var(--border)'}`,
-      background: active ? 'var(--primary-light)' : 'var(--surface)',
-      color: active ? 'var(--primary)' : 'var(--text-muted)',
-      fontSize: 12,
-      fontWeight: 600,
-      cursor: 'pointer',
-      transition: 'all 0.15s',
-    }),
-    statsGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: 8,
-      padding: '0 16px',
-      marginBottom: 16,
-    },
-    statCard: {
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-sm)',
-      padding: '12px 8px',
-      textAlign: 'center',
-    },
-    statValue: {
-      fontSize: 18,
-      fontWeight: 700,
-      margin: '2px 0',
-      fontVariantNumeric: 'tabular-nums',
-    },
-    statLabel: {
-      fontSize: 10,
-      fontWeight: 500,
-      color: 'var(--text-muted)',
-    },
-    listWrap: {
-      padding: '0 16px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 10,
-    },
-    emptyState: {
-      textAlign: 'center',
-      padding: '48px 16px',
-      color: 'var(--text-muted)',
-    },
-    card: {
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius)',
-      padding: 16,
-      transition: 'border-color 0.15s',
-    },
-    cardTop: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'space-between',
-      marginBottom: 10,
-    },
-    cardName: {
-      fontSize: 14,
-      fontWeight: 600,
-      color: 'var(--text)',
-      marginBottom: 4,
-    },
-    cardQty: {
-      display: 'flex',
-      alignItems: 'baseline',
-      gap: 6,
-    },
-    qtyNum: {
-      fontSize: 22,
-      fontWeight: 700,
-      color: 'var(--text)',
-      fontVariantNumeric: 'tabular-nums',
-    },
-    qtyUnit: {
-      fontSize: 12,
-      color: 'var(--text-muted)',
-      fontWeight: 500,
-    },
-    qtyMin: {
-      fontSize: 11,
-      color: 'var(--text-muted)',
-    },
-    editBtn: {
-      width: 32,
-      height: 32,
-      borderRadius: 'var(--radius-sm)',
-      border: '1px solid var(--border)',
-      background: 'var(--surface)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      color: 'var(--text-muted)',
-      transition: 'background 0.15s',
-      flexShrink: 0,
-    },
-    progressBar: {
-      height: 4,
-      borderRadius: 2,
-      background: 'var(--surface-active)',
-      overflow: 'hidden',
-      marginBottom: 10,
-    },
-    progressFill: (pct, color) => ({
-      height: '100%',
-      width: `${pct}%`,
-      borderRadius: 2,
-      background: color,
-      transition: 'width 0.6s ease',
-    }),
-    cardBottom: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    cardPct: {
-      fontSize: 11,
-      color: 'var(--text-muted)',
-      fontWeight: 500,
-    },
-    adjustGroup: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8,
-    },
-    adjBtn: {
-      width: 32,
-      height: 32,
-      borderRadius: 'var(--radius-sm)',
-      border: '1px solid var(--border)',
-      background: 'var(--surface)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      transition: 'background 0.15s',
-    },
-    adjQty: {
-      fontSize: 14,
-      fontWeight: 600,
-      color: 'var(--text)',
-      minWidth: 24,
-      textAlign: 'center',
-      fontVariantNumeric: 'tabular-nums',
-    },
-    overlay: {
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(0,0,0,0.4)',
-      backdropFilter: 'blur(6px)',
-      display: 'flex',
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-      zIndex: 100,
-    },
-    sheet: {
-      width: '100%',
-      maxWidth: 480,
-      background: 'var(--surface)',
-      borderRadius: 'var(--radius) var(--radius) 0 0',
-      padding: '24px 20px',
-      border: '1px solid var(--border)',
-      maxHeight: '80vh',
-      overflowY: 'auto',
-    },
-    sheetHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: 20,
-    },
-    sheetTitle: {
-      fontSize: 18,
-      fontWeight: 700,
-      color: 'var(--text)',
-      margin: 0,
-    },
-    sheetClose: {
-      width: 28,
-      height: 28,
-      borderRadius: 'var(--radius-sm)',
-      border: '1px solid var(--border)',
-      background: 'var(--surface)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      color: 'var(--text-muted)',
-    },
-    fieldGroup: {
-      marginBottom: 14,
-    },
-    fieldLabel: {
-      display: 'block',
-      fontSize: 12,
-      fontWeight: 600,
-      color: 'var(--text-secondary)',
-      marginBottom: 6,
-    },
-    fieldRow: {
-      display: 'flex',
-      gap: 10,
-    },
-    fieldInput: {
-      width: '100%',
-      padding: '10px 12px',
-      borderRadius: 'var(--radius-sm)',
-      border: '1px solid var(--border)',
-      background: 'var(--bg)',
-      color: 'var(--text)',
-      fontSize: 13,
-      outline: 'none',
-      transition: 'border-color 0.15s',
-      boxSizing: 'border-box',
-    },
-    fieldSelect: {
-      width: 110,
-      padding: '10px 12px',
-      borderRadius: 'var(--radius-sm)',
-      border: '1px solid var(--border)',
-      background: 'var(--bg)',
-      color: 'var(--text)',
-      fontSize: 13,
-      outline: 'none',
-      transition: 'border-color 0.15s',
-      boxSizing: 'border-box',
-      appearance: 'auto',
-    },
-    saveBtn: {
-      width: '100%',
-      padding: '12px',
-      borderRadius: 'var(--radius-sm)',
-      background: 'var(--primary)',
-      color: '#fff',
-      border: 'none',
-      fontSize: 14,
-      fontWeight: 600,
-      cursor: 'pointer',
-      marginTop: 8,
-      transition: 'opacity 0.15s',
-    },
-  };
+  const navItems = [
+    { label: 'KDS', icon: Home, path: '/seller' },
+    { label: 'Buyurtmalar', icon: ShoppingBag, path: '/seller/orders' },
+    { label: 'Menyu', icon: UtensilsCrossed, path: '/seller/menu' },
+    { label: 'Statistika', icon: BarChart3, path: '/seller/analytics' },
+    { label: 'Sozlamalar', icon: Settings, path: '/seller/settings' },
+  ];
 
   return (
-    <div style={s.page}>
+    <div className="min-h-full bg-bg pb-24">
       {hasCritical && (
-        <div
-          style={{
-            margin: '12px 16px 0',
-            padding: '10px 14px',
-            background: '#FEF2F2',
-            border: '1px solid #FECACA',
-            borderRadius: 'var(--radius-sm)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          className="mx-4 mt-3 px-3.5 py-2.5 bg-danger/5 border border-danger/20 rounded-xl flex items-center gap-2.5"
         >
-          <AlertTriangle size={16} style={{ color: 'var(--danger)', flexShrink: 0 }} />
-          <span style={{ color: 'var(--danger)', fontSize: 13, fontWeight: 600 }}>
-            {criticalCount} ta mahsulot tugadi — zaxirani to'ldiring!
-          </span>
-        </div>
+          <AlertTriangle size={16} className="text-danger flex-shrink-0" />
+          <span className="text-xs font-semibold text-danger">{criticalCount} ta mahsulot tugadi — zaxirani to'ldiring!</span>
+        </motion.div>
       )}
 
-      <div style={s.header}>
-        <div style={s.headerLeft}>
-          <button onClick={() => navigate(-1)} style={s.backBtn}>
-            <ChevronLeft size={18} />
+      <div className="px-4 pt-3 pb-2">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center hover:border-borderStrong transition-all">
+              <ChevronLeft size={18} className="text-text" />
+            </button>
+            <h1 className="text-lg font-bold text-text">Inventarizatsiya</h1>
+          </div>
+          <button onClick={openAdd} className="flex items-center gap-1.5 px-4 py-2.5 bg-primary text-white font-semibold rounded-xl shadow-primary hover:brightness-110 active:scale-[0.97] transition-all text-sm">
+            <Plus size={16} /> Yangi
           </button>
-          <h1 style={s.title}>Inventarizatsiya</h1>
         </div>
-        <button onClick={openAdd} style={s.addBtn}>
-          <Plus size={14} /> Yangi
-        </button>
-      </div>
 
-      <div style={s.searchWrap}>
-        <div style={s.searchInner}>
-          <Search size={15} style={s.searchIcon} />
-          <input
-            style={s.searchInput}
-            placeholder="Qidirish..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className="relative mb-3">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-textMuted pointer-events-none" />
+          <input className="w-full pl-9 pr-3 py-2.5 bg-surface border border-border rounded-xl text-sm text-text outline-none transition-all focus:border-primary/40" placeholder="Qidirish..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-      </div>
 
-      <div style={s.filters}>
-        {filters.map((f) => (
-          <button
-            key={f.key}
-            onClick={() => setFilter(f.key)}
-            style={s.filterBtn(filter === f.key)}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+        <div className="flex gap-2 mb-3">
+          {filters.map(f => (
+            <button key={f.key} onClick={() => setFilter(f.key)}
+              className={cn('px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all',
+                filter === f.key ? 'bg-primary text-white border-primary' : 'bg-surface text-textMuted border-border hover:border-borderStrong'
+              )}
+            >{f.label}</button>
+          ))}
+        </div>
 
-      <div style={s.statsGrid}>
-        <div style={s.statCard}>
-          <Package size={14} style={{ color: 'var(--text-muted)' }} />
-          <div style={{ ...s.statValue, color: 'var(--text)' }}>{totalItems}</div>
-          <div style={s.statLabel}>Jami</div>
+        <div className="grid grid-cols-4 gap-2 mb-4">
+          <div className="bg-surface border border-border rounded-xl p-2.5 text-center">
+            <Package size={14} className="mx-auto text-textMuted mb-1" />
+            <p className="text-lg font-extrabold text-text tabular-nums">{totalItems}</p>
+            <p className="text-[10px] text-textMuted font-medium">Jami</p>
+          </div>
+          <div className="bg-surface border border-border rounded-xl p-2.5 text-center">
+            <AlertTriangle size={14} className="mx-auto text-warning mb-1" />
+            <p className="text-lg font-extrabold text-warning tabular-nums">{lowCount}</p>
+            <p className="text-[10px] text-textMuted font-medium">Kam</p>
+          </div>
+          <div className="bg-surface border border-border rounded-xl p-2.5 text-center">
+            <AlertTriangle size={14} className="mx-auto text-danger mb-1" />
+            <p className="text-lg font-extrabold text-danger tabular-nums">{criticalCount}</p>
+            <p className="text-[10px] text-textMuted font-medium">Tugadi</p>
+          </div>
+          <div className="bg-surface border border-border rounded-xl p-2.5 text-center">
+            <Check size={14} className="mx-auto text-success mb-1" />
+            <p className="text-lg font-extrabold text-success tabular-nums">{okCount}</p>
+            <p className="text-[10px] text-textMuted font-medium">Yetarli</p>
+          </div>
         </div>
-        <div style={s.statCard}>
-          <AlertTriangle size={14} style={{ color: 'var(--warning)' }} />
-          <div style={{ ...s.statValue, color: 'var(--warning)' }}>{lowCount}</div>
-          <div style={s.statLabel}>Kam qoldi</div>
-        </div>
-        <div style={s.statCard}>
-          <AlertTriangle size={14} style={{ color: 'var(--danger)' }} />
-          <div style={{ ...s.statValue, color: 'var(--danger)' }}>{criticalCount}</div>
-          <div style={s.statLabel}>Tugadi</div>
-        </div>
-        <div style={s.statCard}>
-          <Check size={14} style={{ color: 'var(--success)' }} />
-          <div style={{ ...s.statValue, color: 'var(--success)' }}>{okCount}</div>
-          <div style={s.statLabel}>Yetarli</div>
-        </div>
-      </div>
 
-      <div style={s.listWrap}>
-        {filtered.length === 0 && (
-          <div style={s.emptyState}>
-            <Package size={28} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
-            <h3 style={{ color: 'var(--text)', fontWeight: 500, fontSize: 14, marginBottom: 4 }}>
-              {search ? 'Topilmadi' : "Ombor bo'sh"}
-            </h3>
-            <p style={{ fontSize: 12 }}>
-              {search ? "Boshqa so'z bilan qidiring" : 'Mahsulot qo\'shing'}
-            </p>
+        {filtered.length === 0 ? (
+          <div className="bg-surface border border-border rounded-2xl p-10 text-center">
+            <Package size={48} className="mx-auto mb-3 text-borderStrong" />
+            <p className="font-bold text-text">{search ? 'Topilmadi' : "Ombor bo'sh"}</p>
+            <p className="text-sm text-textMuted mt-1">{search ? "Boshqa so'z bilan qidiring" : 'Mahsulot qo\'shing'}</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map(item => {
+              const badge = getStatusBadge(item.status);
+              const pct = Math.min(100, Math.round((item.quantity / (item.minQuantity * 3)) * 100));
+              const barColor = pct > 50 ? 'bg-success' : pct >= 20 ? 'bg-warning' : 'bg-danger';
+
+              return (
+                <motion.div key={item.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  className="bg-surface border border-border rounded-2xl p-4"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-text">{item.name}</span>
+                        <Badge variant={badge.variant} size="xs">{badge.label}</Badge>
+                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-extrabold text-text tabular-nums">{item.quantity}</span>
+                        <span className="text-sm text-textMuted">{item.unit}</span>
+                        <span className="text-xs text-textMuted">min: {item.minQuantity} {item.unit}</span>
+                      </div>
+                    </div>
+                    <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-xl border border-border bg-surface flex items-center justify-center hover:border-borderStrong transition-all">
+                      <Pencil size={13} className="text-textMuted" />
+                    </button>
+                  </div>
+
+                  <div className="h-1.5 rounded-full bg-surfaceActive overflow-hidden mb-3">
+                    <div className={cn('h-full rounded-full transition-all duration-500', barColor)} style={{ width: `${pct}%` }} />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-textMuted">{pct}%</span>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => adjustQty(item.id, -1)} className="w-8 h-8 rounded-xl border border-border flex items-center justify-center hover:bg-danger/5 hover:border-danger/20 transition-all">
+                        <ArrowDown size={14} className="text-danger" />
+                      </button>
+                      <span className="text-base font-bold text-text tabular-nums min-w-[24px] text-center">{item.quantity}</span>
+                      <button onClick={() => adjustQty(item.id, 1)} className="w-8 h-8 rounded-xl border border-border flex items-center justify-center hover:bg-success/5 hover:border-success/20 transition-all">
+                        <ArrowUp size={14} className="text-success" />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
-
-        {filtered.map((item) => {
-          const badge = getStatusBadge(item.status);
-          const pct = getProgressPercent(item.quantity, item.minQuantity);
-          const barColor = getProgressColor(item.quantity, item.minQuantity);
-
-          return (
-            <div key={item.id} style={s.card}>
-              <div style={s.cardTop}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <span style={s.cardName}>{item.name}</span>
-                    <span
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 600,
-                        padding: '2px 8px',
-                        borderRadius: 999,
-                        background: badge.bg,
-                        color: badge.color,
-                      }}
-                    >
-                      {badge.label}
-                    </span>
-                  </div>
-                  <div style={s.cardQty}>
-                    <span style={s.qtyNum}>{item.quantity}</span>
-                    <span style={s.qtyUnit}>{item.unit}</span>
-                    <span style={s.qtyMin}>min: {item.minQuantity} {item.unit}</span>
-                  </div>
-                </div>
-                <button onClick={() => openEdit(item)} style={s.editBtn}>
-                  <Pencil size={13} />
-                </button>
-              </div>
-
-              <div style={s.progressBar}>
-                <div style={s.progressFill(pct, barColor)} />
-              </div>
-
-              <div style={s.cardBottom}>
-                <span style={s.cardPct}>
-                  {pct}% · {item.unit === 'dona' ? 'dona' : item.unit === 'liter' ? 'litr' : 'kg'}
-                </span>
-                <div style={s.adjustGroup}>
-                  <button onClick={() => adjustQty(item.id, -1)} style={s.adjBtn}>
-                    <ArrowDown size={14} style={{ color: 'var(--danger)' }} />
-                  </button>
-                  <span style={s.adjQty}>{item.quantity}</span>
-                  <button onClick={() => adjustQty(item.id, 1)} style={s.adjBtn}>
-                    <ArrowUp size={14} style={{ color: 'var(--success)' }} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
       </div>
 
-      {modal && (
-        <div style={s.overlay} onClick={() => setModal(false)}>
-          <div style={s.sheet} onClick={(e) => e.stopPropagation()}>
-            <div style={s.sheetHeader}>
-              <h2 style={s.sheetTitle}>{editItem ? 'Tahrirlash' : 'Yangi mahsulot'}</h2>
-              <button onClick={() => setModal(false)} style={s.sheetClose}>
-                <X size={16} />
-              </button>
-            </div>
-
-            <div>
-              <div style={s.fieldGroup}>
-                <label style={s.fieldLabel}>Nomi</label>
-                <input
-                  style={s.fieldInput}
-                  placeholder="Mahsulot nomi"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
+      <AnimatePresence>
+        {modal && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setModal(false)} className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-lg bg-surface rounded-t-3xl border border-border shadow-lg max-h-[80vh] overflow-y-auto"
+            >
+              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+                <h2 className="font-bold text-text">{editItem ? 'Tahrirlash' : 'Yangi mahsulot'}</h2>
+                <button onClick={() => setModal(false)} className="w-8 h-8 rounded-xl bg-surfaceHover border border-border flex items-center justify-center"><X size={16} className="text-textMuted" /></button>
               </div>
-
-              <div style={s.fieldRow}>
-                <div style={{ ...s.fieldGroup, flex: 1 }}>
-                  <label style={s.fieldLabel}>Miqdor</label>
-                  <input
-                    style={s.fieldInput}
-                    type="number"
-                    placeholder="0"
-                    value={form.quantity}
-                    onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-                  />
+              <div className="p-5 space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Nomi</label>
+                  <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" placeholder="Mahsulot nomi" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                 </div>
-                <div style={{ ...s.fieldGroup, width: 110 }}>
-                  <label style={s.fieldLabel}>O'lchov</label>
-                  <select
-                    style={s.fieldSelect}
-                    value={form.unit}
-                    onChange={(e) => setForm({ ...form, unit: e.target.value })}
-                  >
-                    {UNITS.map((u) => (
-                      <option key={u} value={u}>{u}</option>
-                    ))}
-                  </select>
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <label className="block text-xs font-semibold text-textSecondary mb-1.5">Miqdor</label>
+                    <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="number" placeholder="0" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
+                  </div>
+                  <div className="w-28">
+                    <label className="block text-xs font-semibold text-textSecondary mb-1.5">O'lchov</label>
+                    <select className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all appearance-none" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
+                      {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+                    </select>
+                  </div>
                 </div>
+                <div>
+                  <label className="block text-xs font-semibold text-textSecondary mb-1.5">Min. miqdor</label>
+                  <input className="w-full px-3.5 py-2.5 bg-surfaceHover border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="number" placeholder="Eng kam miqdor" value={form.minQuantity} onChange={(e) => setForm({ ...form, minQuantity: e.target.value })} />
+                </div>
+                <button onClick={handleSave} className="w-full py-3 rounded-xl bg-primary text-white font-semibold shadow-primary hover:brightness-110 transition-all text-sm">
+                  {editItem ? 'Saqlash' : "Qo'shish"}
+                </button>
               </div>
-
-              <div style={s.fieldGroup}>
-                <label style={s.fieldLabel}>Min. miqdor</label>
-                <input
-                  style={s.fieldInput}
-                  type="number"
-                  placeholder="Eng kam miqdor"
-                  value={form.minQuantity}
-                  onChange={(e) => setForm({ ...form, minQuantity: e.target.value })}
-                />
-              </div>
-
-              <button onClick={handleSave} style={s.saveBtn}>
-                {editItem ? 'Saqlash' : "Qo'shish"}
-              </button>
-            </div>
+            </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around h-14 max-w-lg mx-auto">
+          {navItems.map((item) => (
+            <button key={item.path} onClick={() => navigate(item.path)}
+              className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full border-none bg-transparent cursor-pointer transition-all"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <item.icon size={22} strokeWidth={1.8} />
+              <span className="text-[10px] font-medium">{item.label}</span>
+            </button>
+          ))}
         </div>
-      )}
+      </nav>
     </div>
   );
 }

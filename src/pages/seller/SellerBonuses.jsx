@@ -1,349 +1,125 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { cn } from '../../utils/cn';
+
 import {
-  ChevronLeft,
-  Plus,
-  Gift,
-  Percent,
-  Phone,
-  CircleDollarSign,
-  Inbox,
+  ChevronLeft, Plus, Gift, Percent, Phone, CircleDollarSign, Inbox,
+  Home, ShoppingBag, UtensilsCrossed, BarChart3, Settings
 } from 'lucide-react';
 
 export default function SellerBonuses() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [phone, setPhone] = useState('');
   const [amount, setAmount] = useState('');
 
-  const s = {
-    page: {
-      minHeight: '100%',
-      background: 'var(--bg)',
-      paddingBottom: 100,
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '16px 16px 12px',
-    },
-    headerLeft: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 12,
-    },
-    backBtn: {
-      width: 36,
-      height: 36,
-      borderRadius: 'var(--radius-sm)',
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      color: 'var(--text)',
-    },
-    title: {
-      fontSize: 20,
-      fontWeight: 700,
-      color: 'var(--text)',
-      margin: 0,
-      letterSpacing: '-0.01em',
-    },
-    content: {
-      padding: '0 16px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 16,
-    },
-    heroCard: {
-      background: 'linear-gradient(135deg, var(--primary) 0%, #FB923C 100%)',
-      borderRadius: 'var(--radius)',
-      padding: 24,
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    heroGlow: {
-      position: 'absolute',
-      top: -20,
-      right: -20,
-      width: 100,
-      height: 100,
-      borderRadius: '50%',
-      background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)',
-      pointerEvents: 'none',
-    },
-    heroIcon: {
-      width: 44,
-      height: 44,
-      borderRadius: 12,
-      background: 'rgba(255,255,255,0.2)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 12,
-    },
-    heroTitle: {
-      fontSize: 18,
-      fontWeight: 700,
-      color: '#fff',
-      margin: '0 0 4px 0',
-    },
-    heroDesc: {
-      fontSize: 13,
-      color: 'rgba(255,255,255,0.8)',
-      margin: 0,
-      lineHeight: 1.4,
-    },
-    formCard: {
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius)',
-      padding: 20,
-    },
-    formTitle: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: 'var(--text)',
-      margin: '0 0 16px 0',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8,
-    },
-    fieldGroup: {
-      marginBottom: 14,
-    },
-    fieldLabel: {
-      display: 'block',
-      fontSize: 12,
-      fontWeight: 600,
-      color: 'var(--text-secondary)',
-      marginBottom: 6,
-    },
-    phoneRow: {
-      display: 'flex',
-      alignItems: 'center',
-      background: 'var(--bg)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-sm)',
-      overflow: 'hidden',
-      transition: 'border-color 0.15s',
-    },
-    phonePrefix: {
-      padding: '10px 0 10px 12px',
-      fontSize: 13,
-      fontWeight: 600,
-      color: 'var(--text-muted)',
-      background: 'var(--surface-active)',
-      borderRight: '1px solid var(--border)',
-      flexShrink: 0,
-    },
-    phoneInput: {
-      flex: 1,
-      padding: '10px 12px',
-      border: 'none',
-      background: 'transparent',
-      color: 'var(--text)',
-      fontSize: 13,
-      outline: 'none',
-    },
-    amountInput: {
-      width: '100%',
-      padding: '10px 12px',
-      background: 'var(--bg)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-sm)',
-      color: 'var(--text)',
-      fontSize: 13,
-      outline: 'none',
-      transition: 'border-color 0.15s',
-      boxSizing: 'border-box',
-    },
-    submitBtn: {
-      width: '100%',
-      padding: '12px',
-      background: 'var(--primary)',
-      border: 'none',
-      borderRadius: 'var(--radius-sm)',
-      color: '#fff',
-      fontSize: 14,
-      fontWeight: 600,
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 8,
-      transition: 'opacity 0.15s',
-      marginTop: 4,
-    },
-    emptyCard: {
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius)',
-      padding: 20,
-    },
-    emptyTitle: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: 'var(--text)',
-      margin: '0 0 12px 0',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8,
-    },
-    emptyState: {
-      textAlign: 'center',
-      padding: '24px 0',
-    },
-    historyCard: {
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius)',
-      padding: 20,
-    },
-    historyTitle: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: 'var(--text)',
-      margin: '0 0 14px 0',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8,
-    },
-    statGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: 8,
-    },
-    statItem: {
-      background: 'var(--bg)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-sm)',
-      padding: '12px 8px',
-      textAlign: 'center',
-    },
-    statValue: {
-      fontSize: 18,
-      fontWeight: 700,
-      color: 'var(--text)',
-      fontVariantNumeric: 'tabular-nums',
-      margin: '2px 0',
-    },
-    statLabel: {
-      fontSize: 10,
-      fontWeight: 500,
-      color: 'var(--text-muted)',
-    },
-  };
+  const navItems = [
+    { label: 'KDS', icon: Home, path: '/seller' },
+    { label: 'Buyurtmalar', icon: ShoppingBag, path: '/seller/orders' },
+    { label: 'Menyu', icon: UtensilsCrossed, path: '/seller/menu' },
+    { label: 'Statistika', icon: BarChart3, path: '/seller/analytics' },
+    { label: 'Sozlamalar', icon: Settings, path: '/seller/settings' },
+  ];
 
   return (
-    <div style={s.page}>
-      <div style={s.header}>
-        <div style={s.headerLeft}>
-          <button onClick={() => navigate(-1)} style={s.backBtn}>
-            <ChevronLeft size={18} />
+    <div className="min-h-full bg-bg pb-24">
+      <div className="px-4 pt-3 pb-2">
+        <div className="flex items-center gap-3 mb-4">
+          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center hover:border-borderStrong transition-all">
+            <ChevronLeft size={18} className="text-text" />
           </button>
-          <h1 style={s.title}>Bonuslar</h1>
-        </div>
-      </div>
-
-      <div style={s.content}>
-        <div style={s.heroCard}>
-          <div style={s.heroGlow} />
-          <div style={s.heroIcon}>
-            <Gift size={22} style={{ color: '#fff' }} />
-          </div>
-          <h2 style={s.heroTitle}>Bonus dasturi</h2>
-          <p style={s.heroDesc}>
-            Mijozlarga bonus qo'shing va ularni rag'batlantiring
-          </p>
+          <h1 className="text-lg font-bold text-text">Bonuslar</h1>
         </div>
 
-        <div style={s.statGrid}>
-          <div style={s.statItem}>
-            <CircleDollarSign size={16} style={{ color: 'var(--primary)' }} />
-            <div style={s.statValue}>0</div>
-            <div style={s.statLabel}>Berilgan</div>
+        <div className="bg-gradient-to-br from-primary to-orange-400 rounded-2xl p-5 mb-4 relative overflow-hidden">
+          <div className="absolute -top-5 -right-5 w-24 h-24 rounded-full bg-white/10 pointer-events-none" />
+          <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+            <Gift size={22} className="text-white" />
           </div>
-          <div style={s.statItem}>
-            <Percent size={16} style={{ color: 'var(--success)' }} />
-            <div style={s.statValue}>0</div>
-            <div style={s.statLabel}>Ishlatilgan</div>
+          <h2 className="text-lg font-bold text-white mb-1">Bonus dasturi</h2>
+          <p className="text-sm text-white/80">Mijozlarga bonus qo'shing va ularni rag'batlantiring</p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="bg-surface border border-border rounded-xl p-3 text-center">
+            <CircleDollarSign size={16} className="mx-auto text-primary mb-1" />
+            <p className="text-lg font-extrabold text-text tabular-nums">0</p>
+            <p className="text-[10px] text-textMuted font-medium">Berilgan</p>
           </div>
-          <div style={s.statItem}>
-            <Gift size={16} style={{ color: 'var(--warning)' }} />
-            <div style={s.statValue}>0</div>
-            <div style={s.statLabel}>Faol</div>
+          <div className="bg-surface border border-border rounded-xl p-3 text-center">
+            <Percent size={16} className="mx-auto text-success mb-1" />
+            <p className="text-lg font-extrabold text-text tabular-nums">0</p>
+            <p className="text-[10px] text-textMuted font-medium">Ishlatilgan</p>
+          </div>
+          <div className="bg-surface border border-border rounded-xl p-3 text-center">
+            <Gift size={16} className="mx-auto text-warning mb-1" />
+            <p className="text-lg font-extrabold text-text tabular-nums">0</p>
+            <p className="text-[10px] text-textMuted font-medium">Faol</p>
           </div>
         </div>
 
-        <div style={s.formCard}>
-          <h3 style={s.formTitle}>
-            <Plus size={16} style={{ color: 'var(--primary)' }} />
-            Mijozga bonus qo'shish
-          </h3>
+        <div className="bg-surface border border-border rounded-2xl p-4 mb-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Plus size={16} className="text-primary" />
+            <span className="text-sm font-bold text-text">Mijozga bonus qo'shish</span>
+          </div>
 
-          <div style={s.fieldGroup}>
-            <label style={s.fieldLabel}>Telefon raqam</label>
-            <div style={s.phoneRow}>
-              <span style={s.phonePrefix}>+998</span>
-              <input
-                style={s.phoneInput}
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="(XX) XXX-XX-XX"
-              />
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-semibold text-textSecondary mb-1.5">Telefon raqam</label>
+              <div className="flex items-center bg-bg border border-border rounded-xl overflow-hidden">
+                <span className="px-3 py-2.5 text-sm font-semibold text-textMuted bg-surfaceActive border-r border-border">+998</span>
+                <input className="flex-1 px-3 py-2.5 bg-transparent border-none text-sm text-text outline-none" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(XX) XXX-XX-XX" />
+              </div>
             </div>
-          </div>
-
-          <div style={{ ...s.fieldGroup, marginBottom: 0 }}>
-            <label style={s.fieldLabel}>Bonus miqdori (so'm)</label>
-            <input
-              style={s.amountInput}
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0"
-            />
-          </div>
-
-          <button style={{ ...s.submitBtn, marginTop: 16 }}>
-            <Plus size={16} />
-            Qo'shish
-          </button>
-        </div>
-
-        <div style={s.historyCard}>
-          <h3 style={s.historyTitle}>
-            <Percent size={16} style={{ color: 'var(--success)' }} />
-            Tarix
-          </h3>
-          <div style={s.emptyState}>
-            <Inbox size={32} style={{ color: 'var(--text-muted)', opacity: 0.4, margin: '0 auto 8px', display: 'block' }} />
-            <p style={{ color: 'var(--text-muted)', fontSize: 13, margin: 0, fontWeight: 500 }}>
-              Hozircha bonus tarixi yo'q
-            </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: 12, margin: '4px 0 0 0' }}>
-              Birinchi bonusni qo'shing
-            </p>
+            <div>
+              <label className="block text-xs font-semibold text-textSecondary mb-1.5">Bonus miqdori (so'm)</label>
+              <input className="w-full px-3.5 py-2.5 bg-bg border border-border rounded-xl text-sm text-text outline-none focus:border-primary/40 transition-all" type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" />
+            </div>
+            <button className="w-full py-3 rounded-xl bg-primary text-white font-semibold shadow-primary hover:brightness-110 active:scale-[0.97] transition-all text-sm flex items-center justify-center gap-2">
+              <Plus size={16} /> Qo'shish
+            </button>
           </div>
         </div>
 
-        <div style={s.emptyCard}>
-          <h3 style={s.emptyTitle}>
-            <Percent size={16} style={{ color: 'var(--warning)' }} />
-            Faol chegirmalar
-          </h3>
-          <div style={{ ...s.emptyState, padding: '16px 0' }}>
-            <Inbox size={28} style={{ color: 'var(--text-muted)', opacity: 0.4, margin: '0 auto 6px', display: 'block' }} />
-            <p style={{ color: 'var(--text-muted)', fontSize: 12, margin: 0 }}>
-              Hozircha faol chegirmalar yo'q
-            </p>
+        <div className="bg-surface border border-border rounded-2xl p-4 mb-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Percent size={16} className="text-success" />
+            <span className="text-sm font-bold text-text">Tarix</span>
+          </div>
+          <div className="text-center py-6">
+            <Inbox size={32} className="mx-auto mb-2 text-borderStrong" />
+            <p className="text-sm font-medium text-textMuted">Hozircha bonus tarixi yo'q</p>
+            <p className="text-xs text-textMuted mt-1">Birinchi bonusni qo'shing</p>
+          </div>
+        </div>
+
+        <div className="bg-surface border border-border rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Percent size={16} className="text-warning" />
+            <span className="text-sm font-bold text-text">Faol chegirmalar</span>
+          </div>
+          <div className="text-center py-4">
+            <Inbox size={28} className="mx-auto mb-2 text-borderStrong" />
+            <p className="text-xs text-textMuted">Hozircha faol chegirmalar yo'q</p>
           </div>
         </div>
       </div>
+
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around h-14 max-w-lg mx-auto">
+          {navItems.map((item) => (
+            <button key={item.path} onClick={() => navigate(item.path)}
+              className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full border-none bg-transparent cursor-pointer transition-all"
+              style={{ color: item.path === location.pathname ? 'var(--primary)' : 'var(--text-muted)' }}
+            >
+              <item.icon size={22} strokeWidth={item.path === location.pathname ? 2.2 : 1.8} />
+              <span className="text-[10px] font-semibold" style={{ fontWeight: item.path === location.pathname ? 700 : 500 }}>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }
