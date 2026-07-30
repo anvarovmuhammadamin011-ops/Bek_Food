@@ -5,7 +5,6 @@ import BottomNav from './components/BottomNav';
 // Customer pages
 import SplashScreen from './pages/SplashScreen';
 import LoginPage from './pages/LoginPage';
-import VerifyPage from './pages/VerifyPage';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import RestaurantPage from './pages/RestaurantPage';
@@ -75,7 +74,6 @@ export default function App() {
       <Routes>
         <Route path="/splash" element={<AppShell><SplashScreen /></AppShell>} />
         <Route path="/login" element={<AppShell><LoginPage /></AppShell>} />
-        <Route path="/verify" element={<AppShell><VerifyPage /></AppShell>} />
 
         {/* Customer routes */}
         <Route path="/" element={<CustomerLayout><HomePage /></CustomerLayout>} />

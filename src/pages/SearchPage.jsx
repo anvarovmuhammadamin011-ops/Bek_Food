@@ -47,7 +47,7 @@ export default function SearchPage() {
             <div>
               <h3 className="subheading" style={{ marginBottom: 10 }}>Mashhur</h3>
               <div className="flex flex-wrap" style={{ gap: 8 }}>
-                {['Shashlik', 'Lavash', 'Gamburger', 'Kartoshka Fri'].map((s, i) => (
+                {['Hot-dog', 'Lavash', 'Gamburger', 'Doner', 'Pitsa'].map((s, i) => (
                   <button key={i} onClick={() => setQuery(s)} className="badge badge-primary" style={{ cursor: 'pointer', padding: '6px 14px', fontSize: 12 }}>{s}</button>
                 ))}
               </div>

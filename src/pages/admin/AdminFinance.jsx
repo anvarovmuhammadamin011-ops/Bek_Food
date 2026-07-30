@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import useStore from '../../store/useStore';
 import {
   DollarSign,
@@ -18,15 +18,15 @@ const formatCurrency = (n) =>
   n.toLocaleString('uz-UZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
 const transactions = [
-  { id: 1, type: 'income', desc: 'Bekfood Set #1042', amount: 85000, time: '14:32' },
+  { id: 1, type: 'income', desc: 'Hot-dog 2x (Double) #1042', amount: 85000, time: '14:32' },
   { id: 2, type: 'expense', desc: "Go'ht yetkazish", amount: -320000, time: '13:15' },
-  { id: 3, type: 'income', desc: 'Lavash Classic #1041', amount: 45000, time: '12:48' },
-  { id: 4, type: 'income', desc: 'Shashlik Set #1040', amount: 120000, time: '12:10' },
+  { id: 3, type: 'income', desc: 'Lavash #1041', amount: 45000, time: '12:48' },
+  { id: 4, type: 'income', desc: 'Hot-dog oddiy #1040', amount: 120000, time: '12:10' },
   { id: 5, type: 'expense', desc: "Kommunal to'lov", amount: -180000, time: '11:30' },
-  { id: 6, type: 'income', desc: 'Burger King #1039', amount: 65000, time: '10:55' },
+  { id: 6, type: 'income', desc: 'Cheeseburger #1039', amount: 65000, time: '10:55' },
   { id: 7, type: 'expense', desc: 'Xodimlar ish haqi', amount: -4500000, time: '10:00' },
-  { id: 8, type: 'income', desc: 'Pizza Margherita #1038', amount: 72000, time: '09:42' },
-  { id: 9, type: 'income', desc: 'Combo Set #1037', amount: 95000, time: '09:15' },
+  { id: 8, type: 'income', desc: 'Cheeseburger #1038', amount: 72000, time: '09:42' },
+  { id: 9, type: 'income', desc: 'Hot-dog 2x (Double) #1037', amount: 95000, time: '09:15' },
   { id: 10, type: 'expense', desc: "Mevalar sotib olish", amount: -250000, time: '08:30' },
 ];
 
@@ -407,3 +407,4 @@ const AdminFinance = () => {
 };
 
 export default AdminFinance;
+

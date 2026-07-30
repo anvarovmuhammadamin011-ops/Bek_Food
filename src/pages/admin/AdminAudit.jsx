@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
 import {
   Search,
@@ -26,7 +26,7 @@ const mockAuditLogs = [
     description: 'Yangi menyu elementi "Ribeye Steak 300g" yaratildi',
     ipAddress: '192.168.1.45',
     device: 'Chrome 120 / Windows 11',
-    details: { target: 'Menyu', oldValue: null, newValue: "Ribeye Steak 300g — 185,000 so'm" },
+    details: { target: 'Menyu', oldValue: null, newValue: "Ribeye Steak 300g â€” 185,000 so'm" },
   },
   {
     id: 2,
@@ -43,10 +43,10 @@ const mockAuditLogs = [
     timestamp: '2026-07-28T12:45:00',
     user: { name: 'Jasur Toshev', avatar: 'JT', role: 'Admin' },
     action: "O'chirildi",
-    description: '"Eski Lavash" menyu elementi o\'chirildi',
+    description: '"Eski Hot-dog" menyu elementi o\'chirildi',
     ipAddress: '10.0.0.12',
     device: 'Firefox 121 / Ubuntu',
-    details: { target: 'Menyu', oldValue: "Eski Lavash — 45,000 so'm", newValue: null },
+    details: { target: 'Menyu', oldValue: "Eski Hot-dog â€” 45,000 so'm", newValue: null },
   },
   {
     id: 4,
@@ -93,20 +93,20 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T20:40:00',
     user: { name: 'Sardor Raximov', avatar: 'SR', role: 'Admin' },
     action: 'Yaratildi',
-    description: "Yangi filial \"Bekfood Denov\" tizimga qo'shildi",
+    description: "Yangi filial \"BEK FOOD Denov\" tizimga qo'shildi",
     ipAddress: '192.168.1.45',
     device: 'Chrome 120 / Windows 11',
-    details: { target: 'Filial', oldValue: null, newValue: 'Bekfood Denov — Buxoro viloyati' },
+    details: { target: 'Filial', oldValue: null, newValue: 'BEK FOOD Denov' },
   },
   {
     id: 9,
     timestamp: '2026-07-27T18:05:00',
     user: { name: 'Malika Nazarova', avatar: 'MN', role: 'Kassir' },
     action: "O'zgartirildi",
-    description: "Buyurtma #1039 uchun to'lov kiritildi — 375,000 so'm",
+    description: "Buyurtma #1039 uchun to'lov kiritildi â€” 375,000 so'm",
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
-    details: { target: 'Buyurtma #1039', oldValue: "To'lanmagan", newValue: "To'langan — 375,000 so'm" },
+    details: { target: 'Buyurtma #1039', oldValue: "To'lanmagan", newValue: "To'langan â€” 375,000 so'm" },
   },
   {
     id: 10,
@@ -133,17 +133,17 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T11:10:00',
     user: { name: 'Jasur Toshev', avatar: 'JT', role: 'Admin' },
     action: 'Kirish',
-    description: 'Tizimga kirish — birinchi muvaffaqiyatsiz urinish',
+    description: 'Tizimga kirish â€” birinchi muvaffaqiyatsiz urinish',
     ipAddress: '10.0.0.12',
     device: 'Firefox 121 / Ubuntu',
-    details: { target: 'Tizim', oldValue: null, newValue: "Noto'g'ri parol — xavfli kirish" },
+    details: { target: 'Tizim', oldValue: null, newValue: "Noto'g'ri parol â€” xavfli kirish" },
   },
   {
     id: 13,
     timestamp: '2026-07-26T19:35:00',
     user: { name: 'Malika Nazarova', avatar: 'MN', role: 'Kassir' },
     action: "O'zgartirildi",
-    description: "Buyurtma #1030 ga qo'shimcha mahsulot qo'shildi — \"Cezar Salat\"",
+    description: "Buyurtma #1030 ga qo'shimcha mahsulot qo'shildi â€” \"Cezar Salat\"",
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
     details: { target: 'Buyurtma #1030', oldValue: '3 ta mahsulot', newValue: '4 ta mahsulot' },
@@ -153,10 +153,10 @@ const mockAuditLogs = [
     timestamp: '2026-07-26T16:20:00',
     user: { name: 'Nilufar Karimova', avatar: 'NK', role: 'Manager' },
     action: 'Yaratildi',
-    description: "Yangi xodim \"Alisher Abduvaliev\" tizimga qo'shildi — Oshpaz",
+    description: "Yangi xodim \"Alisher Abduvaliev\" tizimga qo'shildi â€” Oshpaz",
     ipAddress: '192.168.1.62',
     device: 'Safari 17 / macOS',
-    details: { target: 'Xodim', oldValue: null, newValue: 'Alisher Abduvaliev — Oshpaz' },
+    details: { target: 'Xodim', oldValue: null, newValue: 'Alisher Abduvaliev â€” Oshpaz' },
   },
   {
     id: 15,
@@ -869,11 +869,11 @@ const AdminAudit = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px' }}>
                     <span style={{ color: 'var(--danger)', textDecoration: 'line-through' }}>
-                      {selectedEntry.details.oldValue || '—'}
+                      {selectedEntry.details.oldValue || 'â€”'}
                     </span>
-                    <span style={{ color: 'var(--text-muted)' }}>→</span>
+                    <span style={{ color: 'var(--text-muted)' }}>â†’</span>
                     <span style={{ color: 'var(--success)' }}>
-                      {selectedEntry.details.newValue || '—'}
+                      {selectedEntry.details.newValue || 'â€”'}
                     </span>
                   </div>
                 </div>
@@ -887,3 +887,6 @@ const AdminAudit = () => {
 };
 
 export default AdminAudit;
+
+
+

@@ -19,7 +19,7 @@ export default function SplashScreen() {
           <img
             src="/logo.png"
             alt="BEK FOOD"
-            style={{ width: 48, height: 48, objectFit: 'contain' }}
+            style={{ width: 48, height: 48, objectFit: 'contain', borderRadius: '50%' }}
             onError={(e) => {
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';

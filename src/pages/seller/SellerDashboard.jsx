@@ -566,13 +566,16 @@ export default function SellerDashboard() {
       <div style={s.scrollArea}>
         <div style={s.content}>
           <div style={s.header}>
-            <div>
-              <h1 style={s.headerTitle}>Sotuvchi paneli</h1>
-              {user && (
-                <p style={s.headerSub}>
-                  {user.name || user.phone || 'Sotuvchi'}
-                </p>
-              )}
+            <div className="flex items-center" style={{ gap: 10 }}>
+              <img src="/logo.png" alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover' }} />
+              <div>
+                <h1 style={s.headerTitle}>Sotuvchi paneli</h1>
+                {user && (
+                  <p style={s.headerSub}>
+                    {user.name || user.phone || 'Sotuvchi'}
+                  </p>
+                )}
+              </div>
             </div>
             <div style={s.headerActions}>
               <button

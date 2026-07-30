@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import useStore from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -169,11 +169,11 @@ const AdminDashboard = () => {
   const weekLabels = ['Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan', 'Yak'];
 
   const topProducts = [
-    { rank: 1, name: 'Bekfood Set', sold: 342, revenue: 45200000 },
-    { rank: 2, name: 'Lavash Classic', sold: 289, revenue: 28900000 },
-    { rank: 3, name: 'Shashlik Set', sold: 234, revenue: 35100000 },
-    { rank: 4, name: 'Burger King', sold: 198, revenue: 23760000 },
-    { rank: 5, name: 'Pizza Margherita', sold: 167, revenue: 21710000 },
+    { rank: 1, name: 'Hot-dog 2x (Double)', sold: 342, revenue: 45200000 },
+    { rank: 2, name: 'Lavash', sold: 289, revenue: 28900000 },
+    { rank: 3, name: 'Hot-dog oddiy', sold: 234, revenue: 35100000 },
+    { rank: 4, name: 'Cheeseburger', sold: 198, revenue: 23760000 },
+    { rank: 5, name: 'Cheeseburger', sold: 167, revenue: 21710000 },
   ];
 
   const quickActions = [
@@ -484,3 +484,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+

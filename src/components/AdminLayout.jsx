@@ -21,7 +21,6 @@ import {
   X,
   Bell,
   ChevronRight,
-  Store,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -110,14 +109,7 @@ export default function AdminLayout({ children }) {
         {/* Logo */}
         <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              width: 36, height: 36, borderRadius: 10,
-              background: 'var(--primary)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: 'var(--shadow-primary)',
-            }}>
-              <Store size={18} color="#fff" />
-            </div>
+            <img src="/logo.png" alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} />
             <div>
               <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', lineHeight: 1.2, letterSpacing: '-.02em' }}>BEK FOOD</p>
               <p style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>Admin panel</p>
@@ -193,12 +185,7 @@ export default function AdminLayout({ children }) {
             <Menu size={22} />
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: 8,
-              background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Store size={16} color="#fff" />
-            </div>
+            <img src="/logo.png" alt="" style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }} />
             <span style={{ fontSize: 14, fontWeight: 700 }}>BEK FOOD</span>
           </div>
           <div style={{ position: 'relative' }}>

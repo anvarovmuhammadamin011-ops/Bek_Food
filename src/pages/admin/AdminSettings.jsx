@@ -23,10 +23,10 @@ const AdminSettings = () => {
   const { user, logout } = useStore();
 
   const [restaurantInfo, setRestaurantInfo] = useState({
-    name: 'Bekfood Steakhouse',
+    name: 'BEK FOOD',
     phone: '+998 90 123 45 67',
     telegram: '@bekfood_uz',
-    instagram: '@bekfood_stakehouse',
+    instagram: '@bekfood_uz',
     facebook: '',
   });
 
@@ -53,9 +53,9 @@ const AdminSettings = () => {
   });
 
   const [seo, setSeo] = useState({
-    siteTitle: 'Bekfood - Eng mazali taomlar',
-    description: 'Bekfood restorani - sifatli va mazali taomlar, tez yetkazib berish xizmati.',
-    keywords: "ovqat, restoran, yetkazib berish, Bekfood, Toshkent",
+    siteTitle: 'BEK FOOD - Eng mazali taomlar',
+    description: 'BEK FOOD - sifatli va mazali taomlar, tez yetkazib berish xizmati.',
+    keywords: "ovqat, restoran, yetkazib berish, BEK FOOD, Toshkent",
   });
 
   const [logoPreview, setLogoPreview] = useState(null);

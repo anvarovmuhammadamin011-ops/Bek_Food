@@ -27,9 +27,12 @@ export default function HomePage() {
       <div className="px-4">
         {/* Header */}
         <div className="flex items-center justify-between animate-fade-in" style={{ padding: '16px 0' }}>
-          <div>
-            <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 24, letterSpacing: '-.03em', lineHeight: 1.2 }}>Bek Food</div>
-            <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 2 }}>Chinobod, O'zbekiston</div>
+          <div className="flex items-center" style={{ gap: 10 }}>
+            <img src="/logo.png" alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
+            <div>
+              <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 24, letterSpacing: '-.03em', lineHeight: 1.2 }}>Bek Food</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 2 }}>Chinobod, O'zbekiston</div>
+            </div>
           </div>
           <div className="flex items-center" style={{ gap: 8 }}>
             <button onClick={() => navigate('/profile')} className="card card-interactive" style={{ width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

@@ -51,7 +51,7 @@ const SellerSettings = () => {
   const { user, logout } = useStore();
   const navigate = useNavigate();
 
-  const [restaurantName, setRestaurantName] = useState('Bekfood Restoran');
+  const [restaurantName, setRestaurantName] = useState('BEK FOOD');
   const [phone, setPhone] = useState('+998 90 123 45 67');
   const [workTime, setWorkTime] = useState('10:00 - 23:00');
   const [minOrder, setMinOrder] = useState("0 so'm");

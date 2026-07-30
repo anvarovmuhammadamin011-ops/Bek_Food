@@ -120,18 +120,21 @@ export default function CourierDashboard() {
           justifyContent: 'space-between',
           marginBottom: 24,
         }}>
-          <div>
-            <h1 style={{
-              color: 'var(--text)',
-              fontSize: 22,
-              fontWeight: 700,
-              margin: 0,
-            }}>
-              Kuryer paneli
-            </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 2 }}>
-              {user?.name || 'Kuryer'}
-            </p>
+          <div className="flex items-center" style={{ gap: 10 }}>
+            <img src="/logo.png" alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover' }} />
+            <div>
+              <h1 style={{
+                color: 'var(--text)',
+                fontSize: 22,
+                fontWeight: 700,
+                margin: 0,
+              }}>
+                Kuryer paneli
+              </h1>
+              <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 2 }}>
+                {user?.name || 'Kuryer'}
+              </p>
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button

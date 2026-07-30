@@ -1,21 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Clock, Wallet, Check, ChevronLeft, MessageSquare } from 'lucide-react';
+import { MapPin, Clock, Wallet, Check, ChevronLeft, MessageSquare, Phone } from 'lucide-react';
 import useStore from '../store/useStore';
 
 const STEPS = ['Manzil', "To'lov", 'Tasdiqlash'];
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { cart, getCartTotal, selectedPaymentMethod, setPaymentMethod, placeOrder, addresses } = useStore();
+  const { cart, getCartTotal, selectedPaymentMethod, setPaymentMethod, placeOrder, addresses, user } = useStore();
   const [notes, setNotes] = useState('');
   const [selectedAddress, setSelectedAddress] = useState(addresses.find((a) => a.isDefault)?.id || addresses[0]?.id);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [contactPhone, setContactPhone] = useState(user?.phone || '');
   const totals = getCartTotal();
+  const needsPhone = !user?.phone;
 
   const handlePlaceOrder = () => {
+    if (needsPhone && contactPhone.replace(/\D/g, '').length < 9) return;
     setLoading(true);
     setTimeout(() => {
       placeOrder(selectedPaymentMethod, addresses.find((a) => a.id === selectedAddress)?.fullAddress || '', notes);
@@ -79,7 +82,21 @@ export default function CheckoutPage() {
 
       <div className="p-4 space-y-4">
         {step === 0 && (
-          <div className="card p-4 animate-fade-in-up">
+          <>
+            {needsPhone && (
+              <div className="card p-4 animate-fade-in-up">
+                <div className="flex items-center" style={{ gap: 8, marginBottom: 14 }}>
+                  <Phone size={18} color="var(--primary)" />
+                  <h3 className="subheading">Telefon raqam</h3>
+                </div>
+                <div className="input-group">
+                  <span className="input-group-icon" style={{ fontWeight: 600, color: 'var(--text-muted)' }}>+998</span>
+                  <input type="tel" inputMode="numeric" value={contactPhone.replace(/^998/, '')} onChange={(e) => setContactPhone('998' + e.target.value.replace(/\D/g, '').slice(0, 9))} placeholder="__ ___ __ __" className="input" style={{ paddingLeft: 60, fontSize: 16, fontWeight: 500, letterSpacing: '.05em' }} />
+                </div>
+                <div style={{ color: 'var(--text-dim)', fontSize: 11, marginTop: 8 }}>Yetkazib berish uchun bog'lanish raqami</div>
+              </div>
+            )}
+            <div className="card p-4 animate-fade-in-up">
             <div className="flex items-center" style={{ gap: 8, marginBottom: 14 }}>
               <MapPin size={18} color="var(--primary)" />
               <h3 className="subheading">Yetkazish manzili</h3>
@@ -106,6 +123,7 @@ export default function CheckoutPage() {
               + Yangi manzil
             </button>
           </div>
+          </>
         )}
 
         {step === 1 && (
@@ -180,11 +198,11 @@ export default function CheckoutPage() {
       <div className="fixed bottom-0 inset-x-0 z-40" style={{ padding: '12px 16px', paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))' }}>
         <div style={{ maxWidth: 480, margin: '0 auto', background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(20px) saturate(1.8)', borderRadius: 'var(--radius-lg)', padding: 10, boxShadow: '0 -4px 20px rgba(0,0,0,.05)' }}>
           {step < 2 ? (
-            <button onClick={() => setStep(step + 1)} className="btn btn-primary w-full">
+            <button onClick={() => setStep(step + 1)} disabled={step === 0 && needsPhone && contactPhone.replace(/\D/g, '').length < 9} className="btn btn-primary w-full">
               Keyingisi
             </button>
           ) : (
-            <button onClick={handlePlaceOrder} disabled={loading || !selectedAddress} className="btn btn-primary w-full">
+            <button onClick={handlePlaceOrder} disabled={loading || !selectedAddress || (needsPhone && contactPhone.replace(/\D/g, '').length < 9)} className="btn btn-primary w-full">
               {loading ? <div className="spinner" style={{ borderTopColor: '#fff' }} /> : `Buyurtmani tasdiqlash — ${totals.total.toLocaleString()} so'm`}
             </button>
           )}
