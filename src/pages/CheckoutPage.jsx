@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Clock, Wallet, Check, ChevronLeft, MessageSquare, Phone } from 'lucide-react';
+import { MapPin, Clock, Wallet, Check, ChevronLeft, MessageSquare, Phone, Crosshair } from 'lucide-react';
 import useStore from '../store/useStore';
+import GoogleMap from '../components/GoogleMap';
 
 const STEPS = ['Manzil', "To'lov", 'Tasdiqlash'];
 
@@ -10,6 +11,7 @@ export default function CheckoutPage() {
   const { cart, getCartTotal, selectedPaymentMethod, setPaymentMethod, placeOrder, addresses, user } = useStore();
   const [notes, setNotes] = useState('');
   const [selectedAddress, setSelectedAddress] = useState(addresses.find((a) => a.isDefault)?.id || addresses[0]?.id);
+  const [mapLocation, setMapLocation] = useState(null);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -17,11 +19,14 @@ export default function CheckoutPage() {
   const totals = getCartTotal();
   const needsPhone = !user?.phone;
 
+  const deliveryAddress = mapLocation ? mapLocation.address : (addresses.find((a) => a.id === selectedAddress)?.fullAddress || '');
+
   const handlePlaceOrder = () => {
     if (needsPhone && contactPhone.replace(/\D/g, '').length < 9) return;
+    if (!deliveryAddress) return;
     setLoading(true);
     setTimeout(() => {
-      placeOrder(selectedPaymentMethod, addresses.find((a) => a.id === selectedAddress)?.fullAddress || '', notes);
+      placeOrder(selectedPaymentMethod, deliveryAddress, notes);
       setLoading(false);
       setSuccess(true);
       setTimeout(() => navigate('/tracking'), 1200);
@@ -97,10 +102,24 @@ export default function CheckoutPage() {
               </div>
             )}
             <div className="card p-4 animate-fade-in-up">
-            <div className="flex items-center" style={{ gap: 8, marginBottom: 14 }}>
-              <MapPin size={18} color="var(--primary)" />
-              <h3 className="subheading">Yetkazish manzili</h3>
+              <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
+                <div className="flex items-center" style={{ gap: 8 }}>
+                  <Crosshair size={18} color="var(--primary)" />
+                  <h3 className="subheading">Xaritada tanlash</h3>
+                </div>
+                {mapLocation && (
+                  <button onClick={() => setMapLocation(null)} style={{ color: 'var(--primary)', fontSize: 12, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>Bekor qilish</button>
+                )}
+              </div>
+              <GoogleMap center={{ lat: 41.3111, lng: 69.2797 }} height={200} onLocationSelect={setMapLocation} />
+              {mapLocation && (
+                <div className="animate-fade-in-up" style={{ marginTop: 10, padding: '10px 12px', borderRadius: 'var(--radius)', background: 'var(--primary-light)', border: '1px solid rgba(249,115,22,.2)' }}>
+                  <div style={{ fontSize: 13, color: 'var(--text)', fontWeight: 500 }}>{mapLocation.address}</div>
+                </div>
+              )}
             </div>
+
+            <div className="card p-4 animate-fade-in-up">
             <div className="space-y-2">
               {addresses.map((addr) => (
                 <button key={addr.id} onClick={() => setSelectedAddress(addr.id)} className="w-full flex items-center p-3 text-left" style={{
@@ -202,7 +221,7 @@ export default function CheckoutPage() {
               Keyingisi
             </button>
           ) : (
-            <button onClick={handlePlaceOrder} disabled={loading || !selectedAddress || (needsPhone && contactPhone.replace(/\D/g, '').length < 9)} className="btn btn-primary w-full">
+            <button onClick={handlePlaceOrder} disabled={loading || !deliveryAddress || (needsPhone && contactPhone.replace(/\D/g, '').length < 9)} className="btn btn-primary w-full">
               {loading ? <div className="spinner" style={{ borderTopColor: '#fff' }} /> : `Buyurtmani tasdiqlash — ${totals.total.toLocaleString()} so'm`}
             </button>
           )}

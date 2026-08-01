@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Navigation, MapPin, Phone, Clock, CheckCircle2 } from 'lucide-react';
+import GoogleMap from '../components/GoogleMap';
 import useStore from '../store/useStore';
 
 const steps = [
@@ -68,15 +69,9 @@ export default function TrackingPage() {
           </div>
         </div>
 
-        {/* Map placeholder */}
-        <div className="card animate-fade-in-up" style={{ height: 170, marginBottom: 20, background: 'linear-gradient(135deg, var(--surface-active) 0%, #E5E7EB 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, transparent, transparent 20px, var(--border) 20px, var(--border) 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, var(--border) 20px, var(--border) 21px)' }} />
-          <div className="flex flex-col items-center" style={{ gap: 8, zIndex: 1 }}>
-            <div className="animate-float" style={{ width: 44, height: 44, borderRadius: 'var(--radius-full)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(249,115,22,.2)' }}>
-              <MapPin size={22} color="var(--primary)" />
-            </div>
-            <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>Xarita tez orada</span>
-          </div>
+        {/* Real Google Map */}
+        <div className="card animate-fade-in-up" style={{ padding: 8, marginBottom: 20 }}>
+          <GoogleMap center={{ lat: 41.3111, lng: 69.2797 }} height={170} />
         </div>
 
         {currentIdx < 4 && (

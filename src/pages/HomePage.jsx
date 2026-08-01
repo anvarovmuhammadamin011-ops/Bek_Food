@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Flame, Star, TrendingUp } from 'lucide-react';
+import { User, Flame, Star, TrendingUp } from 'lucide-react';
 import useStore from '../store/useStore';
 import FoodCard from '../components/FoodCard';
 import PromoBanner from '../components/PromoBanner';
@@ -8,7 +8,7 @@ import { SkeletonCard, SkeletonCategory, SkeletonBanner } from '../components/Sk
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { banners, foods, categories, cart, restaurants } = useStore();
+  const { banners, foods, categories, restaurants } = useStore();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const branch = restaurants[0];
@@ -35,18 +35,10 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex items-center" style={{ gap: 8 }}>
-            <button onClick={() => navigate('/profile')} className="card card-interactive" style={{ width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <User size={18} color="var(--text-muted)" />
-            </button>
-            <button onClick={() => navigate('/cart')} className="card card-interactive" style={{ width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-              <ShoppingCart size={18} color="var(--text)" />
-              {cart.length > 0 && (
-                <div className="animate-pop-in" style={{ position: 'absolute', top: -5, right: -5, minWidth: 20, height: 20, background: 'var(--primary)', borderRadius: 'var(--radius-full)', fontSize: 11, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, padding: '0 5px', boxShadow: '0 2px 8px rgba(249,115,22,.3)' }}>
-                  {cart.length}
-                </div>
-              )}
-            </button>
-          </div>
+          <button onClick={() => navigate('/profile')} className="card card-interactive" style={{ width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <User size={18} color="var(--text-muted)" />
+          </button>
+        </div>
         </div>
 
         {/* Promo Banner */}

@@ -86,7 +86,7 @@ export default function CartPage() {
       </div>
 
       {/* Sticky CTA */}
-      <div className="fixed bottom-0 inset-x-0 z-40" style={{ padding: '12px 16px', paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))' }}>
+      <div className="fixed inset-x-0 z-40" style={{ bottom: 'calc(82px + env(safe-area-inset-bottom, 0px))', padding: '12px 16px' }}>
         <div style={{
           maxWidth: 480, margin: '0 auto',
           background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(20px) saturate(1.8)',
