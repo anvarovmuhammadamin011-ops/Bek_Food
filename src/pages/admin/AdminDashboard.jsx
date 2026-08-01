@@ -15,6 +15,9 @@ import {
   ArrowRight,
   ShoppingCart,
   Sparkles,
+  Plus,
+  FolderPlus,
+  Tag,
 } from 'lucide-react';
 
 const useCountUp = (target, duration = 1200) => {
@@ -137,6 +140,25 @@ const AdminDashboard = () => {
     { label: 'Eng ko\'p sotilgan', value: topFoodName, prefix: `${topFoodCount} ta`, icon: Star, colorVar: '--warning', bg: '#FFFBEB' },
   ];
 
+  const quickActions = [
+    { label: "Mahsulot qo'shish", path: '/admin/products?new=1', icon: Plus, colorVar: '--primary', bg: 'var(--primary-light)' },
+    { label: "Kategoriya qo'shish", path: '/admin/categories?new=1', icon: FolderPlus, colorVar: '--success', bg: '#F0FDF4' },
+    { label: 'Promo kod yaratish', path: '/admin/promotions?new=1', icon: Tag, colorVar: '--warning', bg: '#FFFBEB' },
+  ];
+
+  const statusMeta = {
+    pending: { label: 'Kutilmoqda', color: '#F59E0B' },
+    preparing: { label: 'Tayyorlanmoqda', color: 'var(--primary)' },
+    ready: { label: 'Tayyor', color: '#3B82F6' },
+    onTheWay: { label: 'Yetkazilmoqda', color: '#8B5CF6' },
+    delivered: { label: 'Yetkazildi', color: 'var(--success)' },
+    cancelled: { label: 'Bekor qilingan', color: 'var(--danger)' },
+  };
+
+  const recentOrders = [...orders]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
+
   return (
     <div className="page-enter" style={{ padding: '0 0 48px', maxWidth: 1400, margin: '0 auto' }}>
       <style>{`
@@ -161,6 +183,34 @@ const AdminDashboard = () => {
         >
           <ReceiptText size={16} /> Buyurtmalar
         </button>
+      </div>
+
+      <div className="dash-quick-actions" style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+        {quickActions.map((qa, i) => {
+          const Icon = qa.icon;
+          return (
+            <button
+              key={i}
+              onClick={() => navigate(qa.path)}
+              className="card card-hover"
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '11px 18px',
+                border: '1px dashed rgba(249,115,22,0.35)', cursor: 'pointer', fontFamily: 'inherit',
+                fontSize: 14, fontWeight: 600, color: 'var(--text)', background: 'var(--surface)',
+              }}
+            >
+              <span
+                style={{
+                  width: 34, height: 34, borderRadius: 10, background: qa.bg,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}
+              >
+                <Icon size={16} style={{ color: `var(${qa.colorVar})` }} />
+              </span>
+              {qa.label}
+            </button>
+          );
+        })}
       </div>
 
       <div className="dash-kpi-grid" style={{ marginBottom: 20 }}>
@@ -210,6 +260,62 @@ const AdminDashboard = () => {
               </div>
             </div>
             <BarChart data={weekStats.map((d) => d.revenue)} labels={weekStats.map((d) => d.label)} height={180} />
+          </div>
+
+          <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>
+            <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
+              <div>
+                <h3 className="heading" style={{ marginBottom: 2 }}>So'nggi buyurtmalar</h3>
+                <p className="caption">Oxirgi 5 ta buyurtma</p>
+              </div>
+              <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-xs)', background: 'var(--success-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <ReceiptText size={16} style={{ color: 'var(--success)' }} />
+              </div>
+            </div>
+            {recentOrders.length === 0 ? (
+              <p className="caption" style={{ padding: '20px 0', textAlign: 'center' }}>Hali buyurtmalar yo'q</p>
+            ) : (
+              <div>
+                {recentOrders.map((o, i) => {
+                  const st = statusMeta[o.status] || { label: o.status, color: 'var(--text-muted)' };
+                  return (
+                    <button
+                      key={o.id}
+                      onClick={() => navigate('/admin/orders')}
+                      className="w-full"
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left',
+                        padding: '11px 4px', border: 'none', borderBottom: i < recentOrders.length - 1 ? '1px solid var(--border)' : 'none',
+                        background: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 12, fontWeight: 700, color: 'var(--primary)', background: 'var(--primary-light)',
+                          padding: '4px 9px', borderRadius: 8, flexShrink: 0,
+                        }}
+                      >
+                        #{o.id}
+                      </span>
+                      <span className="text-sm font-semibold truncate" style={{ color: 'var(--text)', flex: 1, minWidth: 0 }}>
+                        {o.customerName || 'Mijoz'}
+                      </span>
+                      <span className="text-sm font-semibold" style={{ color: 'var(--text)', flexShrink: 0 }}>
+                        {formatCurrency(o.total)} so'm
+                      </span>
+                      <span
+                        style={{
+                          fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
+                          background: st.color + '14', color: st.color, flexShrink: 0,
+                        }}
+                      >
+                        {st.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Plus, Edit, Trash2, FolderOpen, ArrowUp, ArrowDown, X, Image } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Edit, Trash2, FolderOpen, ArrowUp, ArrowDown, X, Image, Eye, EyeOff } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import useStore from '../../store/useStore';
 
 const ICON_OPTIONS = ['🌭', '🌯', '🍔', '🥙', '🍟', '🍕', '🥗', '🍗', '🍛', '🍜', '🍝', '🥪', '🍞', '🥩', '🍦', '🥤', '🍹', '☕'];
@@ -34,6 +35,12 @@ const s = {
   input: { width: '100%', padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border-strong)', borderRadius: '10px', color: 'var(--text)', fontSize: '14px', outline: 'none', transition: 'all 0.2s', boxSizing: 'border-box', fontFamily: 'inherit' },
   iconGrid: { display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '6px' },
   iconOption: (active) => ({ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '42px', borderRadius: '10px', fontSize: '20px', cursor: 'pointer', border: active ? '1.5px solid var(--primary)' : '1px solid var(--border)', background: active ? 'var(--primary-light)' : 'var(--surface)', transition: 'all 0.15s' }),
+  chipToggle: (on, color = 'var(--primary)') => ({
+    padding: '6px 12px', borderRadius: '8px', border: `1px solid ${on ? color : 'var(--border)'}`,
+    background: on ? color + '14' : 'var(--surface)', color: on ? color : 'var(--text-muted)',
+    cursor: 'pointer', fontSize: '12px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: 6,
+    transition: 'all 0.2s', fontFamily: 'inherit',
+  }),
   empty: { textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' },
   emptyIcon: { width: '64px', height: '64px', borderRadius: '16px', background: 'var(--surface-active)', border: '1px dashed var(--border-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--text-muted)' },
   emptyTitle: { fontSize: '16px', fontWeight: '600', color: 'var(--text-secondary)', margin: '0 0 4px 0' },
@@ -41,7 +48,7 @@ const s = {
 };
 
 export default function AdminCategories() {
-  const { categories, foods, addCategory, updateCategory, deleteCategory, moveCategory } = useStore();
+  const { categories, foods, addCategory, updateCategory, deleteCategory, moveCategory, toggleCategoryActive } = useStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -54,6 +61,16 @@ export default function AdminCategories() {
     setForm({ name: '', icon: '🍔', image: '' });
     setModalOpen(true);
   };
+
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('new')) {
+      openAdd();
+      searchParams.delete('new');
+      window.history.replaceState({}, '', '/admin/categories');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const openEdit = (cat) => {
     setEditingId(cat.id);
@@ -93,7 +110,7 @@ export default function AdminCategories() {
             </div>
           ) : (
             categories.map((cat, idx) => (
-              <div key={cat.id} style={s.card}>
+              <div key={cat.id} style={{ ...s.card, opacity: cat.isActive === false ? 0.55 : 1 }}>
                 <div style={s.cardLeft}>
                   <div style={s.iconBox}>
                     {cat.image ? (
@@ -108,6 +125,14 @@ export default function AdminCategories() {
                   </div>
                 </div>
                 <div style={s.actions}>
+                  <button
+                    style={s.chipToggle(cat.isActive !== false, 'var(--success)')}
+                    onClick={() => toggleCategoryActive(cat.id)}
+                    title={cat.isActive === false ? 'Faollashtirish' : 'Nofaol qilish'}
+                  >
+                    {cat.isActive === false ? <EyeOff size={13} /> : <Eye size={13} />}
+                    {cat.isActive === false ? 'Nofaol' : 'Faol'}
+                  </button>
                   <button style={s.iconBtn} onClick={() => moveCategory(cat.id, 'up')} title="Tepaga" disabled={idx === 0}>
                     <ArrowUp size={15} style={{ opacity: idx === 0 ? 0.3 : 1 }} />
                   </button>

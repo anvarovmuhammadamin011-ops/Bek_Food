@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Search, X, Star, Eye, EyeOff, UtensilsCrossed, Flame, Image } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import useStore from '../../store/useStore';
 
 const s = {
@@ -85,6 +86,16 @@ export default function AdminProducts() {
     setForm({ name: '', description: '', price: '', discountPrice: '', categoryId: categories[0]?.id || '', image: '', isPopular: false, isNew: false, available: true });
     setModalOpen(true);
   };
+
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('new')) {
+      openAdd();
+      searchParams.delete('new');
+      window.history.replaceState({}, '', '/admin/products');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const openEdit = (food) => {
     setEditingId(food.id);

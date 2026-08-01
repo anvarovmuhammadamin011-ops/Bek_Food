@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Tag, Search, X, Calendar, Percent, Coins, Copy, Check, Gift, Package, FolderOpen, Clock } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import useStore from '../../store/useStore';
 
 const s = {
@@ -87,6 +88,16 @@ export default function AdminPromotions() {
     setCodeForm({ code: '', discountType: 'percent', discount: '', minOrder: 0, maxUses: 0, active: true, startDate: '', endDate: '' });
     setModalOpen(true);
   };
+
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('new')) {
+      openAddCode();
+      searchParams.delete('new');
+      window.history.replaceState({}, '', '/admin/promotions');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const openEditCode = (promo) => {
     setEditingId(promo.id);

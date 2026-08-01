@@ -301,6 +301,8 @@ export const useStore = create((set, get) => ({
   updateCategory: (id, data) =>
     set({ categories: get().categories.map((c) => (c.id === id ? { ...c, ...data } : c)) }),
   deleteCategory: (id) => set({ categories: get().categories.filter((c) => c.id !== id) }),
+  toggleCategoryActive: (id) =>
+    set({ categories: get().categories.map((c) => (c.id === id ? { ...c, isActive: !(c.isActive !== false) } : c)) }),
   moveCategory: (id, dir) => {
     const arr = [...get().categories];
     const idx = arr.findIndex((c) => c.id === id);
