@@ -2,12 +2,14 @@ import { create } from 'zustand';
 import { foods, restaurants, categories, banners, addresses, notifications } from '../data/mockData';
 
 const mockOrders = [
-  { id: 1001, items: [{ food: foods[0], quantity: 2, price: 12000 }], total: 24000, status: 'pending', paymentMethod: 'cash', address: "Chinobod, Oqtepa ko'chasi, 15", notes: 'Achchiq qiling', createdAt: new Date(Date.now() - 300000).toISOString(), customerName: 'Aziz', customerPhone: '+998901112233', priority: 'high', estimatedReady: '14:30' },
-  { id: 1002, items: [{ food: foods[5], quantity: 1, price: 33000 }, { food: foods[14], quantity: 2, price: 25000 }], total: 83000, status: 'preparing', paymentMethod: 'card', address: "Chinobod, Navoiy ko'chasi, 27", notes: '', createdAt: new Date(Date.now() - 600000).toISOString(), customerName: 'Sardor', customerPhone: '+998902223344', priority: 'normal', estimatedReady: '14:45' },
-  { id: 1003, items: [{ food: foods[9], quantity: 3, price: 35000 }], total: 105000, status: 'ready', paymentMethod: 'cash', address: "Chinobod, Bog'ishamol ko'chasi, 8", notes: 'Tezroq', createdAt: new Date(Date.now() - 900000).toISOString(), customerName: 'Jamshid', customerPhone: '+998903334455', priority: 'low', estimatedReady: '14:15', courierId: null },
-  { id: 1004, items: [{ food: foods[10], quantity: 1, price: 38000 }, { food: foods[18], quantity: 1, price: 15000 }], total: 53000, status: 'onTheWay', paymentMethod: 'cash', address: "Chinobod, Mustaqillik ko'chasi, 42", notes: '', createdAt: new Date(Date.now() - 1200000).toISOString(), customerName: 'Otabek', customerPhone: '+998904445566', priority: 'normal', courierId: 1 },
-  { id: 1005, items: [{ food: foods[1], quantity: 2, price: 15000 }], total: 30000, status: 'delivered', paymentMethod: 'cash', address: "Chinobod, Bobur ko'chasi, 12", notes: '', createdAt: new Date(Date.now() - 1800000).toISOString(), customerName: 'Dilshod', customerPhone: '+998905556677', priority: 'normal', courierId: 1, deliveredAt: new Date(Date.now() - 600000).toISOString() },
-  { id: 1006, items: [{ food: foods[18], quantity: 4, price: 15000 }], total: 60000, status: 'pending', paymentMethod: 'cash', address: "Chinobod, Cho'pon ota ko'chasi, 5", notes: 'Ketchup ko\'proq', createdAt: new Date(Date.now() - 120000).toISOString(), customerName: 'Nodir', customerPhone: '+998906667788', priority: 'high', estimatedReady: '15:00' },
+  { id: 1001, items: [{ food: foods[0], quantity: 2, price: 12000 }], total: 24000, status: 'pending', paymentMethod: 'cash', address: "Chinobod, Oqtepa ko'chasi, 15", notes: 'Achchiq qiling', createdAt: new Date(Date.now() - 300000).toISOString(), customerName: 'Aziz', customerPhone: '+998901112233', priority: 'high', estimatedReady: '14:30', deliveryType: 'delivery' },
+  { id: 1002, items: [{ food: foods[5], quantity: 1, price: 33000 }, { food: foods[14], quantity: 2, price: 25000 }], total: 83000, status: 'confirmed', paymentMethod: 'card', address: '', notes: '', createdAt: new Date(Date.now() - 600000).toISOString(), customerName: 'Sardor', customerPhone: '+998902223344', priority: 'normal', estimatedReady: '14:45', deliveryType: 'pickup' },
+  { id: 1003, items: [{ food: foods[9], quantity: 3, price: 35000 }], total: 105000, status: 'preparing', paymentMethod: 'cash', address: "Chinobod, Bog'ishamol ko'chasi, 8", notes: 'Tezroq', createdAt: new Date(Date.now() - 900000).toISOString(), customerName: 'Jamshid', customerPhone: '+998903334455', priority: 'low', estimatedReady: '14:15', courierId: null, deliveryType: 'delivery' },
+  { id: 1004, items: [{ food: foods[10], quantity: 1, price: 38000 }, { food: foods[18], quantity: 1, price: 15000 }], total: 53000, status: 'ready', paymentMethod: 'cash', address: "Chinobod, Mustaqillik ko'chasi, 42", notes: '', createdAt: new Date(Date.now() - 1200000).toISOString(), customerName: 'Otabek', customerPhone: '+998904445566', priority: 'normal', deliveryType: 'delivery' },
+  { id: 1005, items: [{ food: foods[1], quantity: 2, price: 15000 }], total: 30000, status: 'onTheWay', paymentMethod: 'cash', address: "Chinobod, Bobur ko'chasi, 12", notes: '', createdAt: new Date(Date.now() - 1800000).toISOString(), customerName: 'Dilshod', customerPhone: '+998905556677', priority: 'normal', courierId: 1, assignedAt: new Date(Date.now() - 1200000).toISOString(), courierAcceptedAt: new Date(Date.now() - 1000000).toISOString(), deliveryType: 'delivery' },
+  { id: 1006, items: [{ food: foods[18], quantity: 4, price: 15000 }], total: 60000, status: 'pending', paymentMethod: 'cash', address: '', notes: 'Ketchup ko\'proq', createdAt: new Date(Date.now() - 120000).toISOString(), customerName: 'Nodir', customerPhone: '+998906667788', priority: 'high', estimatedReady: '15:00', deliveryType: 'pickup' },
+  { id: 1007, items: [{ food: foods[9], quantity: 1, price: 35000 }], total: 35000, status: 'delivered', paymentMethod: 'card', address: "Chinobod, Yangi ko'chasi, 3", notes: '', createdAt: new Date(Date.now() - 3600000).toISOString(), customerName: 'Shohruh', customerPhone: '+998907778899', priority: 'normal', courierId: 2, assignedAt: new Date(Date.now() - 3000000).toISOString(), courierAcceptedAt: new Date(Date.now() - 2800000).toISOString(), deliveredAt: new Date(Date.now() - 1200000).toISOString(), deliveryType: 'delivery' },
+  { id: 1008, items: [{ food: foods[14], quantity: 2, price: 25000 }], total: 50000, status: 'cancelled', paymentMethod: 'cash', address: '', notes: 'Buyurtma bekor qilindi', createdAt: new Date(Date.now() - 5400000).toISOString(), customerName: 'Ulugbek', customerPhone: '+998908889900', priority: 'normal', deliveryType: 'pickup' },
 ];
 
 const mockCourierStats = {
@@ -218,11 +220,12 @@ export const useStore = create((set, get) => ({
   cancelOrder: (id) => get().updateOrderStatus(id, 'cancelled'),
 
   // Seller order actions
-  acceptOrder: (id) => get().updateOrderStatus(id, 'preparing'),
+  acceptOrder: (id) => get().updateOrderStatus(id, 'confirmed'),
+  startPreparing: (id) => get().updateOrderStatus(id, 'preparing'),
   readyOrder: (id) => get().updateOrderStatus(id, 'ready'),
   assignCourier: (id, courierId) => {
     set({
-      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'onTheWay', courierId } : o)),
+      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'onTheWay', courierId, assignedAt: new Date().toISOString() } : o)),
     });
   },
 
@@ -230,7 +233,7 @@ export const useStore = create((set, get) => ({
   courierAcceptOrder: (id) => {
     const courierId = get().user?.id || 10;
     set({
-      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'onTheWay', courierId } : o)),
+      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'onTheWay', courierId, courierAcceptedAt: new Date().toISOString() } : o)),
     });
   },
   courierDelivered: (id) => {

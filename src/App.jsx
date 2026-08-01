@@ -21,10 +21,10 @@ import AddressesPage from './pages/AddressesPage';
 // Seller pages
 import SellerDashboard from './pages/seller/SellerDashboard';
 import SellerOrders from './pages/seller/SellerOrders';
-import SellerMenu from './pages/seller/SellerMenu';
-import SellerInventory from './pages/seller/SellerInventory';
-import SellerAnalytics from './pages/seller/SellerAnalytics';
-import SellerSettings from './pages/seller/SellerSettings';
+import SellerDelivery from './pages/seller/SellerDelivery';
+import SellerReceipts from './pages/seller/SellerReceipts';
+import SellerProfile from './pages/seller/SellerProfile';
+import SellerLayout from './components/SellerLayout';
 
 // Courier pages
 import CourierDashboard from './pages/courier/CourierDashboard';
@@ -83,12 +83,11 @@ export default function App() {
         <Route path="/addresses" element={<CustomerLayout><AddressesPage /></CustomerLayout>} />
 
         {/* Seller routes */}
-        <Route path="/seller" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerDashboard /></AppShell></ProtectedRoute>} />
-        <Route path="/seller/orders" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerOrders /></AppShell></ProtectedRoute>} />
-        <Route path="/seller/menu" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerMenu /></AppShell></ProtectedRoute>} />
-        <Route path="/seller/inventory" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerInventory /></AppShell></ProtectedRoute>} />
-        <Route path="/seller/analytics" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerAnalytics /></AppShell></ProtectedRoute>} />
-        <Route path="/seller/settings" element={<ProtectedRoute allowedRoles={['seller']}><AppShell wide><SellerSettings /></AppShell></ProtectedRoute>} />
+        <Route path="/seller" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerDashboard /></SellerLayout></ProtectedRoute>} />
+        <Route path="/seller/orders" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerOrders /></SellerLayout></ProtectedRoute>} />
+        <Route path="/seller/delivery" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerDelivery /></SellerLayout></ProtectedRoute>} />
+        <Route path="/seller/receipts" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerReceipts /></SellerLayout></ProtectedRoute>} />
+        <Route path="/seller/profile" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerProfile /></SellerLayout></ProtectedRoute>} />
 
         {/* Courier routes */}
         <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierDashboard /></AppShell></ProtectedRoute>} />
