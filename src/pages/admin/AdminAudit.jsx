@@ -26,7 +26,7 @@ const mockAuditLogs = [
     description: 'Yangi menyu elementi "Ribeye Steak 300g" yaratildi',
     ipAddress: '192.168.1.45',
     device: 'Chrome 120 / Windows 11',
-    details: { target: 'Menyu', oldValue: null, newValue: "Ribeye Steak 300g â€” 185,000 so'm" },
+    details: { target: 'Menyu', oldValue: null, newValue: "Ribeye Steak 300g — 185,000 so'm" },
   },
   {
     id: 2,
@@ -46,7 +46,7 @@ const mockAuditLogs = [
     description: '"Eski Hot-dog" menyu elementi o\'chirildi',
     ipAddress: '10.0.0.12',
     device: 'Firefox 121 / Ubuntu',
-    details: { target: 'Menyu', oldValue: "Eski Hot-dog â€” 45,000 so'm", newValue: null },
+    details: { target: 'Menyu', oldValue: "Eski Hot-dog — 45,000 so'm", newValue: null },
   },
   {
     id: 4,
@@ -103,10 +103,10 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T18:05:00',
     user: { name: 'Malika Nazarova', avatar: 'MN', role: 'Kassir' },
     action: "O'zgartirildi",
-    description: "Buyurtma #1039 uchun to'lov kiritildi â€” 375,000 so'm",
+    description: "Buyurtma #1039 uchun to'lov kiritildi — 375,000 so'm",
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
-    details: { target: 'Buyurtma #1039', oldValue: "To'lanmagan", newValue: "To'langan â€” 375,000 so'm" },
+    details: { target: 'Buyurtma #1039', oldValue: "To'lanmagan", newValue: "To'langan — 375,000 so'm" },
   },
   {
     id: 10,
@@ -133,17 +133,17 @@ const mockAuditLogs = [
     timestamp: '2026-07-27T11:10:00',
     user: { name: 'Jasur Toshev', avatar: 'JT', role: 'Admin' },
     action: 'Kirish',
-    description: 'Tizimga kirish â€” birinchi muvaffaqiyatsiz urinish',
+    description: 'Tizimga kirish — birinchi muvaffaqiyatsiz urinish',
     ipAddress: '10.0.0.12',
     device: 'Firefox 121 / Ubuntu',
-    details: { target: 'Tizim', oldValue: null, newValue: "Noto'g'ri parol â€” xavfli kirish" },
+    details: { target: 'Tizim', oldValue: null, newValue: "Noto'g'ri parol — xavfli kirish" },
   },
   {
     id: 13,
     timestamp: '2026-07-26T19:35:00',
     user: { name: 'Malika Nazarova', avatar: 'MN', role: 'Kassir' },
     action: "O'zgartirildi",
-    description: "Buyurtma #1030 ga qo'shimcha mahsulot qo'shildi â€” \"Cezar Salat\"",
+    description: "Buyurtma #1030 ga qo'shimcha mahsulot qo'shildi — \"Cezar Salat\"",
     ipAddress: '192.168.1.78',
     device: 'Chrome 120 / Android 14',
     details: { target: 'Buyurtma #1030', oldValue: '3 ta mahsulot', newValue: '4 ta mahsulot' },
@@ -153,10 +153,10 @@ const mockAuditLogs = [
     timestamp: '2026-07-26T16:20:00',
     user: { name: 'Nilufar Karimova', avatar: 'NK', role: 'Manager' },
     action: 'Yaratildi',
-    description: "Yangi xodim \"Alisher Abduvaliev\" tizimga qo'shildi â€” Oshpaz",
+    description: "Yangi xodim \"Alisher Abduvaliev\" tizimga qo'shildi — Oshpaz",
     ipAddress: '192.168.1.62',
     device: 'Safari 17 / macOS',
-    details: { target: 'Xodim', oldValue: null, newValue: 'Alisher Abduvaliev â€” Oshpaz' },
+    details: { target: 'Xodim', oldValue: null, newValue: 'Alisher Abduvaliev — Oshpaz' },
   },
   {
     id: 15,
@@ -869,11 +869,11 @@ const AdminAudit = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px' }}>
                     <span style={{ color: 'var(--danger)', textDecoration: 'line-through' }}>
-                      {selectedEntry.details.oldValue || 'â€”'}
+                      {selectedEntry.details.oldValue || '—'}
                     </span>
                     <span style={{ color: 'var(--text-muted)' }}>â†’</span>
                     <span style={{ color: 'var(--success)' }}>
-                      {selectedEntry.details.newValue || 'â€”'}
+                      {selectedEntry.details.newValue || '—'}
                     </span>
                   </div>
                 </div>

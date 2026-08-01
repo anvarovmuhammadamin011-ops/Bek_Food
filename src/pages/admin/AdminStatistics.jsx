@@ -153,8 +153,8 @@ export default function AdminStatistics() {
   const { orders, inventory } = useStore();
 
   const totalOrders = orders.length;
-  const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
-  const totalCost = inventory.reduce((s, i) => s + i.cost, 0);
+  const totalRevenue = orders.reduce((s, o) => s + (o.total || 0), 0);
+  const totalCost = inventory.reduce((s, i) => s + (i.quantity * (i.unitCost || 0)), 0);
   const profit = totalRevenue - totalCost;
 
   const profitPositive = profit >= 0;

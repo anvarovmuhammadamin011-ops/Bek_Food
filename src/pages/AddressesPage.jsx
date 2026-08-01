@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MapPin, Plus } from 'lucide-react';
 import useStore from '../store/useStore';
+import EmptyState from '../components/EmptyState';
 
 export default function AddressesPage() {
   const { addresses } = useStore();
@@ -26,11 +27,7 @@ export default function AddressesPage() {
         )}
 
         {addresses.length === 0 && (
-          <div className="empty-state py-16">
-            <div className="empty-state-icon"><MapPin size={24} /></div>
-            <h3 className="heading">Manzil yo'q</h3>
-            <p className="body">Yetkazib berish manzilini qo'shing</p>
-          </div>
+          <EmptyState icon="address" title="Manzil yo'q" description="Yetkazib berish manzilini qo'shing" />
         )}
 
         {addresses.map((addr) => (

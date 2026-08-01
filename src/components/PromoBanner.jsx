@@ -31,7 +31,7 @@ export default function PromoBanner({ banners = [] }) {
       <div style={{ display: 'flex', transition: 'transform .5s var(--ease)', transform: `translateX(-${current * 100}%)`, height: '100%' }}>
         {banners.map((b, i) => (
           <div key={b.id || i} style={{ minWidth: '100%', height: '100%', position: 'relative' }}>
-            <img src={b.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={b.image} alt="" onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.2) 60%, transparent 100%)' }} />
             <div style={{ position: 'absolute', bottom: 18, left: 18, right: 60 }}>
               <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 12, marginBottom: 3 }}>{b.subtitle}</p>

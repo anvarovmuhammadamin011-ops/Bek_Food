@@ -14,7 +14,7 @@ import {
   ArrowRight,
   ShoppingCart,
   Star,
-  Menu,
+  Tag,
 } from 'lucide-react';
 
 const useCountUp = (target, duration = 1200) => {
@@ -172,13 +172,13 @@ const AdminDashboard = () => {
     { rank: 1, name: 'Hot-dog 2x (Double)', sold: 342, revenue: 45200000 },
     { rank: 2, name: 'Lavash', sold: 289, revenue: 28900000 },
     { rank: 3, name: 'Hot-dog oddiy', sold: 234, revenue: 35100000 },
-    { rank: 4, name: 'Cheeseburger', sold: 198, revenue: 23760000 },
-    { rank: 5, name: 'Cheeseburger', sold: 167, revenue: 21710000 },
+    { rank: 4, name: 'Doner kichik', sold: 198, revenue: 23760000 },
+    { rank: 5, name: 'Gamburger', sold: 167, revenue: 21710000 },
   ];
 
   const quickActions = [
     { label: 'Buyurtmalar', path: '/admin/orders', icon: ShoppingCart, desc: 'Barcha buyurtmalar' },
-    { label: 'Menyu', path: '/admin/menu', icon: Menu, desc: 'Menyuni boshqarish' },
+    { label: 'Promo kodlar', path: '/admin/promos', icon: Tag, desc: 'Chegirma kodlari' },
     { label: 'Mijozlar', path: '/admin/customers', icon: Users, desc: "Mijozlar ro'yxati" },
     { label: 'Xodimlar', path: '/admin/employees', icon: Users, desc: 'Xodimlar boshqaruvi' },
   ];

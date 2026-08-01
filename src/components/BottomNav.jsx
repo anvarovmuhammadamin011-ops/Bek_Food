@@ -29,7 +29,7 @@ export default function BottomNav() {
             WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-xl)',
-            boxShadow: '0 8px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04)',
+            boxShadow: '0 -4px 10px rgba(0,0,0,.05), 0 8px 32px rgba(0,0,0,.06)',
             padding: '6px 8px',
           }}
         >

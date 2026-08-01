@@ -33,14 +33,20 @@ const mockSellerStats = {
 };
 
 const mockInventory = [
-  { id: 1, name: "Qiyma go'sht", quantity: 15, unit: 'kg', minQuantity: 5, status: 'ok' },
-  { id: 2, name: "Tovuq go'shti", quantity: 8, unit: 'kg', minQuantity: 5, status: 'low' },
-  { id: 3, name: "Piyoz", quantity: 20, unit: 'kg', minQuantity: 10, status: 'ok' },
-  { id: 4, name: "Kartoshka", quantity: 3, unit: 'kg', minQuantity: 8, status: 'critical' },
-  { id: 5, name: "Non", quantity: 50, unit: 'dona', minQuantity: 20, status: 'ok' },
-  { id: 6, name: "Pishloq", quantity: 4, unit: 'kg', minQuantity: 3, status: 'ok' },
-  { id: 7, name: "Sosiska", quantity: 24, unit: 'dona', minQuantity: 12, status: 'ok' },
-  { id: 8, name: "Sosiska", quantity: 2, unit: 'kg', minQuantity: 4, status: 'critical' },
+  { id: 1, name: "Qiyma go'sht", quantity: 15, unit: 'kg', minQuantity: 5, unitCost: 55000, status: 'ok' },
+  { id: 2, name: "Tovuq go'shti", quantity: 8, unit: 'kg', minQuantity: 5, unitCost: 28000, status: 'low' },
+  { id: 3, name: "Piyoz", quantity: 20, unit: 'kg', minQuantity: 10, unitCost: 5000, status: 'ok' },
+  { id: 4, name: "Kartoshka", quantity: 3, unit: 'kg', minQuantity: 8, unitCost: 6000, status: 'critical' },
+  { id: 5, name: "Non", quantity: 50, unit: 'dona', minQuantity: 20, unitCost: 3000, status: 'ok' },
+  { id: 6, name: "Pishloq", quantity: 4, unit: 'kg', minQuantity: 3, unitCost: 45000, status: 'ok' },
+  { id: 7, name: "Sosiska", quantity: 24, unit: 'dona', minQuantity: 12, unitCost: 8000, status: 'ok' },
+  { id: 8, name: "Sosiska", quantity: 2, unit: 'kg', minQuantity: 4, unitCost: 70000, status: 'critical' },
+];
+
+const mockPromoCodes = [
+  { id: 1, code: 'BEK20', discount: 20, discountType: 'percent', minOrder: 0, maxUses: 0, usedCount: 12, active: true, startDate: '', endDate: '' },
+  { id: 2, code: 'BEK50', discount: 5000, discountType: 'fixed', minOrder: 100000, maxUses: 50, usedCount: 18, active: true, startDate: '', endDate: '' },
+  { id: 3, code: 'CHINOBOD', discount: 10, discountType: 'percent', minOrder: 50000, maxUses: 100, usedCount: 34, active: false, startDate: '', endDate: '' },
 ];
 
 const mockEmployees = [
@@ -58,6 +64,7 @@ const initialState = {
   orders: mockOrders,
   favorites: [],
   appliedCoupon: null,
+  promoCodes: mockPromoCodes,
   selectedPaymentMethod: 'cash',
   selectedFood: null,
   selectedRestaurant: null,
@@ -137,6 +144,12 @@ export const useStore = create((set, get) => ({
       cart: get().cart.map((i) => (i.id === id ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i)),
     }),
   clearCart: () => set({ cart: [] }),
+  addAddress: (address) => {
+    const list = get().addresses;
+    const newAddr = { id: Date.now(), label: address.label || 'Yangi manzil', fullAddress: address.fullAddress, isDefault: list.length === 0 };
+    set({ addresses: [...list, newAddr] });
+    return newAddr;
+  },
   getCartTotal: () => {
     const cart = get().cart;
     const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -238,14 +251,24 @@ export const useStore = create((set, get) => ({
     set({ courierNotifications: get().courierNotifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)) }),
 
   // Coupon
-  applyPromoCode: (code) => {
-    if (code === 'BEK20') {
-      set({ appliedCoupon: { code: 'BEK20', discount: 20, discountType: 'percent' } });
-      return true;
-    }
-    return false;
+  applyPromoCode: (code, subtotal) => {
+    const promo = get().promoCodes.find(
+      (p) => String(p.code).toLowerCase() === String(code || '').trim().toLowerCase()
+    );
+    if (!promo || !promo.active) return false;
+    if (promo.minOrder && subtotal < promo.minOrder) return false;
+    if (promo.maxUses && promo.usedCount >= promo.maxUses) return false;
+    set({
+      appliedCoupon: { code: promo.code, discount: promo.discount, discountType: promo.discountType },
+      promoCodes: get().promoCodes.map((p) => (p.id === promo.id ? { ...p, usedCount: p.usedCount + 1 } : p)),
+    });
+    return true;
   },
   removeCoupon: () => set({ appliedCoupon: null }),
+  addPromoCode: (promo) => set({ promoCodes: [...get().promoCodes, { ...promo, id: Date.now() }] }),
+  updatePromoCode: (id, data) =>
+    set({ promoCodes: get().promoCodes.map((p) => (p.id === id ? { ...p, ...data } : p)) }),
+  deletePromoCode: (id) => set({ promoCodes: get().promoCodes.filter((p) => p.id !== id) }),
 
   // Seller actions
   addProduct: (product) => set({ foods: [...get().foods, { ...product, id: Date.now() }] }),

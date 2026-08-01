@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import useStore from '../store/useStore';
 import FoodCard from '../components/FoodCard';
 import RestaurantCard from '../components/RestaurantCard';
+import EmptyState from '../components/EmptyState';
 
 export default function SearchPage() {
   const navigate = useNavigate();
@@ -71,11 +72,7 @@ export default function SearchPage() {
         )}
 
         {query && results.length === 0 && (
-          <div className="empty-state pt-20">
-            <div className="empty-state-icon"><Search size={24} /></div>
-            <h3 className="heading">Natija topilmadi</h3>
-            <p className="body mt-1">Boshqa so'z bilan urinib ko'ring</p>
-          </div>
+          <EmptyState icon="search" title="Natija topilmadi" description="Boshqa so'z bilan urinib ko'ring" />
         )}
       </div>
     </div>

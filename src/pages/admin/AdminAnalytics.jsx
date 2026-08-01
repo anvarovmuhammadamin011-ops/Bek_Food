@@ -1,6 +1,4 @@
 ﻿import React, { useState } from 'react';
-import useStore from '../../store/useStore';
-import { useNavigate } from 'react-router-dom';
 import {
   TrendingUp,
   TrendingDown,
@@ -9,7 +7,6 @@ import {
   Users,
   Package,
   Star,
-  Bot,
   CreditCard,
   Banknote,
   ArrowUpRight,
@@ -30,18 +27,18 @@ const revenueLabels = ['Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan', 'Yak'];
 
 const topProducts = [
   { name: 'Hot-dog oddiy', count: 342, pct: 100 },
-  { name: 'Hot-dog oddiy', count: 278, pct: 81 },
+  { name: 'Hot-dog 2x (Double)', count: 278, pct: 81 },
   { name: 'Lavash', count: 245, pct: 72 },
   { name: 'Doner kichik', count: 198, pct: 58 },
-  { name: 'Doner kichik', count: 176, pct: 51 },
+  { name: 'Gamburger', count: 176, pct: 51 },
 ];
 
 const bottomProducts = [
-  { name: 'Fri', count: 34, pct: 100 },
-  { name: 'PomidorSalat', count: 28, pct: 82 },
-  { name: 'Fri', count: 22, pct: 65 },
-  { name: 'Lavash', count: 18, pct: 53 },
-  { name: 'Lavash', count: 12, pct: 35 },
+  { name: 'Fri katta', count: 34, pct: 100 },
+  { name: 'Pomidor salat', count: 28, pct: 82 },
+  { name: 'Gazlangan suv', count: 22, pct: 65 },
+  { name: 'Ice tea', count: 18, pct: 53 },
+  { name: 'Shaftoli sharbat', count: 12, pct: 35 },
 ];
 
 const topCustomers = [
@@ -81,10 +78,10 @@ const categoryPerformance = [
 ];
 
 const insights = [
-  "Hot-dog oddiy eng ko'p sotilmoqda â€” zaxirani oshiring",
-  "Hot-dog oddiy kam sotilmoqda â€” aksiya tashkil qiling",
+  "Hot-dog oddiy eng ko'p sotilmoqda — zaxirani oshiring",
+  'Ichimliklar kam sotilmoqda — aksiya tashkil qiling',
   '12:00-14:00 va 18:00-20:00 band vaqtlar',
-  "O'rtacha tayyorlash vaqti 18 daqiqa â€” 15 ga tushiring",
+  "O'rtacha tayyorlash vaqti 18 daqiqa — 15 ga tushiring",
   'Yangi mijozlarga 10% cashback tavsiya qilinadi',
 ];
 
@@ -376,8 +373,6 @@ function MiniLineChart({ data, width = 600, height = 160 }) {
 
 export default function AdminAnalytics() {
   const [activePeriod, setActivePeriod] = useState('daily');
-  const navigate = useNavigate();
-  const store = useStore();
 
   const maxHourly = Math.max(...hourlyOrders);
 
@@ -552,7 +547,7 @@ export default function AdminAnalytics() {
         <div style={{ marginBottom: 8 }}>
           <div style={S.heatmapGrid}>
             {hourlyOrders.map((val, i) => (
-              <div key={i} style={S.heatmapCell(val, maxHourly)} title={`${i}:00 â€” ${val} ta buyurtma`} />
+              <div key={i} style={S.heatmapCell(val, maxHourly)} title={`${i}:00 — ${val} ta buyurtma`} />
             ))}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(24, 1fr)', gap: 3, marginTop: 6 }}>

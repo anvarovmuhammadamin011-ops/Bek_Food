@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Navigation, MapPin, Phone, Clock, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Navigation, MapPin, Phone, Clock, CheckCircle2, RotateCcw, Flame } from 'lucide-react';
 import GoogleMap from '../components/GoogleMap';
+import FoodCard from '../components/FoodCard';
+import { OrdersIllustration } from '../components/Illustrations';
 import useStore from '../store/useStore';
 
 const steps = [
@@ -14,7 +16,7 @@ const steps = [
 
 export default function TrackingPage() {
   const navigate = useNavigate();
-  const { currentOrder, updateOrderStatus } = useStore();
+  const { currentOrder, updateOrderStatus, orders, foods, addToCart } = useStore();
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
@@ -34,12 +36,64 @@ export default function TrackingPage() {
   }, []);
 
   if (!currentOrder) {
+    const pastOrders = orders.filter((o) => o.status === 'delivered');
+    const latest = pastOrders[0];
+    const popular = foods.filter((f) => f.isPopular).slice(0, 6);
+
+    const handleReorder = () => {
+      if (!latest) return;
+      latest.items.forEach((item) => addToCart(item.food, item.quantity));
+      navigate('/cart');
+    };
+
     return (
-      <div className="h-full flex flex-col items-center justify-center px-8 text-center">
-        <div className="empty-state-icon"><Navigation size={28} /></div>
-        <h2 className="display-3" style={{ marginBottom: 6 }}>Faol buyurtma yo'q</h2>
-        <p className="body" style={{ marginBottom: 24 }}>Buyurtma berishni boshlang</p>
-        <button onClick={() => navigate('/')} className="btn btn-primary">Menyu</button>
+      <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+        <div className="flex flex-col items-center text-center" style={{ padding: '40px 24px 8px' }}>
+          <div className="animate-float"><OrdersIllustration size={170} /></div>
+          <h2 className="display-3" style={{ marginBottom: 6 }}>Faol buyurtma yo'q</h2>
+          <p className="body" style={{ maxWidth: 270, marginBottom: 20 }}>Hozircha hech narsa buyurtma qilmadingiz. Mazali yeguliklar menyuda!</p>
+          <button onClick={() => navigate('/')} className="btn btn-primary">
+            Menyuga o'tish
+          </button>
+        </div>
+
+        {latest && (
+          <div className="px-4" style={{ marginTop: 24 }}>
+            <div className="card p-4 animate-fade-in-up">
+              <div className="flex items-center" style={{ gap: 8, marginBottom: 8 }}>
+                <RotateCcw size={16} color="var(--primary)" />
+                <h3 className="subheading">So'nggi buyurtmangiz</h3>
+              </div>
+              <p className="caption" style={{ marginBottom: 12 }}>
+                #{String(latest.id).slice(-4)} — {latest.items.map((i) => `${i.food.name} x${i.quantity}`).join(', ')}
+              </p>
+              <button onClick={handleReorder} className="btn btn-primary w-full">
+                Qayta buyurtma berish — {latest.total.toLocaleString()} so'm
+              </button>
+            </div>
+          </div>
+        )}
+
+        {popular.length > 0 && (
+          <div style={{ marginTop: 24 }}>
+            <div className="px-4 flex items-center justify-between" style={{ marginBottom: 12 }}>
+              <div className="flex items-center" style={{ gap: 8 }}>
+                <Flame size={18} color="var(--primary)" />
+                <h3 className="subheading">Ommabop mahsulotlar</h3>
+              </div>
+              <button onClick={() => navigate('/')} className="caption" style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
+                Hammasi
+              </button>
+            </div>
+            <div className="flex" style={{ gap: 12, overflowX: 'auto', scrollbarWidth: 'none', padding: '0 16px 4px' }}>
+              {popular.map((f) => (
+                <div key={f.id} style={{ minWidth: 150 }}>
+                  <FoodCard food={f} compact />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -149,7 +203,7 @@ export default function TrackingPage() {
               <div key={i} className="flex items-center justify-between" style={{ padding: '8px 0', borderBottom: i < currentOrder.items.length - 1 ? '1px solid var(--border)' : 'none' }}>
                 <div className="flex items-center" style={{ gap: 10 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: 'var(--surface-active)' }}>
-                    <img src={item.food.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={item.food.image} alt="" onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div>
                     <div style={{ color: 'var(--text)', fontSize: 13, fontWeight: 500 }}>{item.food.name}</div>

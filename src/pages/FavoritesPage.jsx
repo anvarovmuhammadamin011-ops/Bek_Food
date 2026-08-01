@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 import FoodCard from '../components/FoodCard';
 import RestaurantCard from '../components/RestaurantCard';
+import EmptyState from '../components/EmptyState';
 
 export default function FavoritesPage() {
+  const navigate = useNavigate();
   const { favorites, foods, restaurants } = useStore();
   const [tab, setTab] = useState('restaurants');
 
@@ -31,11 +33,7 @@ export default function FavoritesPage() {
 
       <div className="p-4 space-y-3">
         {(tab === 'restaurants' ? favRestaurants : favFoods).length === 0 && (
-          <div className="empty-state py-16">
-            <div className="empty-state-icon"><Heart size={24} /></div>
-            <h3 className="heading">Sevimlilar yo'q</h3>
-            <p className="body">Yurakcha bosib sevimlilarga qo'shing</p>
-          </div>
+          <EmptyState icon="heart" title="Sevimlilar yo'q" description="Yurakcha bosib sevimlilarga qo'shing" actionLabel="Menyuga o'tish" onAction={() => navigate('/')} />
         )}
         {tab === 'restaurants' && <div className="space-y-3">{favRestaurants.map((r) => <RestaurantCard key={r.id} restaurant={r} />)}</div>}
         {tab === 'foods' && <div className="grid grid-cols-2" style={{ gap: 12 }}>{favFoods.map((f) => <FoodCard key={f.id} food={f} />)}</div>}

@@ -34,14 +34,11 @@ import CourierSettings from './pages/courier/CourierSettings';
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
-import AdminMenu from './pages/admin/AdminMenu';
 import AdminCustomers from './pages/admin/AdminCustomers';
 import AdminEmployees from './pages/admin/AdminEmployees';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminFinance from './pages/admin/AdminFinance';
-import AdminInventory from './pages/admin/AdminInventory';
-import AdminBanners from './pages/admin/AdminBanners';
-import AdminReviews from './pages/admin/AdminReviews';
+import AdminPromos from './pages/admin/AdminPromos';
 import AdminAudit from './pages/admin/AdminAudit';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminBranches from './pages/admin/AdminBranches';
@@ -105,14 +102,11 @@ export default function App() {
         {/* Admin routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/menu" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminMenu /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/customers" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminCustomers /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminEmployees /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminAnalytics /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/finance" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminFinance /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminInventory /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/banners" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminBanners /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/reviews" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminReviews /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/promos" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminPromos /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/audit" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminAudit /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/branches" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminBranches /></AdminLayout></ProtectedRoute>} />

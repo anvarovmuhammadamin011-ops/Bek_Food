@@ -4,14 +4,11 @@ import useStore from '../store/useStore';
 import {
   LayoutDashboard,
   ShoppingCart,
-  UtensilsCrossed,
   Users,
   UserCog,
   BarChart3,
   Wallet,
-  Package,
-  Image,
-  Star,
+  Tag,
   ShieldCheck,
   Settings,
   Building2,
@@ -26,14 +23,11 @@ import {
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
   { label: 'Buyurtmalar', path: '/admin/orders', icon: ShoppingCart },
-  { label: 'Menyu', path: '/admin/menu', icon: UtensilsCrossed },
   { label: 'Mijozlar', path: '/admin/customers', icon: Users },
   { label: 'Xodimlar', path: '/admin/employees', icon: UserCog },
   { label: 'Analitika', path: '/admin/analytics', icon: BarChart3 },
   { label: 'Moliya', path: '/admin/finance', icon: Wallet },
-  { label: 'Ombor', path: '/admin/inventory', icon: Package },
-  { label: 'Bannerlar', path: '/admin/banners', icon: Image },
-  { label: 'Sharhlar', path: '/admin/reviews', icon: Star },
+  { label: 'Promo kodlar', path: '/admin/promos', icon: Tag },
   { label: 'Audit', path: '/admin/audit', icon: ShieldCheck },
   { label: 'Filiallar', path: '/admin/branches', icon: Building2 },
   { label: 'Statistika', path: '/admin/statistics', icon: TrendingUp },
@@ -44,7 +38,6 @@ export default function AdminLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const store = useStore();
-  const user = store?.user || { name: 'Admin' };
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const unreadCount = 5;
 

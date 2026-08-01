@@ -21,7 +21,7 @@ export default function RestaurantPage() {
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-28">
       <div className="relative" style={{ height: 260 }}>
-        <img src={restaurant.coverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={restaurant.coverImage} alt="" onError={(e) => { e.currentTarget.src = '/food/restaurant-cover.svg'; }} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 50%)' }} />
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
           <button onClick={() => navigate(-1)} style={{ background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-sm)', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,.08)' }}>
@@ -37,7 +37,7 @@ export default function RestaurantPage() {
         <div className="card p-4 animate-slide-up">
           <div className="flex items-start" style={{ gap: 14, marginBottom: 12 }}>
             <div style={{ width: 56, height: 56, borderRadius: 'var(--radius)', border: '2px solid var(--border)', overflow: 'hidden', flexShrink: 0 }}>
-              <img src={restaurant.logo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={restaurant.logo} alt="" onError={(e) => { e.currentTarget.src = '/logo.png'; }} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
               <h1 className="display-3" style={{ fontSize: 20 }}>{restaurant.name}</h1>

@@ -1001,7 +1001,7 @@ export default function AdminOrders() {
                           flexShrink: 0,
                         }}>
                           {item.food?.image ? (
-                            <img src={item.food.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={item.food.image} alt="" onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           ) : (
                             <Package size={18} color="var(--text-muted)" />
                           )}

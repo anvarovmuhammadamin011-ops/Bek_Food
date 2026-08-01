@@ -738,7 +738,7 @@ export default function SellerMenu() {
               }}
             >
               <div style={styles.cardImgWrap}>
-                <img src={food.image} alt={food.name} style={styles.cardImg} />
+                <img src={food.image} alt={food.name} style={styles.cardImg} onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} />
                 <div style={styles.cardImgGradient} />
 
                 <div

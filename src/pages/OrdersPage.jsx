@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, CheckCircle, XCircle, RotateCcw, Star } from 'lucide-react';
+import { RotateCcw, Star } from 'lucide-react';
 import useStore from '../store/useStore';
+import EmptyState from '../components/EmptyState';
 
 const statusConfig = {
   pending: { label: 'Kutilmoqda', color: 'var(--warning)', bg: 'var(--warning-light)' },
@@ -46,13 +47,13 @@ export default function OrdersPage() {
 
       <div className="p-4 space-y-3">
         {displayed.length === 0 && (
-          <div className="empty-state py-16">
-            <div className="empty-state-icon">
-              {tab === 'active' ? <Clock size={24} /> : tab === 'completed' ? <CheckCircle size={24} /> : <XCircle size={24} />}
-            </div>
-            <h3 className="heading">Buyurtma yo'q</h3>
-            <p className="body">Hozircha buyurtmalar mavjud emas</p>
-          </div>
+          <EmptyState
+            icon="orders"
+            title="Buyurtma yo'q"
+            description={tab === 'active' ? 'Faol buyurtmalaringiz yo\'q. Yangi buyurtma berishni boshlang!' : tab === 'completed' ? 'Hozircha bajarilgan buyurtmalar mavjud emas' : 'Bekor qilingan buyurtmalar yo\'q'}
+            actionLabel={tab === 'active' ? 'Menyuga o\'tish' : undefined}
+            onAction={() => navigate('/')}
+          />
         )}
 
         {displayed.map((order) => {
@@ -69,7 +70,7 @@ export default function OrdersPage() {
               <div className="flex items-center" style={{ gap: 4, marginBottom: 12 }}>
                 <div className="flex" style={{ marginRight: -4 }}>
                   {order.items.slice(0, 3).map((item, i) => (
-                    <img key={i} src={item.food.image} alt="" style={{ width: 32, height: 32, borderRadius: 'var(--radius-xs)', border: '2px solid var(--bg)', objectFit: 'cover' }} />
+                    <img key={i} src={item.food.image} alt="" onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} style={{ width: 32, height: 32, borderRadius: 'var(--radius-xs)', border: '2px solid var(--bg)', objectFit: 'cover' }} />
                   ))}
                 </div>
                 <p className="caption">{order.items.length} ta mahsulot</p>

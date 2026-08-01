@@ -36,6 +36,7 @@ export default function FoodCard({ food, compact = false }) {
             src={food.image} alt={food.name}
             style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: imgLoaded ? 1 : 0, transition: 'opacity .4s' }}
             loading="lazy" onLoad={() => setImgLoaded(true)}
+            onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; setImgLoaded(true); }}
           />
           {food.discountPrice && (
             <span className="badge badge-danger" style={{ position: 'absolute', top: 10, left: 10, fontSize: 10, padding: '3px 8px' }}>
@@ -96,6 +97,7 @@ export default function FoodCard({ food, compact = false }) {
           src={food.image} alt={food.name}
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: imgLoaded ? 1 : 0, transition: 'opacity .4s' }}
           loading="lazy" onLoad={() => setImgLoaded(true)}
+          onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; setImgLoaded(true); }}
         />
         {food.discountPrice && (
           <span className="badge badge-danger" style={{ position: 'absolute', top: 10, left: 10, padding: '3px 10px' }}>

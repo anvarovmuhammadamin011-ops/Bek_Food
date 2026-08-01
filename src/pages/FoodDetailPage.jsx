@@ -28,7 +28,7 @@ export default function FoodDetailPage() {
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-28">
       <div className="relative" style={{ height: 300 }}>
-        <img src={food.image} alt={food.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={food.image} alt={food.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 50%)' }} />
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
           <button onClick={() => navigate(-1)} style={{

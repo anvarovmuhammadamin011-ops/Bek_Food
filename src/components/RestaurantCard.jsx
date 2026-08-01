@@ -16,6 +16,7 @@ export default function RestaurantCard({ restaurant }) {
           alt={restaurant.name}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           loading="lazy"
+          onError={(e) => { e.currentTarget.src = '/food/restaurant-cover.svg'; }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 60%)' }} />
         <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>

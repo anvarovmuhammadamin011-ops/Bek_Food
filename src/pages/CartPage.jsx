@@ -24,7 +24,8 @@ export default function CartPage() {
   }
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-36">
+    <div className="h-full flex flex-col">
+      <div className="flex-1 overflow-y-auto scrollbar-hide pb-36">
       <div className="p-4">
         <div className="flex items-center justify-between animate-fade-in" style={{ marginBottom: 16 }}>
           <h1 className="heading">Savat</h1>
@@ -47,7 +48,7 @@ export default function CartPage() {
               }}
             >
               <div style={{ width: 52, height: 52, borderRadius: 'var(--radius-sm)', overflow: 'hidden', flexShrink: 0, background: 'var(--surface-active)' }}>
-                <img src={item.food.image} alt={item.food.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={item.food.image} alt={item.food.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.food.name}</div>
@@ -72,9 +73,27 @@ export default function CartPage() {
         {/* Price summary */}
         <div className="card animate-fade-in-up" style={{ marginTop: 16, padding: 18 }}>
           <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10 }}>
+            <span style={{ color: 'var(--text-muted)' }}>Mahsulotlar ({cart.reduce((s, i) => s + i.quantity, 0)})</span>
+            <span style={{ color: 'var(--text)' }}>{totals.subtotal.toLocaleString()} so'm</span>
+          </div>
+          <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10 }}>
+            <span style={{ color: 'var(--text-muted)' }}>Xizmat haqi (2%)</span>
+            <span style={{ color: 'var(--text)' }}>+{totals.serviceFee.toLocaleString()} so'm</span>
+          </div>
+          <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10 }}>
+            <span style={{ color: 'var(--text-muted)' }}>Soliq (1%)</span>
+            <span style={{ color: 'var(--text)' }}>-{totals.tax.toLocaleString()} so'm</span>
+          </div>
+          <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10 }}>
             <span style={{ color: 'var(--text-muted)' }}>Yetkazib berish</span>
             <span style={{ color: 'var(--success)', fontWeight: 600 }}>bepul</span>
           </div>
+          {totals.discount > 0 && (
+            <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10, color: 'var(--success)' }}>
+              <span>Chegirma</span>
+              <span>-{totals.discount.toLocaleString()} so'm</span>
+            </div>
+          )}
           <div className="divider" />
           <div className="flex items-baseline justify-between" style={{ marginTop: 10 }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: 15 }}>Jami</span>
@@ -84,14 +103,13 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+      </div>
 
       {/* Sticky CTA */}
-      <div className="fixed inset-x-0 z-40" style={{ bottom: 'calc(82px + env(safe-area-inset-bottom, 0px))', padding: '12px 16px' }}>
+      <div className="fixed inset-x-0 z-40" style={{ bottom: 82, padding: '12px 16px', background: 'rgba(255,255,255,.97)', borderTop: '1px solid var(--border)' }}>
         <div style={{
           maxWidth: 480, margin: '0 auto',
-          background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(20px) saturate(1.8)',
           borderRadius: 'var(--radius-lg)', padding: '10px',
-          boxShadow: '0 -4px 20px rgba(0,0,0,.05)',
         }}>
           <button onClick={() => navigate('/checkout')} className="btn btn-primary w-full">
             <span>Buyurtma berish</span>

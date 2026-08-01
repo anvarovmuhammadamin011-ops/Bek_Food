@@ -1,9 +1,9 @@
-const hotdogImg = 'https://images.unsplash.com/photo-1612392062120-e5a0e2e4f5b4?w=400&h=300&fit=crop';
-const lavashImg = 'https://images.unsplash.com/photo-1659714885921-0e8d6a1bc05e?w=400&h=300&fit=crop';
-const burgerImg = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop';
-const donerImg = 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=300&fit=crop';
-const friesImg = 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop';
-const pizzaImg = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop';
+const hotdogImg = '/food/hotdog.svg';
+const lavashImg = '/food/lavash.svg';
+const burgerImg = '/food/burger.svg';
+const donerImg = '/food/doner.svg';
+const friesImg = '/food/fries.svg';
+const pizzaImg = '/food/pizza.svg';
 
 const foodList = [
   { id: 1, name: 'Hot-dog oddiy', price: 12000, image: hotdogImg, categoryId: 1, isPopular: true, restaurantId: 1, spiceLevel: 0, ingredients: ['Sosiska', 'Bulochka'] },
@@ -48,7 +48,7 @@ export const categories = [
 export const foods = foodList;
 
 export const restaurants = [
-  { id: 1, name: 'BEK FOOD Chinobod', coverImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop', logo: '/logo.png', cuisine: 'Hot-dog, Lavash, Burger, Doner', rating: 4.8, deliveryTime: '25-35', distance: 'Chinobod', minOrder: 0, isOpen: true, address: "Chinobod tumani, Oqtepa ko'chasi, 15", phone: '+998901234567', workingHours: '10:00 - 23:00', coordinates: { lat: 41.2995, lng: 69.2401 } },
+    { id: 1, name: 'BEK FOOD Chinobod', coverImage: '/food/restaurant-cover.svg', logo: '/logo.png', cuisine: 'Hot-dog, Lavash, Burger, Doner', rating: 4.8, deliveryTime: '25-35', distance: 'Chinobod', minOrder: 0, isOpen: true, address: "Chinobod tumani, Oqtepa ko'chasi, 15", phone: '+998901234567', workingHours: '10:00 - 23:00', coordinates: { lat: 41.2995, lng: 69.2401 } },
 ];
 
 export const banners = [
