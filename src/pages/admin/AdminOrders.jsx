@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Search, Filter, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
-  Check, X, Eye, Clock, Download, Printer, Package, User, MapPin, CreditCard, Banknote, AlertCircle
+  Check, X, Eye, Clock, Download, Printer, Package, User, MapPin, CreditCard, Banknote
 } from 'lucide-react';
 import useStore from '../../store/useStore';
 
@@ -15,10 +16,6 @@ const statusConfig = {
 };
 
 const statusOrder = ['pending', 'preparing', 'ready', 'onTheWay', 'delivered'];
-
-function formatCurrency(n) {
-  return n?.toLocaleString() + " so'm";
-}
 
 function formatTime(iso) {
   const d = new Date(iso);
@@ -587,13 +584,14 @@ const styles = {
 
 export default function AdminOrders() {
   const { orders, updateOrderStatus, cancelOrder } = useStore();
+  const [searchParams] = useSearchParams();
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [detailOrder, setDetailOrder] = useState(null);
   const [search, setSearch] = useState('');
   const [filterDate, setFilterDate] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || 'all');
   const [filterPayment, setFilterPayment] = useState('all');
   const [filterMinSum, setFilterMinSum] = useState('');
   const [filterMaxSum, setFilterMaxSum] = useState('');

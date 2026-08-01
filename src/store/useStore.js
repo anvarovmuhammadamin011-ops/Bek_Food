@@ -49,6 +49,20 @@ const mockPromoCodes = [
   { id: 3, code: 'CHINOBOD', discount: 10, discountType: 'percent', minOrder: 50000, maxUses: 100, usedCount: 34, active: false, startDate: '', endDate: '' },
 ];
 
+const mockSettings = {
+  name: 'BEK FOOD',
+  phone: '+998 90 123 45 67',
+  address: "Chinobod tumani, Oqtepa ko'chasi, 15",
+  logo: '/logo.png',
+  lat: 41.2995,
+  lng: 69.2401,
+  openTime: '10:00',
+  closeTime: '23:00',
+  deliveryFee: 0,
+  minOrder: 0,
+  paymentMethods: { cash: true, card: false, click: false, payme: false },
+};
+
 const mockEmployees = [
   { id: 1, name: 'Akbar', role: 'courier', phone: '+998901112233', rating: 4.8, totalDeliveries: 312, isOnline: true },
   { id: 2, name: 'Sardor', role: 'courier', phone: '+998902223344', rating: 4.6, totalDeliveries: 198, isOnline: false },
@@ -65,6 +79,9 @@ const initialState = {
   favorites: [],
   appliedCoupon: null,
   promoCodes: mockPromoCodes,
+  settings: mockSettings,
+  productDiscounts: [],
+  categoryDiscounts: [],
   selectedPaymentMethod: 'cash',
   selectedFood: null,
   selectedRestaurant: null,
@@ -153,7 +170,7 @@ export const useStore = create((set, get) => ({
   getCartTotal: () => {
     const cart = get().cart;
     const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-    const deliveryFee = 0;
+    const deliveryFee = get().settings?.deliveryFee && subtotal > 0 ? Number(get().settings.deliveryFee) : 0;
     const serviceFee = Math.round(subtotal * 0.02);
     const tax = Math.round(subtotal * 0.01);
     const discount = get().appliedCoupon
@@ -274,6 +291,78 @@ export const useStore = create((set, get) => ({
   addProduct: (product) => set({ foods: [...get().foods, { ...product, id: Date.now() }] }),
   updateProduct: (id, data) => set({ foods: get().foods.map((f) => (f.id === id ? { ...f, ...data } : f)) }),
   deleteProduct: (id) => set({ foods: get().foods.filter((f) => f.id !== id) }),
+  toggleProductAvailability: (id) =>
+    set({ foods: get().foods.map((f) => (f.id === id ? { ...f, available: !(f.available !== false) } : f)) }),
+  toggleProductPopular: (id) =>
+    set({ foods: get().foods.map((f) => (f.id === id ? { ...f, isPopular: !f.isPopular } : f)) }),
+
+  // Categories
+  addCategory: (category) => set({ categories: [...get().categories, { ...category, id: Date.now() }] }),
+  updateCategory: (id, data) =>
+    set({ categories: get().categories.map((c) => (c.id === id ? { ...c, ...data } : c)) }),
+  deleteCategory: (id) => set({ categories: get().categories.filter((c) => c.id !== id) }),
+  moveCategory: (id, dir) => {
+    const arr = [...get().categories];
+    const idx = arr.findIndex((c) => c.id === id);
+    const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
+    if (idx === -1 || swapIdx < 0 || swapIdx >= arr.length) return;
+    [arr[idx], arr[swapIdx]] = [arr[swapIdx], arr[idx]];
+    set({ categories: arr });
+  },
+
+  // Discounts (product / category)
+  applyProductDiscount: (productId, percent, expiresAt = '') => {
+    const food = get().foods.find((f) => f.id === productId);
+    if (!food) return;
+    const discountPrice = Math.round(food.price * (1 - percent / 100));
+    set({
+      foods: get().foods.map((f) => (f.id === productId ? { ...f, discountPrice } : f)),
+      productDiscounts: [
+        ...get().productDiscounts.filter((d) => d.productId !== productId),
+        { id: Date.now(), productId, productName: food.name, percent, expiresAt },
+      ],
+    });
+  },
+  removeProductDiscount: (productId) => {
+    set({
+      foods: get().foods.map((f) => (f.id === productId ? { ...f, discountPrice: undefined } : f)),
+      productDiscounts: get().productDiscounts.filter((d) => d.productId !== productId),
+    });
+  },
+  applyCategoryDiscount: (categoryId, percent, expiresAt = '') => {
+    const cat = get().categories.find((c) => c.id === categoryId);
+    if (!cat) return;
+    const targetIds = get().foods.filter((f) => f.categoryId === categoryId).map((f) => f.id);
+    const prev = get().productDiscounts.filter((d) => !targetIds.includes(d.productId));
+    set({
+      foods: get().foods.map((f) =>
+        f.categoryId === categoryId && !f.discountPrice
+          ? { ...f, discountPrice: Math.round(f.price * (1 - percent / 100)) }
+          : f
+      ),
+      productDiscounts: prev,
+      categoryDiscounts: [
+        ...get().categoryDiscounts.filter((d) => d.categoryId !== categoryId),
+        { id: Date.now(), categoryId, categoryName: cat.name, percent, expiresAt },
+      ],
+    });
+  },
+  removeCategoryDiscount: (categoryId) => {
+    const disc = get().categoryDiscounts.find((d) => d.categoryId === categoryId);
+    if (disc) {
+      set({
+        foods: get().foods.map((f) =>
+          f.categoryId === categoryId && f.discountPrice
+            ? { ...f, discountPrice: undefined }
+            : f
+        ),
+        categoryDiscounts: get().categoryDiscounts.filter((d) => d.categoryId !== categoryId),
+      });
+    }
+  },
+
+  // Settings
+  updateSettings: (data) => set({ settings: { ...get().settings, ...data } }),
   addInventory: (entry) => set({ inventory: [...get().inventory, { ...entry, id: Date.now() }] }),
   updateInventory: (id, data) => set({ inventory: get().inventory.map((i) => (i.id === id ? { ...i, ...data } : i)) }),
 

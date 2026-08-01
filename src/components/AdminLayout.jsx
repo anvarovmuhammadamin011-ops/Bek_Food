@@ -3,16 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import useStore from '../store/useStore';
 import {
   LayoutDashboard,
-  ShoppingCart,
-  Users,
-  UserCog,
+  Hamburger,
+  FolderOpen,
+  Gift,
   BarChart3,
-  Wallet,
-  Tag,
-  ShieldCheck,
   Settings,
-  Building2,
-  TrendingUp,
   LogOut,
   Menu,
   X,
@@ -22,15 +17,10 @@ import {
 
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-  { label: 'Buyurtmalar', path: '/admin/orders', icon: ShoppingCart },
-  { label: 'Mijozlar', path: '/admin/customers', icon: Users },
-  { label: 'Xodimlar', path: '/admin/employees', icon: UserCog },
+  { label: 'Mahsulotlar', path: '/admin/products', icon: Hamburger },
+  { label: 'Kategoriyalar', path: '/admin/categories', icon: FolderOpen },
+  { label: 'Promotions', path: '/admin/promotions', icon: Gift },
   { label: 'Analitika', path: '/admin/analytics', icon: BarChart3 },
-  { label: 'Moliya', path: '/admin/finance', icon: Wallet },
-  { label: 'Promo kodlar', path: '/admin/promos', icon: Tag },
-  { label: 'Audit', path: '/admin/audit', icon: ShieldCheck },
-  { label: 'Filiallar', path: '/admin/branches', icon: Building2 },
-  { label: 'Statistika', path: '/admin/statistics', icon: TrendingUp },
   { label: 'Sozlamalar', path: '/admin/settings', icon: Settings },
 ];
 

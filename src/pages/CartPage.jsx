@@ -86,7 +86,9 @@ export default function CartPage() {
           </div>
           <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10 }}>
             <span style={{ color: 'var(--text-muted)' }}>Yetkazib berish</span>
-            <span style={{ color: 'var(--success)', fontWeight: 600 }}>bepul</span>
+            <span style={{ color: totals.deliveryFee > 0 ? 'var(--text)' : 'var(--success)', fontWeight: 600 }}>
+              {totals.deliveryFee > 0 ? `+${totals.deliveryFee.toLocaleString()} so'm` : 'bepul'}
+            </span>
           </div>
           {totals.discount > 0 && (
             <div className="flex justify-between" style={{ fontSize: 13, marginBottom: 10, color: 'var(--success)' }}>
