@@ -28,8 +28,10 @@ import SellerLayout from './components/SellerLayout';
 
 // Courier pages
 import CourierDashboard from './pages/courier/CourierDashboard';
-import CourierOrders from './pages/courier/CourierOrders';
-import CourierSettings from './pages/courier/CourierSettings';
+import CourierDelivery from './pages/courier/CourierDelivery';
+import CourierHistory from './pages/courier/CourierHistory';
+import CourierProfile from './pages/courier/CourierProfile';
+import CourierLayout from './components/CourierLayout';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -90,9 +92,10 @@ export default function App() {
         <Route path="/seller/profile" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerProfile /></SellerLayout></ProtectedRoute>} />
 
         {/* Courier routes */}
-        <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierDashboard /></AppShell></ProtectedRoute>} />
-        <Route path="/courier/orders" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierOrders /></AppShell></ProtectedRoute>} />
-        <Route path="/courier/settings" element={<ProtectedRoute allowedRoles={['courier']}><AppShell wide><CourierSettings /></AppShell></ProtectedRoute>} />
+        <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierDashboard /></CourierLayout></ProtectedRoute>} />
+        <Route path="/courier/delivery" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierDelivery /></CourierLayout></ProtectedRoute>} />
+        <Route path="/courier/history" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierHistory /></CourierLayout></ProtectedRoute>} />
+        <Route path="/courier/profile" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierProfile /></CourierLayout></ProtectedRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />

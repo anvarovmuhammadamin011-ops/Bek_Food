@@ -8,9 +8,12 @@ import useStore from '../store/useStore';
 
 const steps = [
   { key: 'pending', label: 'Qabul qilindi', icon: CheckCircle2, desc: 'Buyurtmangiz qabul qilindi' },
+  { key: 'confirmed', label: 'Tasdiqlandi', icon: CheckCircle2, desc: 'Buyurtmangiz tasdiqlandi' },
   { key: 'preparing', label: 'Tayyorlanmoqda', icon: Clock, desc: 'Oshpazlar tayyorlamoqda' },
-  { key: 'ready', label: "Dastavkaga chiqdi", icon: MapPin, desc: "Buyurtma jo'natildi" },
-  { key: 'onTheWay', label: "Yo'lda", icon: Navigation, desc: "Kuryer yo'lda" },
+  { key: 'ready', label: 'Tayyor', icon: MapPin, desc: 'Buyurtma tayyor' },
+  { key: 'assigned', label: 'Kuryer tayinlandi', icon: Navigation, desc: 'Kuryer tayinlandi' },
+  { key: 'onTheWay', label: 'Kuryer keldi', icon: Navigation, desc: 'Kuryer buyurtmani oldi' },
+  { key: 'pickedUp', label: "Yo'lda", icon: Navigation, desc: "Kuryer yo'lda" },
   { key: 'delivered', label: 'Yetkazildi', icon: CheckCircle2, desc: 'Muvaffaqiyatli yetkazildi' },
 ];
 

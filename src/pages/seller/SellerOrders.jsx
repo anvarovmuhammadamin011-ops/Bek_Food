@@ -27,7 +27,9 @@ const COLUMNS = [
   { key: 'confirmed', label: 'Tasdiqlandi', icon: CheckCircle2, accent: '#F59E0B' },
   { key: 'preparing', label: 'Tayyorlanmoqda', icon: ChefHat, accent: '#F97316' },
   { key: 'ready', label: 'Tayyor', icon: PackageCheck, accent: '#22C55E' },
-  { key: 'onTheWay', label: 'Yetkazilmoqda', icon: Bike, accent: '#3B82F6' },
+  { key: 'assigned', label: 'Kuryer tayinlandi', icon: Bike, accent: '#F59E0B' },
+  { key: 'onTheWay', label: 'Kuryer ketdi', icon: Bike, accent: '#3B82F6' },
+  { key: 'pickedUp', label: 'Olib ketildi', icon: PackageCheck, accent: '#8B5CF6' },
   { key: 'delivered', label: 'Yakunlangan', icon: Package, accent: '#6B7280' },
 ];
 
@@ -36,7 +38,9 @@ const STATUS_META = {
   confirmed: { label: 'Tasdiqlandi', color: '#F59E0B', bg: 'rgba(245,158,11,0.08)' },
   preparing: { label: 'Tayyorlanmoqda', color: '#F97316', bg: 'rgba(249,115,22,0.08)' },
   ready: { label: 'Tayyor', color: '#22C55E', bg: 'rgba(34,197,94,0.08)' },
-  onTheWay: { label: 'Yetkazilmoqda', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+  assigned: { label: 'Kuryer tayinlandi', color: '#F59E0B', bg: 'rgba(245,158,11,0.08)' },
+  onTheWay: { label: 'Kuryer ketdi', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+  pickedUp: { label: 'Olib ketildi', color: '#8B5CF6', bg: 'rgba(139,92,246,0.08)' },
   delivered: { label: 'Yetkazildi', color: '#6B7280', bg: 'rgba(107,114,128,0.08)' },
   cancelled: { label: 'Bekor', color: '#9CA3AF', bg: 'rgba(156,163,175,0.08)' },
 };
@@ -470,15 +474,26 @@ function OrderCard({ order, onAccept, onReject, onPreparing, onReady, onAssignCo
         </div>
       )}
 
-      {(order.status === 'onTheWay' || order.status === 'delivered') && (
+      {['assigned', 'onTheWay', 'pickedUp', 'delivered'].includes(order.status) && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0, flex: 1 }}>
-            {order.status === 'onTheWay' ? 'Kuryer yetkazmoqda' : 'Yetkazib berildi'}
+            {order.status === 'assigned' && 'Kuryer qabul qilishini kutilmoqda'}
+            {order.status === 'onTheWay' && 'Kuryer buyurtmani olib ketmoqda'}
+            {order.status === 'pickedUp' && 'Kuryer yetkazmoqda'}
+            {order.status === 'delivered' && 'Yetkazib berildi'}
           </p>
           <div style={{ display: 'flex', gap: 6 }}>
             <button onClick={() => printReceipt(order, settings)} style={s.iconBtn} title="Chek chop etish">
               <Printer size={15} />
             </button>
+            {order.status !== 'delivered' && (() => {
+              const courier = employees.find((e) => e.id === order.courierId);
+              return (
+                <button onClick={() => { if (courier?.phone) window.location.href = 'tel:' + courier.phone; }} style={s.iconBtn} title={`Kuryerga qo'ng'iroq (${courier?.name || ''})`}>
+                  <Bike size={15} />
+                </button>
+              );
+            })()}
             <button onClick={() => { if (order.customerPhone) window.location.href = 'tel:' + order.customerPhone; }} style={s.iconBtn} title="Qo'ng'iroq qilish">
               <Phone size={15} />
             </button>
@@ -647,7 +662,9 @@ export default function SellerOrders() {
     { key: 'confirmed', label: 'Tasdiqlandi' },
     { key: 'preparing', label: 'Tayyorlanmoqda' },
     { key: 'ready', label: 'Tayyor' },
+    { key: 'assigned', label: 'Kuryer tayinlandi' },
     { key: 'onTheWay', label: 'Yetkazish' },
+    { key: 'pickedUp', label: 'Olib ketildi' },
     { key: 'pickup', label: 'Olib ketish' },
     { key: 'delivered', label: 'Yakunlangan' },
     { key: 'cancelled', label: 'Bekor' },

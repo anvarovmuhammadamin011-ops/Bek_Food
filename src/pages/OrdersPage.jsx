@@ -6,9 +6,12 @@ import EmptyState from '../components/EmptyState';
 
 const statusConfig = {
   pending: { label: 'Kutilmoqda', color: 'var(--warning)', bg: 'var(--warning-light)' },
+  confirmed: { label: 'Tasdiqlandi', color: 'var(--warning)', bg: 'var(--warning-light)' },
   preparing: { label: 'Tayyorlanmoqda', color: 'var(--primary)', bg: 'var(--primary-light)' },
   ready: { label: 'Tayyor', color: 'var(--success)', bg: 'var(--success-light)' },
+  assigned: { label: 'Kuryer tayinlandi', color: 'var(--warning)', bg: 'var(--warning-light)' },
   onTheWay: { label: "Yo'lda", color: 'var(--primary)', bg: 'var(--primary-light)' },
+  pickedUp: { label: 'Olib ketildi', color: 'var(--primary)', bg: 'var(--primary-light)' },
   delivered: { label: 'Yetkazildi', color: 'var(--success)', bg: 'var(--success-light)' },
   cancelled: { label: 'Bekor qilindi', color: 'var(--text-dim)', bg: 'var(--surface-active)' },
 };

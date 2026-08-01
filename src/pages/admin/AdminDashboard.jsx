@@ -18,6 +18,9 @@ import {
   Plus,
   FolderPlus,
   Tag,
+  Bike,
+  Timer,
+  PackageCheck,
 } from 'lucide-react';
 
 const useCountUp = (target, duration = 1200) => {
@@ -92,6 +95,17 @@ const AdminDashboard = () => {
 
   const statusCount = (status) => orders.filter((o) => o.status === status).length;
 
+  const employees = store.employees || [];
+  const activeCouriers = employees.filter((e) => e.role === 'courier' && e.isOnline).length;
+  const deliveredOrders = orders.filter((o) => o.status === 'delivered');
+  const deliveredTimes = deliveredOrders
+    .filter((o) => o.assignedAt && o.deliveredAt)
+    .map((o) => new Date(o.deliveredAt).getTime() - new Date(o.assignedAt).getTime());
+  const avgDeliveryMin = deliveredTimes.length
+    ? Math.round(deliveredTimes.reduce((s, t) => s + t, 0) / deliveredTimes.length / 60000)
+    : 0;
+  const cancelledDeliveries = orders.filter((o) => o.status === 'cancelled' && o.deliveryType === 'delivery').length;
+
   const todayOrders = orders;
   const todayRevenue = todayOrders.filter((o) => o.status !== 'cancelled').reduce((s, o) => s + (o.total || 0), 0);
   const revenueAnimated = useCountUp(todayRevenue);
@@ -148,9 +162,12 @@ const AdminDashboard = () => {
 
   const statusMeta = {
     pending: { label: 'Kutilmoqda', color: '#F59E0B' },
+    confirmed: { label: 'Tasdiqlandi', color: '#F59E0B' },
     preparing: { label: 'Tayyorlanmoqda', color: 'var(--primary)' },
     ready: { label: 'Tayyor', color: '#3B82F6' },
+    assigned: { label: 'Kuryer tayinlandi', color: '#F59E0B' },
     onTheWay: { label: 'Yetkazilmoqda', color: '#8B5CF6' },
+    pickedUp: { label: 'Olib ketildi', color: '#8B5CF6' },
     delivered: { label: 'Yetkazildi', color: 'var(--success)' },
     cancelled: { label: 'Bekor qilingan', color: 'var(--danger)' },
   };
@@ -245,6 +262,49 @@ const AdminDashboard = () => {
           );
           return card;
         })}
+      </div>
+
+      <div className="dash-delivery" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px' }}>
+          <span style={{ width: 38, height: 38, borderRadius: 10, background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Bike size={17} style={{ color: 'var(--primary)' }} />
+          </span>
+          <div>
+            <p className="caption" style={{ marginBottom: 1 }}>Faol kuryerlar</p>
+            <p className="price-lg" style={{ fontSize: 17 }}>{activeCouriers} ta</p>
+          </div>
+        </div>
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px' }}>
+          <span style={{ width: 38, height: 38, borderRadius: 10, background: '#F0FDF4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <PackageCheck size={17} style={{ color: 'var(--success)' }} />
+          </span>
+          <div>
+            <p className="caption" style={{ marginBottom: 1 }}>Yetkazilgan buyurtmalar</p>
+            <p className="price-lg" style={{ fontSize: 17 }}>{deliveredOrders.length} ta</p>
+          </div>
+        </div>
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px' }}>
+          <span style={{ width: 38, height: 38, borderRadius: 10, background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Timer size={17} style={{ color: '#3B82F6' }} />
+          </span>
+          <div>
+            <p className="caption" style={{ marginBottom: 1 }}>O'rtacha yetkazish vaqti</p>
+            <p className="price-lg" style={{ fontSize: 17 }}>{avgDeliveryMin} daqiqa</p>
+          </div>
+        </div>
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px' }}>
+          <span style={{ width: 38, height: 38, borderRadius: 10, background: '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <XCircle size={17} style={{ color: 'var(--danger)' }} />
+          </span>
+          <div>
+            <p className="caption" style={{ marginBottom: 1 }}>Bekor qilingan yetkazishlar</p>
+            <p className="price-lg" style={{ fontSize: 17 }}>{cancelledDeliveries} ta</p>
+          </div>
+        </div>
+        <style>{`
+          @media(max-width:1100px){ .dash-delivery{ grid-template-columns: repeat(2, 1fr) !important; } }
+          @media(max-width:480px){ .dash-delivery{ grid-template-columns: 1fr !important; } }
+        `}</style>
       </div>
 
       <div className="dash-two-col">

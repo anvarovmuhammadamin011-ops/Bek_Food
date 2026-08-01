@@ -52,8 +52,15 @@ export default function SellerDelivery() {
   const courierPhone = (id) => employees.find((e) => e.id === id)?.phone || '';
 
   const deliveryOrders = orders
-    .filter((o) => o.courierId && (o.status === 'onTheWay' || o.status === 'delivered'))
+    .filter((o) => o.courierId && ['assigned', 'onTheWay', 'pickedUp', 'delivered'].includes(o.status))
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const STATUS_META = {
+    assigned: { label: 'Kuryer tayinlandi', color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', icon: Clock },
+    onTheWay: { label: 'Kuryer ketdi', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)', icon: Bike },
+    pickedUp: { label: 'Olib ketildi, yetkazilmoqda', color: '#8B5CF6', bg: 'rgba(139,92,246,0.08)', icon: PackageCheck },
+    delivered: { label: 'Yetkazildi', color: '#6B7280', bg: 'rgba(107,114,128,0.08)', icon: CheckCheck },
+  };
 
   return (
     <div style={s.page}>
@@ -74,6 +81,8 @@ export default function SellerDelivery() {
         ) : (
           <div style={s.list}>
             {deliveryOrders.map((order) => {
+              const meta = STATUS_META[order.status] || STATUS_META.delivered;
+              const StatusIcon = meta.icon;
               const delivered = order.status === 'delivered';
               return (
                 <div key={order.id} style={s.card}>
@@ -87,9 +96,9 @@ export default function SellerDelivery() {
                         <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>{courierName(order.courierId)}</p>
                       </div>
                     </div>
-                    <span style={s.statusBadge(delivered ? '#6B7280' : '#3B82F6', delivered ? 'rgba(107,114,128,0.08)' : 'rgba(59,130,246,0.08)')}>
-                      {delivered ? <CheckCheck size={12} /> : <Clock size={12} />}
-                      {delivered ? 'Yetkazildi' : 'Yetkazilmoqda'}
+                    <span style={s.statusBadge(meta.color, meta.bg)}>
+                      <StatusIcon size={12} />
+                      {meta.label}
                     </span>
                   </div>
 
@@ -118,6 +127,12 @@ export default function SellerDelivery() {
                         <Bike size={12} />
                       </div>
                       <span>Kuryer qabul qildi{order.courierAcceptedAt ? ` · ${formatTime(order.courierAcceptedAt)}` : ''}</span>
+                    </div>
+                    <div style={s.step(order.pickedUpAt)}>
+                      <div style={s.dot(order.pickedUpAt, '#F97316')}>
+                        <PackageCheck size={12} />
+                      </div>
+                      <span>Buyurtmani oldi{order.pickedUpAt ? ` · ${formatTime(order.pickedUpAt)}` : ''}</span>
                     </div>
                     <div style={s.step(delivered)}>
                       <div style={s.dot(delivered)}>

@@ -8,14 +8,17 @@ import useStore from '../../store/useStore';
 
 const statusConfig = {
   pending: { label: 'Kutilmoqda', color: 'var(--warning)', bg: 'rgba(245,158,11,.1)' },
+  confirmed: { label: 'Tasdiqlangan', color: '#F59E0B', bg: 'rgba(245,158,11,.1)' },
   preparing: { label: 'Tayyorlanmoqda', color: 'var(--primary)', bg: 'var(--primary-light)' },
   ready: { label: 'Tayyor', color: 'var(--success)', bg: 'rgba(34,197,94,.1)' },
+  assigned: { label: 'Kuryer tayinlandi', color: '#F59E0B', bg: 'rgba(245,158,11,.1)' },
   onTheWay: { label: "Yo'lda", color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' },
+  pickedUp: { label: 'Olib ketildi', color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' },
   delivered: { label: 'Yetkazilgan', color: 'var(--success)', bg: 'rgba(34,197,94,.1)' },
   cancelled: { label: 'Bekor qilingan', color: 'var(--danger)', bg: 'rgba(239,68,68,.1)' },
 };
 
-const statusOrder = ['pending', 'preparing', 'ready', 'onTheWay', 'delivered'];
+const statusOrder = ['pending', 'confirmed', 'preparing', 'ready', 'assigned', 'onTheWay', 'pickedUp', 'delivered'];
 
 function formatTime(iso) {
   const d = new Date(iso);
@@ -31,17 +34,26 @@ function getTimeline(order) {
   const base = new Date(order.createdAt).getTime();
   const steps = [];
   steps.push({ time: formatTime(order.createdAt), label: 'Buyurtma yaratildi', done: true });
-  if (['preparing', 'ready', 'onTheWay', 'delivered'].includes(order.status)) {
+  if (['confirmed', 'preparing', 'ready', 'assigned', 'onTheWay', 'pickedUp', 'delivered'].includes(order.status)) {
     steps.push({ time: formatTime(new Date(base + 60000)), label: 'Sotuvchi qabul qildi', done: true });
   }
-  if (['ready', 'onTheWay', 'delivered'].includes(order.status)) {
+  if (['preparing', 'ready', 'assigned', 'onTheWay', 'pickedUp', 'delivered'].includes(order.status)) {
+    steps.push({ time: formatTime(new Date(base + 300000)), label: "Tayyorlash boshlandi", done: true });
+  }
+  if (['ready', 'assigned', 'onTheWay', 'pickedUp', 'delivered'].includes(order.status)) {
     steps.push({ time: formatTime(new Date(base + 900000)), label: "Tayyor bo'ldi", done: true });
   }
-  if (['onTheWay', 'delivered'].includes(order.status)) {
-    steps.push({ time: formatTime(new Date(base + 1200000)), label: 'Kuryer oldi', done: true });
+  if (['assigned', 'onTheWay', 'pickedUp', 'delivered'].includes(order.status)) {
+    steps.push({ time: formatTime(order.assignedAt || new Date(base + 1200000)), label: 'Kuryer tayinlandi', done: true });
+  }
+  if (['onTheWay', 'pickedUp', 'delivered'].includes(order.status)) {
+    steps.push({ time: formatTime(order.courierAcceptedAt || new Date(base + 1500000)), label: 'Kuryer qabul qildi', done: true });
+  }
+  if (['pickedUp', 'delivered'].includes(order.status)) {
+    steps.push({ time: formatTime(order.pickedUpAt || new Date(base + 1800000)), label: 'Buyurtma olindi', done: true });
   }
   if (order.status === 'delivered') {
-    steps.push({ time: formatTime(order.deliveredAt || new Date(base + 1800000)), label: 'Yetkazildi', done: true });
+    steps.push({ time: formatTime(order.deliveredAt || new Date(base + 2400000)), label: 'Yetkazildi', done: true });
   }
   if (order.status === 'cancelled') {
     steps.push({ time: formatTime(new Date()), label: 'Bekor qilindi', done: false });
@@ -739,9 +751,12 @@ export default function AdminOrders() {
               <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={styles.select}>
                 <option value="all">Barchasi</option>
                 <option value="pending">Kutilmoqda</option>
+                <option value="confirmed">Tasdiqlangan</option>
                 <option value="preparing">Tayyorlanmoqda</option>
                 <option value="ready">Tayyor</option>
+                <option value="assigned">Kuryer tayinlandi</option>
                 <option value="onTheWay">Yo'lda</option>
+                <option value="pickedUp">Olib ketildi</option>
                 <option value="delivered">Yetkazilgan</option>
                 <option value="cancelled">Bekor qilingan</option>
               </select>

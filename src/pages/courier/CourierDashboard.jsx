@@ -1,416 +1,187 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Package, Clock, Navigation, Banknote, TrendingUp, Settings, LogOut, CheckCircle2, Truck, LayoutDashboard, ShoppingCart } from 'lucide-react';
+import React from 'react';
 import useStore from '../../store/useStore';
+import { useNavigate } from 'react-router-dom';
+import {
+  Banknote,
+  Package,
+  CheckCheck,
+  Bike,
+  BellRing,
+  ArrowRight,
+  MapPin,
+  Phone,
+  Navigation,
+  CreditCard,
+  Banknote as CashIcon,
+} from 'lucide-react';
 
-function useCountUp(target, duration = 1200) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    let start = null;
-    let raf;
-    const step = (ts) => {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      setCount(Math.floor(progress * target));
-      if (progress < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
-  return count;
-}
-
-function StatCard({ icon: Icon, label, value, suffix, isString }) {
-  const animated = useCountUp(isString ? 0 : value);
-  return (
-    <div style={{
-      background: 'var(--surface)',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-sm)',
-      padding: 16,
-      boxShadow: 'var(--shadow-sm)',
-    }}>
-      <div style={{
-        width: 40,
-        height: 40,
-        borderRadius: 12,
-        background: 'var(--primary-light)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 12,
-      }}>
-        <Icon size={20} style={{ color: 'var(--primary)' }} />
-      </div>
-      <p style={{
-        color: 'var(--text)',
-        fontSize: 22,
-        fontWeight: 700,
-        lineHeight: 1.1,
-        margin: 0,
-      }}>
-        {isString ? value : animated.toLocaleString()}{suffix || ''}
-      </p>
-      <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 4, margin: '4px 0 0 0' }}>{label}</p>
-    </div>
-  );
-}
-
-function WeekChart({ data }) {
-  const days = ['Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan', 'Yak'];
-  const max = Math.max(...data, 1);
-  const barWidth = 36;
-  const gap = 8;
-  const chartHeight = 120;
-  const svgWidth = days.length * (barWidth + gap);
-  const [animated, setAnimated] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setAnimated(true), 100);
-    return () => clearTimeout(t);
-  }, []);
-
-  return (
-    <div style={{ overflowX: 'auto', paddingTop: 4 }}>
-      <svg width={svgWidth} height={chartHeight + 28} style={{ display: 'block' }}>
-        {data.map((val, i) => {
-          const barH = animated ? (val / max) * chartHeight : 0;
-          const x = i * (barWidth + gap) + gap / 2;
-          const y = chartHeight - barH;
-          return (
-            <g key={i}>
-              <rect
-                x={x} y={y} width={barWidth} height={barH} rx={6} ry={6}
-                fill="var(--primary)" opacity={0.8}
-                style={{ transition: 'height 0.8s cubic-bezier(.4,0,.2,1), y 0.8s cubic-bezier(.4,0,.2,1)' }}
-              />
-              <text
-                x={x + barWidth / 2} y={chartHeight + 18}
-                textAnchor="middle" fill="var(--text-muted)" fontSize={10}
-              >
-                {days[i]}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
+const s = {
+  page: { padding: '32px', background: 'var(--bg)', minHeight: '100vh' },
+  container: { maxWidth: '860px', margin: '0 auto' },
+  header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' },
+  title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },
+  subtitle: { fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' },
+  statsGrid: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '20px' },
+  statCard: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '18px' },
+  statIcon: (color, bg) => ({ width: 40, height: 40, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }),
+  statValue: { fontSize: '22px', fontWeight: '800', color: 'var(--text)', margin: 0, fontVariantNumeric: 'tabular-nums' },
+  statLabel: { fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' },
+  card: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px', marginBottom: '16px' },
+  cardHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' },
+  cardTitle: { fontSize: '15px', fontWeight: '700', color: 'var(--text)', margin: 0 },
+  activeBadge: {
+    display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 999,
+    background: 'rgba(34,197,94,0.1)', color: 'var(--success)', fontSize: '11px', fontWeight: '700',
+  },
+  row: { display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' },
+  actionBtn: (bg, color) => ({
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    padding: '11px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+    fontSize: 13, fontWeight: 700, background: bg, color, flex: 1, fontFamily: 'inherit',
+  }),
+  outlineBtn: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    padding: '11px 0', borderRadius: 10, border: '1px solid var(--border)',
+    background: 'var(--surface)', color: 'var(--text-secondary)', cursor: 'pointer',
+    fontSize: 13, fontWeight: 600, flex: 1, fontFamily: 'inherit',
+  },
+  empty: { background: 'var(--surface)', border: '1px dashed var(--border-strong)', borderRadius: 'var(--radius)', padding: '36px 20px', textAlign: 'center' },
+};
 
 export default function CourierDashboard() {
   const navigate = useNavigate();
-  const { user, courierStats, orders, logout } = useStore();
-  const [isOnline, setIsOnline] = useState(true);
+  const { user, orders } = useStore();
 
-  const deliveredOrders = orders.filter(o => o.status === 'delivered');
-  const recentDelivered = deliveredOrders.slice(0, 3);
+  const courierId = user?.id;
+  const todayStr = new Date().toDateString();
+  const isToday = (d) => new Date(d).toDateString() === todayStr;
 
-  const handleLogout = useCallback(() => {
-    logout();
-    navigate('/login');
-  }, [logout, navigate]);
+  const myOrders = orders.filter((o) => o.courierId === courierId);
+  const activeOrder = myOrders.find((o) => ['assigned', 'onTheWay', 'pickedUp'].includes(o.status)) || null;
+  const availableOrders = orders.filter((o) => o.status === 'assigned' && o.courierId === courierId);
+  const deliveredToday = myOrders.filter((o) => o.status === 'delivered' && isToday(o.deliveredAt));
+  const todayEarnings = deliveredToday.reduce((s, o) => s + (o.total || 0), 0);
+
+  const openMaps = (address) => {
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || '')}`, '_blank');
+  };
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide" style={{ paddingBottom: 90 }}>
-      <div style={{ padding: 16 }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 24,
-        }}>
-          <div className="flex items-center" style={{ gap: 10 }}>
-            <img src="/logo.png" alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover' }} />
-            <div>
-              <h1 style={{
-                color: 'var(--text)',
-                fontSize: 22,
-                fontWeight: 700,
-                margin: 0,
-              }}>
-                Kuryer paneli
-              </h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 2 }}>
-                {user?.name || 'Kuryer'}
-              </p>
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              onClick={() => setIsOnline(!isOnline)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '8px 14px',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 10,
-                cursor: 'pointer',
-                boxShadow: 'var(--shadow-sm)',
-              }}
-            >
-              <div style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: isOnline ? 'var(--success)' : 'var(--text-muted)',
-                boxShadow: isOnline ? '0 0 8px rgba(34,197,94,0.4)' : 'none',
-              }} />
-              <span style={{ color: 'var(--text)', fontSize: 12, fontWeight: 600 }}>
-                {isOnline ? 'Online' : 'Offline'}
-              </span>
-            </button>
-            <button
-              onClick={handleLogout}
-              style={{
-                width: 40,
-                height: 40,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 10,
-                cursor: 'pointer',
-                boxShadow: 'var(--shadow-sm)',
-              }}
-            >
-              <LogOut size={16} style={{ color: 'var(--text-muted)' }} />
-            </button>
+    <div style={s.page}>
+      <div style={s.container}>
+        <div style={s.header}>
+          <div>
+            <h1 style={s.title}>Dashboard</h1>
+            <p style={s.subtitle}>Xush kelibsiz, <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user?.name || 'Kuryer'}</span></p>
           </div>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: 10,
-          marginBottom: 20,
-        }}>
-          <StatCard icon={Package} label="Buyurtmalar soni" value={courierStats.today.orders} />
-          <StatCard icon={Truck} label="Faol buyurtmalar" value={orders.filter(o => o.status === 'onTheWay').length} />
-          <StatCard icon={CheckCircle2} label="Yakunlangan" value={courierStats.today.orders} />
-          <StatCard icon={Clock} label="O'rtacha vaqt" value="28 daqiqa" isString />
-          <StatCard icon={Navigation} label="Masofa" value="47.5 km" isString />
-          <StatCard icon={Banknote} label="Daromad" value="180,000 so'm" isString />
-        </div>
-
-        <div style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius)',
-          padding: 16,
-          marginBottom: 20,
-          boxShadow: 'var(--shadow-sm)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <h3 style={{ color: 'var(--text)', fontSize: 14, fontWeight: 600, margin: 0 }}>
-              Haftalik statistika
-            </h3>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              padding: '4px 10px',
-              background: 'rgba(34,197,94,0.08)',
-              borderRadius: 8,
-            }}>
-              <TrendingUp size={12} style={{ color: 'var(--success)' }} />
-              <span style={{ color: 'var(--success)', fontSize: 11, fontWeight: 600 }}>+12%</span>
-            </div>
+        <div style={s.statsGrid}>
+          <div style={s.statCard}>
+            <div style={s.statIcon('var(--success)', '#F0FDF4')}><Banknote size={19} style={{ color: 'var(--success)' }} /></div>
+            <p style={s.statValue}>{todayEarnings.toLocaleString('uz-UZ')}</p>
+            <p style={s.statLabel}>Bugungi daromad (so'm)</p>
           </div>
-          <WeekChart data={courierStats.weekChart} />
+          <div style={s.statCard}>
+            <div style={s.statIcon('var(--primary)', 'var(--primary-light)')}><Package size={19} style={{ color: 'var(--primary)' }} /></div>
+            <p style={s.statValue}>{myOrders.filter((o) => o.status === 'delivered').length}</p>
+            <p style={s.statLabel}>Yetkazilganlar</p>
+          </div>
+          <div style={s.statCard}>
+            <div style={s.statIcon('#3B82F6', '#EFF6FF')}><Bike size={19} style={{ color: '#3B82F6' }} /></div>
+            <p style={s.statValue}>{activeOrder ? 1 : 0}</p>
+            <p style={s.statLabel}>Faol buyurtma</p>
+          </div>
+          <div style={s.statCard}>
+            <div style={s.statIcon('#EF4444', '#FEF2F2')}><BellRing size={19} style={{ color: '#EF4444' }} /></div>
+            <p style={s.statValue}>{availableOrders.length}</p>
+            <p style={s.statLabel}>Yangi buyurtmalar</p>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
-          <button
-            onClick={() => navigate('/courier/orders')}
-            style={{
-              flex: 1,
-              borderRadius: 12,
-              padding: '14px 0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-              fontSize: 13,
-              fontWeight: 600,
-              border: 'none',
-              cursor: 'pointer',
-              background: 'var(--primary)',
-              color: '#fff',
-              boxShadow: '0 4px 14px rgba(249,115,22,0.3)',
-            }}
-          >
-            <Package size={16} />
-            Buyurtmalar
-          </button>
-          <button
-            onClick={() => navigate('/courier/settings')}
-            style={{
-              flex: 1,
-              borderRadius: 12,
-              padding: '14px 0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-              fontSize: 13,
-              fontWeight: 600,
-              border: '1px solid var(--border)',
-              cursor: 'pointer',
-              background: 'var(--surface)',
-              color: 'var(--text)',
-              boxShadow: 'var(--shadow-sm)',
-            }}
-          >
-            <Settings size={16} />
-            Sozlamalar
-          </button>
-        </div>
+        <style>{`
+          @media(max-width:900px){
+            .courier-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+          @media(max-width:480px){
+            .courier-stats-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
 
-        <div>
-          <h3 style={{ color: 'var(--text)', fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
-            So'nggi faoliyat
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {recentDelivered.length === 0 && (
-              <div style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                padding: '32px 20px',
-                textAlign: 'center',
-              }}>
-                <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>Hali yetkazilgan buyurtmalar yo'q</p>
+        {activeOrder ? (
+          <div style={{ ...s.card, borderColor: 'rgba(34,197,94,0.3)' }}>
+            <div style={s.cardHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CheckCheck size={17} style={{ color: 'var(--success)' }} />
+                <h2 style={s.cardTitle}>Aktiv buyurtma #{String(activeOrder.id).slice(-4)}</h2>
               </div>
-            )}
-            {recentDelivered.map((order) => (
-              <div
-                key={order.id}
-                style={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)',
-                  padding: '14px 16px',
-                  boxShadow: 'var(--shadow-sm)',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 12,
-                      background: 'rgba(34,197,94,0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                    }}>
-                      <CheckCircle2 size={18} style={{ color: 'var(--success)' }} />
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ color: 'var(--text)', fontSize: 13, fontWeight: 600, margin: 0 }}>
-                        {order.customerName}
-                      </p>
-                      <p style={{
-                        color: 'var(--text-muted)',
-                        fontSize: 11,
-                        marginTop: 2,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}>
-                        {order.address}
-                      </p>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
-                    <p style={{ color: 'var(--primary)', fontSize: 13, fontWeight: 600, margin: 0 }}>
-                      {order.total.toLocaleString()} so'm
-                    </p>
-                    <p style={{ color: 'var(--text-muted)', fontSize: 10, marginTop: 2 }}>
-                      {order.deliveredAt
-                        ? new Date(order.deliveredAt).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
-                        : '\u2014'
-                      }
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        background: 'rgba(255,255,255,0.85)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderTop: '1px solid var(--border)',
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          padding: '8px 0',
-          maxWidth: 480,
-          margin: '0 auto',
-        }}>
-          {[
-            { icon: LayoutDashboard, label: 'Bosh sahifa', path: '/courier' },
-            { icon: ShoppingCart, label: 'Buyurtmalar', path: '/courier/orders' },
-            { icon: Settings, label: 'Sozlamalar', path: '/courier/settings' },
-          ].map((item) => {
-            const isActive = window.location.pathname === item.path;
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 4,
-                  padding: '6px 16px',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}
-              >
-                {isActive && (
-                  <div style={{
-                    position: 'absolute',
-                    top: -8,
-                    width: 24,
-                    height: 3,
-                    borderRadius: 2,
-                    background: 'var(--primary)',
-                  }} />
-                )}
-                <item.icon
-                  size={20}
-                  style={{ color: isActive ? 'var(--primary)' : 'var(--text-muted)' }}
-                />
-                <span style={{
-                  fontSize: 10,
-                  fontWeight: isActive ? 700 : 500,
-                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-                }}>
-                  {item.label}
-                </span>
+              <span style={s.activeBadge}>Faol</span>
+            </div>
+            <div style={s.row}>
+              <span style={{ fontWeight: 600, color: 'var(--text)' }}>{activeOrder.customerName}</span>
+              <span>{activeOrder.customerPhone}</span>
+            </div>
+            <div style={s.row}>
+              <MapPin size={14} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+              <span style={{ flex: 1 }}>{activeOrder.address || 'Olib ketish'}</span>
+              <button onClick={() => openMaps(activeOrder.address)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: 2, display: 'flex' }}>
+                <Navigation size={16} />
               </button>
-            );
-          })}
+            </div>
+            <div style={s.row}>
+              <span>
+                {(activeOrder.items || []).map((i) => `${i.quantity}x ${i.food?.name}`).join(', ')}
+              </span>
+              <span style={{ marginLeft: 'auto', fontWeight: 700, color: 'var(--text)' }}>
+                {(activeOrder.total || 0).toLocaleString('uz-UZ')} so'm
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <button style={s.outlineBtn} onClick={() => { if (activeOrder.customerPhone) window.location.href = 'tel:' + activeOrder.customerPhone; }}>
+                <Phone size={14} /> Qo'ng'iroq
+              </button>
+              <button style={s.actionBtn('var(--primary)', '#fff')} onClick={() => navigate('/courier/delivery')}>
+                Boshqarish <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ ...s.empty, marginBottom: 16 }}>
+            <div style={{ fontSize: 38, marginBottom: 8 }}>🚚</div>
+            <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 4px 0' }}>Faol buyurtma yo'q</p>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>Yangi buyurtma tayinlanganda shu yerda ko'rinadi</p>
+          </div>
+        )}
+
+        <div style={s.card}>
+          <div style={s.cardHeader}>
+            <h2 style={s.cardTitle}>Yangi buyurtmalar</h2>
+            {availableOrders.length > 0 && (
+              <span style={{ padding: '3px 10px', borderRadius: 999, background: 'rgba(239,68,68,0.1)', color: '#EF4444', fontSize: 11, fontWeight: 700 }}>
+                {availableOrders.length} ta
+              </span>
+            )}
+          </div>
+          {availableOrders.length === 0 ? (
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>Hozircha yangi buyurtmalar yo'q</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {availableOrders.map((order) => (
+                <div key={order.id} style={{ background: 'var(--surface-active)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ fontWeight: 700, color: 'var(--text)', fontSize: 14 }}>#{String(order.id).slice(-4)}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
+                      {order.paymentMethod === 'card' ? <CreditCard size={13} /> : <CashIcon size={13} />}
+                      {order.paymentMethod === 'card' ? 'Karta' : 'Naqd'} · {(order.total || 0).toLocaleString('uz-UZ')} so'm
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>
+                    {order.customerName} · {order.address || 'Olib ketish'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
