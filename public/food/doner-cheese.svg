@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFFAE8"/>
+      <stop offset="100%" stop-color="#F2CF7A"/>
+    </radialGradient>
+    <linearGradient id="wrap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F7E3B8"/>
+      <stop offset="100%" stop-color="#E2C487"/>
+    </linearGradient>
+    <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A56B45"/>
+      <stop offset="100%" stop-color="#6E4328"/>
+    </linearGradient>
+    <linearGradient id="cheese" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FFB300"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="72" cy="52" r="46" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="334" cy="246" r="52" fill="#FFFFFF" opacity="0.16"/>
+  <ellipse cx="200" cy="248" rx="112" ry="15" fill="#4A2E12" opacity="0.18"/>
+  <g>
+    <path d="M104 236
+             Q 96 188 118 128
+             Q 132 90 246 104
+             Q 268 108 298 132
+             Q 288 166 306 236 Z"
+          fill="url(#wrap)" stroke="#D4B67A" stroke-width="4"/>
+    <path d="M150 236
+             Q 148 196 162 138
+             Q 172 108 230 98
+             L 260 106
+             Q 256 160 256 236 Z"
+          fill="url(#meat)" opacity="0.95"/>
+    <path d="M162 236 l 30 -92 M180 236 l 34 -84 M198 236 l 36 -78 M216 236 l 36 -70 M234 236 l 30 -62" stroke="#4C3120" stroke-width="4" stroke-linecap="round" opacity="0.3"/>
+    <g fill="url(#cheese)">
+      <path d="M160 140 q40 -18 78 0 l0 18 q-39 -12 -78 0 z"/>
+      <path d="M168 172 q36 -14 70 0 l0 16 q-35 -10 -70 0 z"/>
+      <path d="M180 204 q30 -12 60 0 l0 14 q-30 -9 -60 0 z"/>
+    </g>
+    <circle cx="214" cy="178" r="9" fill="#E8590C" opacity="0.8"/>
+    <circle cx="228" cy="214" r="8" fill="#E8590C" opacity="0.7"/>
+  </g>
+  <text x="200" y="42" text-anchor="middle" font-family="Arial" font-weight="800" font-size="16" fill="#B45309" opacity="0.55">PISHLOQ</text>
+</svg>

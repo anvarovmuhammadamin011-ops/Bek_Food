@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.32" r="0.95">
+      <stop offset="0%" stop-color="#FDEBEB"/>
+      <stop offset="100%" stop-color="#F5A8A8"/>
+    </radialGradient>
+    <linearGradient id="bun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC46B"/>
+      <stop offset="100%" stop-color="#E29B3E"/>
+    </linearGradient>
+    <linearGradient id="sos" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B4482F"/>
+      <stop offset="100%" stop-color="#8E3022"/>
+    </linearGradient>
+    <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7E5744"/>
+      <stop offset="100%" stop-color="#5D3B2C"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="74" cy="48" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="330" cy="86" r="52" fill="#FFFFFF" opacity="0.18"/>
+  <ellipse cx="200" cy="246" rx="132" ry="16" fill="#6D4016" opacity="0.18"/>
+  <g>
+    <rect x="86" y="112" width="228" height="40" rx="18" fill="url(#bun)"/>
+    <ellipse cx="200" cy="116" rx="114" ry="11" fill="#FFD98A" opacity="0.8"/>
+    <rect x="86" y="180" width="228" height="42" rx="16" fill="url(#bun)"/>
+    <ellipse cx="200" cy="217" rx="114" ry="10" fill="#C77E2E" opacity="0.45"/>
+    <rect x="108" y="144" width="184" height="42" rx="20" fill="url(#meat)"/>
+    <path d="M120 168 l22 10 M150 168 l22 10 M180 168 l24 10 M210 168 l22 10 M240 168 l22 10 M270 168 l18 10" stroke="#FFE0A8" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+    <circle cx="126" cy="128" r="3" fill="#FFF1D6"/>
+    <circle cx="154" cy="136" r="2.5" fill="#FFF1D6"/>
+    <circle cx="196" cy="126" r="2.5" fill="#FFF1D6"/>
+    <circle cx="236" cy="134" r="2.5" fill="#FFF1D6"/>
+    <circle cx="272" cy="128" r="3" fill="#FFF1D6"/>
+  </g>
+</svg>

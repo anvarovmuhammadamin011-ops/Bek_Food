@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.28" r="1">
+      <stop offset="0%" stop-color="#FFF8E1"/>
+      <stop offset="100%" stop-color="#FFA000"/>
+    </radialGradient>
+    <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC46B"/>
+      <stop offset="100%" stop-color="#E8A04B"/>
+    </linearGradient>
+    <linearGradient id="patty" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8A5230"/>
+      <stop offset="100%" stop-color="#5D3320"/>
+    </linearGradient>
+    <linearGradient id="cheese" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FF8F00"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="72" cy="50" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="338" cy="244" r="52" fill="#FFFFFF" opacity="0.15"/>
+  <ellipse cx="200" cy="248" rx="126" ry="15" fill="#7A4A12" opacity="0.18"/>
+  <g>
+    <path d="M112 60
+             Q 152 40 202 36
+             Q 252 40 290 60
+             Q 298 84 284 112
+             Q 246 128 202 126
+             Q 154 128 116 112
+             Q 102 84 112 60 Z"
+          fill="url(#top)" stroke="#D08B2E" stroke-width="3"/>
+    <g fill="#FFF4DC">
+      <circle cx="152" cy="54" r="3.5"/>
+      <circle cx="204" cy="44" r="3.5"/>
+      <circle cx="250" cy="56" r="3.5"/>
+      <circle cx="182" cy="70" r="3"/>
+      <circle cx="228" cy="66" r="3"/>
+    </g>
+    <rect x="114" y="116" width="172" height="20" rx="10" fill="#FDD835"/>
+    <rect x="116" y="130" width="168" height="20" rx="10" fill="url(#patty)"/>
+    <path d="M124 138 q9 -7 20 0 q9 7 20 0 M172 137 q9 -7 20 0 q9 7 20 0 M220 137 q9 -7 20 0 q9 7 20 0" stroke="#3E2723" stroke-width="2.5" fill="none" opacity="0.5"/>
+    <rect x="114" y="152" width="172" height="20" rx="10" fill="#9CCC65"/>
+    <rect x="116" y="166" width="168" height="20" rx="10" fill="url(#patty)"/>
+    <ellipse cx="116" cy="186" rx="24" ry="6" fill="#7A4A12" opacity="0.4"/>
+    <g fill="url(#cheese)">
+      <path d="M118 186 q22 -8 40 0 l0 16 q-20 6 -40 0 z"/>
+      <path d="M162 188 q20 -7 36 0 l0 15 q-18 5 -36 0 z"/>
+      <path d="M206 190 q20 -6 36 0 l0 14 q-18 5 -36 0 z"/>
+      <path d="M216 204 q20 -6 34 0 l0 13 q-17 5 -34 0 z"/>
+    </g>
+    <rect x="112" y="212" width="176" height="16" rx="8" fill="#E5493B"/>
+    <path d="M122 214 q8 -6 16 0 q8 6 16 0 M170 213 q8 -6 16 0 q8 6 16 0 M218 213 q8 -6 16 0 q8 6 20 0" stroke="#C62828" stroke-width="2.5" fill="none"/>
+    <rect x="110" y="226" width="180" height="18" rx="9" fill="url(#top)"/>
+    <text x="200" y="272" text-anchor="middle" font-family="Arial" font-weight="800" font-size="17" fill="#8A5A12" opacity="0.6">2x PISHLOQ</text>
+  </g>
+</svg>

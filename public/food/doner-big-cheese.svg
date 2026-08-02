@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.25" r="1">
+      <stop offset="0%" stop-color="#FFF9E6"/>
+      <stop offset="100%" stop-color="#F0BD5C"/>
+    </radialGradient>
+    <linearGradient id="wrap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F7E3B8"/>
+      <stop offset="100%" stop-color="#E2C487"/>
+    </linearGradient>
+    <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A56B45"/>
+      <stop offset="100%" stop-color="#6E4328"/>
+    </linearGradient>
+    <linearGradient id="cheese" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FFA000"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="70" cy="50" r="48" fill="#FFFFFF" opacity="0.24"/>
+  <circle cx="336" cy="244" r="54" fill="#FFFFFF" opacity="0.16"/>
+  <ellipse cx="200" cy="248" rx="124" ry="20" fill="#4A2E12" opacity="0.2"/>
+  <g>
+    <path d="M96 244
+             Q 96 182 96 118
+             Q 120 78 204 92
+             Q 276 100 314 130
+             Q 318 180 316 244 Z"
+          fill="url(#wrap)" stroke="#D4B67A" stroke-width="4"/>
+    <path d="M150 244
+             Q 160 182 168 128
+             L 208 92
+             L 250 112
+             Q 262 176 264 244 Z"
+          fill="url(#meat)" opacity="0.96"/>
+    <path d="M170 226 l 34 -20 M178 238 l 36 -28 M188 238 l 30 -44 M200 244 l 24 -56 M214 244 l 18 -66 M228 244 l 14 -76" stroke="#4C3120" stroke-width="4" stroke-linecap="round" opacity="0.3"/>
+    <g fill="url(#cheese)">
+      <path d="M164 152 q44 -20 86 0 l0 20 q-46 -14 -86 0 z"/>
+      <path d="M176 172 q38 -14 72 0 l0 16 q-38 -10 -72 0 z"/>
+      <path d="M192 196 q30 -10 56 0 l0 14 q-30 -7 -56 0 z"/>
+      <path d="M200 228 q24 -8 44 0 l0 10 q-24 -6 -44 0 z"/>
+    </g>
+    <circle cx="210" cy="166" r="8" fill="#E8590C" opacity="0.75"/>
+    <circle cx="226" cy="206" r="7" fill="#E8590C" opacity="0.65"/>
+  </g>
+  <text x="200" y="46" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#8A5A12" opacity="0.6">KATTA + PISHLOQ</text>
+</svg>

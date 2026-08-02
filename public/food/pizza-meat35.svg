@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FBE7D2"/>
+      <stop offset="100%" stop-color="#E8B06E"/>
+    </radialGradient>
+    <radialGradient id="crust" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0%" stop-color="#F2C06A"/>
+      <stop offset="100%" stop-color="#C98C3C"/>
+    </radialGradient>
+    <radialGradient id="cheese" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="100%" stop-color="#FFC94D"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="70" cy="50" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <ellipse cx="200" cy="252" rx="138" ry="17" fill="#5A3412" opacity="0.2"/>
+  <g transform="translate(0 2)">
+    <circle cx="200" cy="150" r="106" fill="url(#crust)"/>
+    <circle cx="200" cy="150" r="88" fill="url(#cheese)"/>
+    <circle cx="200" cy="150" r="74" fill="#E8491E" opacity="0.85"/>
+    <g fill="#7A4A2E">
+      <ellipse cx="166" cy="116" rx="16" ry="12" transform="rotate(24 166 116)"/>
+      <ellipse cx="216" cy="116" rx="17" ry="12" transform="rotate(-14 216 116)"/>
+      <ellipse cx="256" cy="146" rx="16" ry="12" transform="rotate(32 256 146)"/>
+      <ellipse cx="258" cy="188" rx="16" ry="12" transform="rotate(-20 258 188)"/>
+      <ellipse cx="196" cy="188" rx="17" ry="12" transform="rotate(12 196 188)"/>
+      <ellipse cx="220" cy="156" rx="15" ry="11" transform="rotate(-28 220 156)"/>
+      <ellipse cx="148" cy="154" rx="15" ry="11" transform="rotate(18 148 154)"/>
+      <ellipse cx="238" cy="104" rx="15" ry="11" transform="rotate(6 238 104)"/>
+      <ellipse cx="178" cy="218" rx="15" ry="11" transform="rotate(-10 178 218)"/>
+    </g>
+    <g fill="#66BB6A">
+      <ellipse cx="176" cy="148" rx="12" ry="7" transform="rotate(-18 176 148)"/>
+      <ellipse cx="224" cy="148" rx="12" ry="7" transform="rotate(20 224 148)"/>
+      <ellipse cx="188" cy="206" rx="11" ry="6" transform="rotate(-6 188 206)"/>
+    </g>
+  </g>
+  <text x="200" y="286" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#5A3412" opacity="0.65">35 sm</text>
+</svg>

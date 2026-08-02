@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="100%" stop-color="#FFCA28"/>
+    </radialGradient>
+    <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC46B"/>
+      <stop offset="100%" stop-color="#E8A04B"/>
+    </linearGradient>
+    <linearGradient id="patty" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8A5230"/>
+      <stop offset="100%" stop-color="#5D3320"/>
+    </linearGradient>
+    <linearGradient id="cheese" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FF8F00"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="72" cy="52" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="338" cy="244" r="52" fill="#FFFFFF" opacity="0.15"/>
+  <ellipse cx="200" cy="244" rx="120" ry="15" fill="#7A4A12" opacity="0.16"/>
+  <g>
+    <path d="M110 90
+             Q 150 62 200 58
+             Q 250 62 290 90
+             Q 298 118 284 146
+             Q 248 154 202 152
+             Q 152 154 116 146
+             Q 102 118 110 90 Z"
+          fill="url(#top)" stroke="#D08B2E" stroke-width="3"/>
+    <g fill="#FFF4DC">
+      <circle cx="150" cy="82" r="3.5"/>
+      <circle cx="200" cy="68" r="3.5"/>
+      <circle cx="248" cy="80" r="3.5"/>
+      <circle cx="176" cy="92" r="3"/>
+      <circle cx="226" cy="90" r="3"/>
+    </g>
+    <path d="M196 150 h8 v30 h-8 z" fill="#FDD835"/>
+    <rect x="114" y="148" width="172" height="26" rx="13" fill="#FDD835"/>
+    <rect x="118" y="190" width="164" height="20" rx="10" fill="url(#patty)"/>
+    <g fill="url(#cheese)">
+      <path d="M116 208 q24 -8 40 0 l0 16 q-20 6 -40 0 z"/>
+      <path d="M158 210 q20 -7 36 0 l0 14 q-18 5 -36 0 z"/>
+      <path d="M200 210 q20 -7 36 0 l0 15 q-18 5 -36 0 z"/>
+      <path d="M244 208 q20 -7 36 0 l0 14 q-18 5 -36 0 z"/>
+    </g>
+    <path d="M126 178 q10 -7 24 0 q10 7 24 0 M176 178 q10 -7 24 0 q10 7 24 0" stroke="#66BB6A" stroke-width="3" fill="none" opacity="0.8"/>
+    <rect x="114" y="216" width="172" height="14" rx="7" fill="#E5493B"/>
+    <path d="M124 218 q8 -6 16 0 q8 6 16 0 M172 217 q8 -6 16 0 q8 6 16 0 M220 217 q8 -6 16 0 q8 6 18 0" stroke="#C62828" stroke-width="2.5" fill="none"/>
+    <rect x="112" y="228" width="176" height="20" rx="10" fill="url(#top)"/>
+  </g>
+</svg>

@@ -1,10 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFF7ED"/>
-      <stop offset="100%" stop-color="#FFEDD5"/>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFF8E1"/>
+      <stop offset="100%" stop-color="#FFD54F"/>
+    </radialGradient>
+    <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC46B"/>
+      <stop offset="100%" stop-color="#E8A04B"/>
+    </linearGradient>
+    <linearGradient id="patty" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8A5230"/>
+      <stop offset="100%" stop-color="#5D3320"/>
     </linearGradient>
   </defs>
-  <rect width="400" height="300" fill="url(#g)"/>
-  <text x="200" y="172" font-size="130" text-anchor="middle" dominant-baseline="middle">🍔</text>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="72" cy="52" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="338" cy="244" r="52" fill="#FFFFFF" opacity="0.15"/>
+  <ellipse cx="200" cy="244" rx="120" ry="15" fill="#7A4A12" opacity="0.16"/>
+  <g>
+    <path d="M112 92
+             Q 150 64 200 60
+             Q 250 64 288 92
+             Q 296 120 282 148
+             Q 260 156 226 152
+             Q 200 150 174 152
+             Q 140 156 118 148
+             Q 104 120 112 92 Z"
+          fill="url(#top)" stroke="#D08B2E" stroke-width="3"/>
+    <path d="M112 88 h176 M202 100 M190 62 M210 62 M176 70 M222 72 M160 66 M240 68" stroke="#FFF1D6" stroke-width="0" stroke-linecap="round"/>
+    <g fill="#FFF4DC">
+      <circle cx="150" cy="82" r="3.5"/>
+      <circle cx="196" cy="70" r="3.5"/>
+      <circle cx="244" cy="80" r="3.5"/>
+      <circle cx="180" cy="92" r="3"/>
+      <circle cx="222" cy="90" r="3"/>
+    </g>
+    <path d="M196 152 h8 v34 h-8 z" fill="#FDD835"/>
+    <rect x="116" y="150" width="168" height="26" rx="13" fill="#FDD835"/>
+    <path d="M118 174 h164 v12 q0 10 -14 10 l-136 0 q-14 0 -14 -10 z" fill="#9CCC65"/>
+    <path d="M124 180 q12 -8 26 0 q12 8 24 0 M176 178 q10 -7 20 0 q10 7 20 0 M226 178 q10 -7 20 0 q10 7 22 0" stroke="#66BB6A" stroke-width="3" fill="none" opacity="0.8"/>
+    <rect x="118" y="192" width="164" height="20" rx="10" fill="url(#patty)"/>
+    <ellipse cx="118" cy="196" rx="22" ry="6" fill="#7A4A12" opacity="0.5"/>
+    <rect x="114" y="206" width="172" height="14" rx="7" fill="#E5493B"/>
+    <path d="M124 208 q8 -6 16 0 q8 6 16 0 M172 207 q8 -6 16 0 q8 6 16 0 M220 207 q8 -6 16 0 q8 6 18 0" stroke="#C62828" stroke-width="2.5" fill="none"/>
+    <rect x="112" y="218" width="176" height="22" rx="10" fill="url(#top)"/>
+    <path d="M124 224 q10 -6 22 0 q10 6 24 0 M184 224 q10 -6 22 0 q10 6 26 0" stroke="#C77E2E" stroke-width="3" fill="none" opacity="0.6"/>
+  </g>
 </svg>

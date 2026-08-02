@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFF8E1"/>
+      <stop offset="100%" stop-color="#FFE082"/>
+    </radialGradient>
+    <linearGradient id="bun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFCF7A"/>
+      <stop offset="100%" stop-color="#EAA04B"/>
+    </linearGradient>
+    <linearGradient id="sos" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C4444F"/>
+      <stop offset="100%" stop-color="#9C2F3B"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="76" cy="50" r="44" fill="#FFFFFF" opacity="0.24"/>
+  <circle cx="336" cy="220" r="54" fill="#FFFFFF" opacity="0.16"/>
+  <ellipse cx="200" cy="246" rx="134" ry="16" fill="#6D4016" opacity="0.18"/>
+  <g transform="rotate(-8 200 290)">
+    <rect x="74" y="110" width="252" height="28" rx="14" fill="url(#bun)"/>
+    <rect x="74" y="176" width="252" height="28" rx="14" fill="url(#bun)"/>
+    <rect x="96" y="134" width="208" height="46" rx="20" fill="url(#sos)"/>
+    <path d="M112 148 q92 -12 176 -2" fill="none" stroke="#A63441" stroke-width="5" opacity="0.5"/>
+    <path stroke="#FFB300" stroke-width="10" stroke-linecap="round" fill="none"
+      d="M108 160 l26 14 M134 160 l26 14 M160 160 l26 14 M186 160 l28 14 M214 160 l26 14 M240 160 l26 14 M266 160 l26 14 M292 160 l18 14"/>
+    <g fill="#FFEED6">
+      <circle cx="126" cy="118" r="3"/>
+      <circle cx="164" cy="126" r="2.5"/>
+      <circle cx="210" cy="118" r="2.5"/>
+      <circle cx="256" cy="126" r="2.5"/>
+      <circle cx="296" cy="118" r="3"/>
+    </g>
+  </g>
+  <text x="200" y="44" text-anchor="middle" font-family="Arial" font-weight="800" font-size="16" fill="#B45309" opacity="0.5">PREMIUM</text>
+</svg>

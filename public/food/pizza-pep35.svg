@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFF3E0"/>
+      <stop offset="100%" stop-color="#FFC98A"/>
+    </radialGradient>
+    <radialGradient id="crust" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0%" stop-color="#F2C06A"/>
+      <stop offset="100%" stop-color="#C98C3C"/>
+    </radialGradient>
+    <radialGradient id="cheese" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="100%" stop-color="#FFC94D"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="70" cy="50" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <ellipse cx="200" cy="252" rx="138" ry="17" fill="#8A4A12" opacity="0.18"/>
+  <g transform="translate(0 2)">
+    <circle cx="200" cy="150" r="106" fill="url(#crust)"/>
+    <circle cx="200" cy="150" r="88" fill="url(#cheese)"/>
+    <circle cx="200" cy="150" r="74" fill="#E8491E" opacity="0.85"/>
+    <g fill="#FFE082">
+      <circle cx="164" cy="120" r="19"/>
+      <circle cx="244" cy="138" r="20"/>
+      <circle cx="200" cy="200" r="18"/>
+    </g>
+    <g>
+      <circle cx="170" cy="118" r="12" fill="#D32F2F"/>
+      <circle cx="220" cy="130" r="12" fill="#C62828"/>
+      <circle cx="252" cy="156" r="12" fill="#D32F2F"/>
+      <circle cx="246" cy="188" r="12" fill="#C62828"/>
+      <circle cx="188" cy="182" r="12" fill="#D32F2F"/>
+      <circle cx="212" cy="168" r="12" fill="#B71C1C"/>
+      <circle cx="150" cy="152" r="12" fill="#C62828"/>
+      <circle cx="236" cy="114" r="12" fill="#C62828"/>
+      <circle cx="176" cy="212" r="12" fill="#D32F2F"/>
+    </g>
+  </g>
+  <text x="200" y="286" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#8A4A12" opacity="0.65">35 sm</text>
+</svg>

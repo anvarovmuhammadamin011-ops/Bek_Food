@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.32" r="1">
+      <stop offset="0%" stop-color="#F3EDDC"/>
+      <stop offset="100%" stop-color="#DCC290"/>
+    </radialGradient>
+    <radialGradient id="crust" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0%" stop-color="#F2C06A"/>
+      <stop offset="100%" stop-color="#C98C3C"/>
+    </radialGradient>
+    <radialGradient id="cheese" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="100%" stop-color="#FFC94D"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="70" cy="52" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <ellipse cx="200" cy="236" rx="120" ry="16" fill="#4A2E12" opacity="0.2"/>
+  <g>
+    <circle cx="200" cy="168" r="94" fill="url(#crust)"/>
+    <circle cx="200" cy="168" r="78" fill="url(#cheese)"/>
+    <circle cx="200" cy="168" r="66" fill="#E8491E" opacity="0.85"/>
+    <g>
+      <circle cx="168" cy="140" r="11" fill="#D32F2F"/>
+      <circle cx="214" cy="150" r="11" fill="#C62828"/>
+      <circle cx="240" cy="176" r="11" fill="#D32F2F"/>
+      <circle cx="232" cy="208" r="11" fill="#C62828"/>
+      <circle cx="178" cy="196" r="11" fill="#D32F2F"/>
+    </g>
+    <g fill="#3E2723">
+      <circle cx="192" cy="166" r="6"/>
+      <circle cx="150" cy="172" r="6"/>
+      <circle cx="222" cy="166" r="6"/>
+      <circle cx="164" cy="204" r="5.5"/>
+      <circle cx="210" cy="192" r="5.5"/>
+    </g>
+    <g fill="#EFE6D2">
+      <rect x="196" y="116" width="16" height="20" rx="8" transform="rotate(14 204 126)"/>
+      <rect x="122" y="180" width="16" height="20" rx="8" transform="rotate(-10 126 190)"/>
+      <rect x="244" y="206" width="16" height="20" rx="8" transform="rotate(22 250 210)"/>
+    </g>
+    <g fill="#66BB6A">
+      <ellipse cx="188" cy="180" rx="9" ry="5" transform="rotate(-16 188 180)"/>
+      <ellipse cx="158" cy="160" rx="9" ry="5" transform="rotate(24 158 160)"/>
+    </g>
+  </g>
+  <text x="200" y="278" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#4A2E12" opacity="0.65">30 sm</text>
+</svg>

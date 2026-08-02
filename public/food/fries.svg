@@ -1,10 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFF7ED"/>
-      <stop offset="100%" stop-color="#FFEDD5"/>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFF9DC"/>
+      <stop offset="100%" stop-color="#FFD54F"/>
+    </radialGradient>
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EF1734"/>
+      <stop offset="100%" stop-color="#C40E28"/>
+    </linearGradient>
+    <linearGradient id="fry" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFCC33"/>
+      <stop offset="100%" stop-color="#F2A007"/>
     </linearGradient>
   </defs>
-  <rect width="400" height="300" fill="url(#g)"/>
-  <text x="200" y="172" font-size="130" text-anchor="middle" dominant-baseline="middle">🍟</text>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="76" cy="52" r="46" fill="#FFFFFF" opacity="0.24"/>
+  <circle cx="334" cy="248" r="50" fill="#FFFFFF" opacity="0.16"/>
+  <ellipse cx="200" cy="254" rx="118" ry="16" fill="#8A4A12" opacity="0.2"/>
+  <g>
+    <path d="M132 92
+             L 124 226
+             Q 124 250 150 250
+             L 250 250
+             Q 276 250 276 226
+             L 268 92
+             Q 266 76 250 76
+             Q 220 96 200 96
+             Q 178 96 150 76
+             Q 134 76 132 92 Z"
+          fill="url(#box)"/>
+    <path d="M140 232 l 30 -52 M176 238 l 30 -84 M212 238 l 30 -78 M248 238 l 26 -52" stroke="#FFD0D0" stroke-width="5" stroke-linecap="round" opacity="0.45"/>
+    <rect x="122" y="84" width="156" height="18" rx="8" fill="#D2112B"/>
+    <g transform="rotate(14 150 200)">
+      <rect x="146" y="180" width="14" height="96" rx="7" fill="#D2112B"/>
+    </g>
+  </g>
+  <g>
+    <path d="M128 108 q 24 -10 44 -28 q 20 18 44 28 q 10 -16 28 -20 q 16 6 28 22" fill="none" stroke="#B86A12" stroke-width="0"/>
+    <g>
+      <rect x="132" y="96" width="13" height="96" rx="6.5" fill="url(#fry)" transform="rotate(6 138 144)"/>
+      <rect x="152" y="86" width="13" height="102" rx="6.5" fill="url(#fry)" transform="rotate(-6 158 137)"/>
+      <rect x="174" y="82" width="13" height="106" rx="6.5" fill="url(#fry)"/>
+      <rect x="194" y="80" width="13" height="110" rx="6.5" fill="url(#fry)" transform="rotate(6 200 135)"/>
+      <rect x="216" y="82" width="13" height="106" rx="6.5" fill="url(#fry)" transform="rotate(-8 222 135)"/>
+      <rect x="238" y="88" width="13" height="100" rx="6.5" fill="url(#fry)" transform="rotate(10 248 138)"/>
+      <rect x="146" y="92" width="12" height="88" rx="6" fill="#FFD75E" transform="rotate(4 158 136)"/>
+      <rect x="202" y="96" width="12" height="92" rx="6" fill="#FFD75E" transform="rotate(-4 220 142)"/>
+    </g>
+  </g>
 </svg>

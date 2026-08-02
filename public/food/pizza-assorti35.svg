@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#F3EDDC"/>
+      <stop offset="100%" stop-color="#D8BC88"/>
+    </radialGradient>
+    <radialGradient id="crust" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0%" stop-color="#F2C06A"/>
+      <stop offset="100%" stop-color="#C98C3C"/>
+    </radialGradient>
+    <radialGradient id="cheese" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="100%" stop-color="#FFC94D"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="70" cy="50" r="44" fill="#FFFFFF" opacity="0.22"/>
+  <ellipse cx="200" cy="252" rx="138" ry="17" fill="#4A2E12" opacity="0.2"/>
+  <g transform="translate(0 2)">
+    <circle cx="200" cy="150" r="106" fill="url(#crust)"/>
+    <circle cx="200" cy="150" r="88" fill="url(#cheese)"/>
+    <circle cx="200" cy="150" r="74" fill="#E8491E" opacity="0.85"/>
+    <g>
+      <circle cx="170" cy="118" r="12" fill="#D32F2F"/>
+      <circle cx="222" cy="126" r="12" fill="#C62828"/>
+      <circle cx="256" cy="160" r="12" fill="#D32F2F"/>
+      <circle cx="244" cy="196" r="12" fill="#C62828"/>
+      <circle cx="188" cy="188" r="12" fill="#D32F2F"/>
+    </g>
+    <g fill="#3F2723">
+      <circle cx="204" cy="152" r="6.5"/>
+      <circle cx="150" cy="152" r="6.5"/>
+      <circle cx="226" cy="170" r="6"/>
+      <circle cx="172" cy="204" r="6"/>
+      <circle cx="214" cy="212" r="6"/>
+    </g>
+    <g fill="#EFE6D2">
+      <rect x="170" y="96" width="17" height="22" rx="8" transform="rotate(12 176 106)"/>
+      <rect x="108" y="176" width="17" height="22" rx="8" transform="rotate(-12 114 186)"/>
+      <rect x="258" y="118" width="17" height="22" rx="8" transform="rotate(24 266 122)"/>
+    </g>
+    <g fill="#66BB6A">
+      <ellipse cx="184" cy="168" rx="10" ry="6" transform="rotate(-16 184 168)"/>
+      <ellipse cx="238" cy="142" rx="10" ry="6" transform="rotate(24 238 142)"/>
+    </g>
+  </g>
+  <text x="200" y="286" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#4A2E12" opacity="0.65">35 sm</text>
+</svg>

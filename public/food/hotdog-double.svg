@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.32" r="0.95">
+      <stop offset="0%" stop-color="#FFF3E0"/>
+      <stop offset="100%" stop-color="#FFB74D"/>
+    </radialGradient>
+    <linearGradient id="bun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC46B"/>
+      <stop offset="100%" stop-color="#E29B3E"/>
+    </linearGradient>
+    <linearGradient id="sos" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C4444F"/>
+      <stop offset="100%" stop-color="#9C2F3B"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="70" cy="58" r="40" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="340" cy="240" r="48" fill="#FFFFFF" opacity="0.16"/>
+  <ellipse cx="200" cy="246" rx="140" ry="16" fill="#6D4016" opacity="0.18"/>
+  <g transform="rotate(-12 200 300)">
+    <rect x="78" y="128" width="244" height="38" rx="17" fill="url(#bun)"/>
+    <rect x="78" y="180" width="244" height="40" rx="15" fill="url(#bun)"/>
+    <rect x="104" y="154" width="88" height="34" rx="15" fill="url(#sos)"/>
+    <rect x="208" y="154" width="88" height="34" rx="15" fill="url(#sos)"/>
+    <circle cx="100" cy="104" r="2.5" fill="#FFF1D6"/>
+    <circle cx="132" cy="98" r="2.5" fill="#FFF1D6"/>
+    <circle cx="168" cy="103" r="2" fill="#FFF1D6"/>
+    <circle cx="250" cy="99" r="2.5" fill="#FFF1D6"/>
+    <circle cx="286" cy="103" r="2.5" fill="#FFF1D6"/>
+    <circle cx="204" cy="100" r="2" fill="#FFF1D6"/>
+    <path d="M108 170 l24 10 M136 170 l24 10 M164 170 l24 10 M214 170 l24 10 M242 170 l24 10 M270 170 l18 10" stroke="#E3003B" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <text x="200" y="42" text-anchor="middle" font-family="Arial" font-weight="800" font-size="17" fill="#B45309" opacity="0.55">DOUBLE 2x</text>
+</svg>

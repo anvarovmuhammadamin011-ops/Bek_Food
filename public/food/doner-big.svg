@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#FFF0E0"/>
+      <stop offset="100%" stop-color="#E3BE8F"/>
+    </radialGradient>
+    <linearGradient id="wrap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F7E3B8"/>
+      <stop offset="100%" stop-color="#E2C487"/>
+    </linearGradient>
+    <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A56B45"/>
+      <stop offset="100%" stop-color="#6E4328"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="72" cy="52" r="46" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="334" cy="246" r="52" fill="#FFFFFF" opacity="0.16"/>
+  <ellipse cx="200" cy="248" rx="122" ry="15" fill="#4A2E12" opacity="0.18"/>
+  <g>
+    <path d="M98 240
+             Q 88 186 110 122
+             Q 126 84 246 96
+             Q 276 100 306 124
+             Q 316 172 314 240 Z"
+          fill="url(#wrap)" stroke="#D4B67A" stroke-width="4"/>
+    <path d="M150 240
+             Q 148 190 160 134
+             Q 170 104 214 96
+             L 244 108
+             Q 264 150 264 240 Z"
+          fill="url(#meat)" opacity="0.95"/>
+    <path d="M162 240 l 34 -120 M178 240 l 40 -114 M196 240 l 44 -108 M212 240 l 46 -100 M230 240 l 40 -88" stroke="#4C3120" stroke-width="4.5" stroke-linecap="round" opacity="0.35"/>
+    <circle cx="206" cy="210" r="12" fill="#E8590C" opacity="0.85"/>
+    <circle cx="226" cy="178" r="10" fill="#E8590C" opacity="0.7"/>
+    <circle cx="236" cy="232" r="9" fill="#E8590C" opacity="0.65"/>
+    <ellipse cx="174" cy="222" rx="14" ry="9" fill="#9CCC65"/>
+    <ellipse cx="250" cy="218" rx="13" ry="8" fill="#66BB6A"/>
+  </g>
+  <text x="200" y="42" text-anchor="middle" font-family="Arial" font-weight="800" font-size="18" fill="#8A5A12" opacity="0.6">KATTA</text>
+</svg>
