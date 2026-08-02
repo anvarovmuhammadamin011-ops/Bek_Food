@@ -186,6 +186,8 @@ export const useStore = create((set, get) => ({
   },
   logout: () => set({ user: null, isAuthenticated: false, role: null, cart: [], orders: mockOrders, currentOrder: null }),
 
+  updateProfile: (patch) => set({ user: { ...get().user, ...patch } }),
+
   // Cart
   addToCart: (food, quantity = 1, extras = [], notes = '') => {
     const cart = get().cart;
