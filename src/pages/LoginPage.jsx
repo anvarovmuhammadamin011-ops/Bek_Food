@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Store, Bike } from 'lucide-react';
 import useStore from '../store/useStore';
+import api from '../api/client';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 
 export default function LoginPage() {
@@ -25,8 +26,14 @@ export default function LoginPage() {
     setError('');
     try {
       const fullPhone = `998${cleaned}`;
-      const userId = Math.abs([...fullPhone].reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)) % 99999 || 1;
-      const userData = { id: userId, name: 'User', phone: fullPhone, role: 'CUSTOMER', email: '', avatar: '' };
+      let userData;
+      try {
+        const res = await api.login(fullPhone);
+        userData = { ...res.user, token: res.token };
+      } catch {
+        const userId = Math.abs([...fullPhone].reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)) % 99999 || 1;
+        userData = { id: userId, name: 'User', phone: fullPhone, role: 'customer', email: '', avatar: '' };
+      }
       login(userData);
       navigate('/', { replace: true });
     } catch (err) {

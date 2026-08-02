@@ -1,5 +1,16 @@
 import { create } from 'zustand';
 import { foods, restaurants, categories, banners, addresses, notifications } from '../data/mockData';
+import api from '../api/client';
+
+const SERVER_KEYS = ['foods', 'categories', 'restaurants', 'banners', 'promoCodes', 'settings', 'inventory', 'employees', 'branches', 'orders', 'addresses', 'notifications'];
+const SESSION_KEYS = ['user', 'cart', 'favorites', 'addresses', 'appliedCoupon'];
+const SESSION_KEY = 'bekfood_session';
+
+function buildSnapshot(s) {
+  const out = {};
+  for (const k of SERVER_KEYS) if (s[k] !== undefined) out[k] = s[k];
+  return out;
+}
 
 const mockOrders = [
   { id: 1001, items: [{ food: foods[0], quantity: 2, price: 12000 }], total: 24000, status: 'pending', paymentMethod: 'cash', address: "Chinobod, Oqtepa ko'chasi, 15", notes: 'Achchiq qiling', createdAt: new Date(Date.now() - 300000).toISOString(), customerName: 'Aziz', customerPhone: '+998901112233', priority: 'high', estimatedReady: '14:30', deliveryType: 'delivery' },
@@ -125,6 +136,35 @@ export const useStore = create((set, get) => ({
 
   // Auth
   setLoading: (v) => set({ isAppLoading: v }),
+  boot: async () => {
+    let restored = false;
+    try {
+      const saved = localStorage.getItem(SESSION_KEY);
+      if (saved) {
+        const s = JSON.parse(saved);
+        const patch = {};
+        for (const k of SESSION_KEYS) if (s[k] !== undefined) patch[k] = s[k];
+        if (patch.user) patch.isAuthenticated = true;
+        set(patch);
+        restored = true;
+      }
+    } catch { /* ber munkin emas */ }
+    try {
+      const res = await api.getData();
+      const data = res?.data;
+      if (data && Array.isArray(data.foods) && data.foods.length) {
+        const patch = {};
+        for (const k of SERVER_KEYS) if (data[k] !== undefined) patch[k] = data[k];
+        set(patch);
+      } else if (!restored) {
+        api.saveData(buildSnapshot(get())).catch(() => {});
+      }
+    } catch {
+      // Server o'chgan bo'lsa mahalliy (mock) ma'lumotlar bilan davom etamiz
+    } finally {
+      set({ isAppLoading: false });
+    }
+  },
   login: (user) => {
     set({
       user: { id: user.id, name: user.name, phone: user.phone, email: user.email, role: user.role?.toLowerCase() || 'customer', avatar: user.avatar },
@@ -417,5 +457,28 @@ export const useStore = create((set, get) => ({
   // Reset
   reset: () => set(initialState),
 }));
+
+// Backendga avtomatik saqlash (hamma o'zgarishlar bazaga yoziladi)
+let saveTimer = null;
+useStore.subscribe((state, prev) => {
+  let serverDirty = false;
+  let clientDirty = false;
+  for (const k of SERVER_KEYS) if (state[k] !== prev[k]) { serverDirty = true; break; }
+  for (const k of SESSION_KEYS) if (state[k] !== prev[k]) { clientDirty = true; break; }
+  if (serverDirty) {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      api.saveData(buildSnapshot(useStore.getState())).catch(() => {});
+    }, 600);
+  }
+  if (clientDirty) {
+    try {
+      const s = useStore.getState();
+      const item = {};
+      for (const k of SESSION_KEYS) item[k] = s[k];
+      localStorage.setItem(SESSION_KEY, JSON.stringify(item));
+    } catch { /* localStorage band bo'lishi mumkin */ }
+  }
+});
 
 export default useStore;
