@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#E8F6FF"/>
+      <stop offset="100%" stop-color="#C3E8FF"/>
+    </radialGradient>
+    <linearGradient id="can" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B8192C"/>
+      <stop offset="35%" stop-color="#E02337"/>
+      <stop offset="70%" stop-color="#C8192E"/>
+      <stop offset="100%" stop-color="#8E0F1E"/>
+    </linearGradient>
+    <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8EBEE"/>
+      <stop offset="100%" stop-color="#B9C0C8"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="36" fill="url(#bg)"/>
+  <ellipse cx="200" cy="270" rx="110" ry="16" fill="#0F4C81" opacity="0.15"/>
+  <circle cx="80" cy="60" r="42" fill="#FFFFFF" opacity="0.25"/>
+  <circle cx="330" cy="80" r="54" fill="#FFFFFF" opacity="0.2"/>
+  <g transform="translate(200,150)">
+    <rect x="-62" y="-95" width="124" height="190" rx="16" fill="url(#can)"/>
+    <ellipse cx="0" cy="-95" rx="62" ry="16" fill="url(#lid)"/>
+    <ellipse cx="0" cy="-78" rx="58" ry="14" fill="#F5F7F9" opacity="0.9"/>
+    <path d="M-100 -52 h200" stroke="#F7FAFC" stroke-width="5" opacity="0.55"/>
+    <text x="0" y="-20" text-anchor="middle" font-family="Arial" font-size="26" font-weight="800" fill="#FFFFFF" letter-spacing="1">Coca</text>
+    <text x="0" y="8" text-anchor="middle" font-family="Arial" font-size="26" font-weight="800" fill="#FFFFFF" letter-spacing="1">Cola</text>
+    <path d="M-95 30 h190 v55 a0 0 0 0 1 0 0 h-190 z" fill="none"/>
+    <rect x="-95" y="30" width="190" height="6" fill="#FFFFFF" opacity="0.3"/>
+    <ellipse cx="-60" cy="70" rx="22" ry="8" fill="#FFFFFF" opacity="0.15"/>
+  </g>
+</svg>

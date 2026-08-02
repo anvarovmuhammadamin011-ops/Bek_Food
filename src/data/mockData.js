@@ -30,6 +30,10 @@ const foodList = [
   { id: 26, name: 'Pitsa assorti 30 sm', price: 75000, image: '/food/pizza-assorti30.svg', categoryId: 6, restaurantId: 1, spiceLevel: 1, ingredients: ['Xamir', 'Assorti', 'Pishloq'] },
   { id: 27, name: 'Pitsa assorti 35 sm', price: 95000, image: '/food/pizza-assorti35.svg', categoryId: 6, restaurantId: 1, spiceLevel: 1, ingredients: ['Xamir', 'Assorti', 'Pishloq'] },
   { id: 28, name: 'Pitsa assorti 40 sm', price: 115000, image: '/food/pizza-assorti40.svg', categoryId: 6, restaurantId: 1, spiceLevel: 1, ingredients: ['Xamir', 'Assorti', 'Pishloq'] },
+  { id: 29, name: 'Coca-Cola 0.5 L', price: 8000, image: '/food/cola.svg', categoryId: 7, restaurantId: 1, spiceLevel: 0, ingredients: ['Gazli ichimlik'] },
+  { id: 30, name: 'Coca-Cola 1 L', price: 15000, image: '/food/cola-1.svg', categoryId: 7, restaurantId: 1, spiceLevel: 0, ingredients: ['Gazli ichimlik'] },
+  { id: 31, name: 'Sous ketchup', price: 2000, image: '/food/sauce.svg', categoryId: 8, restaurantId: 1, spiceLevel: 0, ingredients: ['Ketchup'] },
+  { id: 32, name: 'Sous sarimsoqli', price: 3000, image: '/food/sauce-garlic.svg', categoryId: 8, restaurantId: 1, spiceLevel: 0, ingredients: ['Smetana', 'Sarimsoq'] },
 ];
 
 export const categories = [
@@ -39,6 +43,8 @@ export const categories = [
   { id: 4, name: 'Nonburgerlar & Donar', icon: '🥙' },
   { id: 5, name: 'Frilar', icon: '🍟' },
   { id: 6, name: 'Pitsalar', icon: '🍕' },
+  { id: 7, name: 'Ichimliklar', icon: '🥤' },
+  { id: 8, name: 'Soslar', icon: '🍶' },
 ];
 
 export const foods = foodList;

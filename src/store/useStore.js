@@ -314,6 +314,8 @@ export const useStore = create((set, get) => ({
       set({ recentSearches: [q, ...get().recentSearches.slice(0, 9)] });
     }
   },
+  clearRecentSearches: () => set({ recentSearches: [] }),
+  removeRecentSearch: (q) => set({ recentSearches: get().recentSearches.filter((s) => s !== q) }),
 
   // Payment
   setPaymentMethod: (method) => set({ selectedPaymentMethod: method }),
