@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Store, Bike } from 'lucide-react';
 import useStore from '../store/useStore';
 import api from '../api/client';
 import GoogleLoginButton from '../components/GoogleLoginButton';
@@ -8,15 +7,10 @@ import GoogleLoginButton from '../components/GoogleLoginButton';
 export default function LoginPage() {
   const navigate = useNavigate();
   const login = useStore((s) => s.login);
-  const loginAs = useStore((s) => s.loginAs);
+  const employees = useStore((s) => s.employees);
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const quickLogin = (role, path) => {
-    loginAs(role);
-    navigate(path, { replace: true });
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,6 +20,7 @@ export default function LoginPage() {
     setError('');
     try {
       const fullPhone = `998${cleaned}`;
+      const employee = employees.find((emp) => (emp.phone || '').replace(/\D/g, '') === fullPhone);
       let userData;
       try {
         const res = await api.login(fullPhone);
@@ -34,8 +29,17 @@ export default function LoginPage() {
         const userId = Math.abs([...fullPhone].reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)) % 99999 || 1;
         userData = { id: userId, name: 'User', phone: fullPhone, role: 'customer', email: '', avatar: '' };
       }
+      if (employee) {
+        userData = {
+          ...userData,
+          id: employee.id,
+          name: employee.name || userData.name,
+          phone: employee.phone || fullPhone,
+          role: employee.role,
+        };
+      }
       login(userData);
-      navigate('/', { replace: true });
+      navigate(employee ? (employee.role === 'admin' ? '/admin' : employee.role === 'seller' ? '/seller' : '/courier') : '/', { replace: true });
     } catch (err) {
       setError(err.message || 'Xatolik');
     } finally {
@@ -96,43 +100,6 @@ export default function LoginPage() {
         </div>
 
         <GoogleLoginButton />
-
-        <div style={{ marginTop: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-            <span style={{ color: 'var(--text-dim)', fontSize: 12, fontWeight: 500, flexShrink: 0 }}>Tezkor kirish (demo)</span>
-            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-          </div>
-          <div className="flex" style={{ gap: 8 }}>
-            <button onClick={() => quickLogin('admin', '/admin')} className="flex-1 flex flex-col items-center" style={{
-              padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
-              background: 'var(--surface)', border: '1px solid var(--border)',
-            }}>
-              <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Shield size={18} color="var(--primary)" />
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>Admin</span>
-            </button>
-            <button onClick={() => quickLogin('seller', '/seller')} className="flex-1 flex flex-col items-center" style={{
-              padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
-              background: 'var(--surface)', border: '1px solid var(--border)',
-            }}>
-              <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', background: 'var(--success-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Store size={18} color="var(--success)" />
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>Sotuvchi</span>
-            </button>
-            <button onClick={() => quickLogin('courier', '/courier')} className="flex-1 flex flex-col items-center" style={{
-              padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
-              background: 'var(--surface)', border: '1px solid var(--border)',
-            }}>
-              <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', background: 'var(--warning-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bike size={18} color="var(--warning)" />
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>Kuryer</span>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

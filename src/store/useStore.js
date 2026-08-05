@@ -77,6 +77,7 @@ const mockSettings = {
 };
 
 const mockEmployees = [
+  { id: 30, name: 'Admin', role: 'admin', phone: '+998900000000', rating: 5, isOnline: true },
   { id: 1, name: 'Akbar', role: 'courier', phone: '+998901112233', rating: 4.8, totalDeliveries: 312, isOnline: true },
   { id: 2, name: 'Sardor', role: 'courier', phone: '+998902223344', rating: 4.6, totalDeliveries: 198, isOnline: false },
   { id: 3, name: 'Otabek', role: 'seller', phone: '+998903334455', rating: 4.9, totalOrders: 1245, isOnline: true },
@@ -166,22 +167,12 @@ export const useStore = create((set, get) => ({
     }
   },
   login: (user) => {
+    const role = (user.role || '').toLowerCase();
+    const mapped = role === 'admin' ? 'admin' : role === 'courier' || role === 'driver' ? 'courier' : role === 'seller' || role === 'order_manager' ? 'seller' : 'customer';
     set({
-      user: { id: user.id, name: user.name, phone: user.phone, email: user.email, role: user.role?.toLowerCase() || 'customer', avatar: user.avatar },
+      user: { id: user.id, name: user.name, phone: user.phone, email: user.email, role: mapped, avatar: user.avatar },
       isAuthenticated: true,
-      role: user.role?.toLowerCase() === 'admin' ? 'admin' : user.role?.toLowerCase() === 'driver' ? 'courier' : user.role?.toLowerCase() === 'order_manager' ? 'seller' : 'customer',
-    });
-  },
-  loginAs: (role, userData) => {
-    const defaults = {
-      courier: { id: 1, name: 'Akbar', phone: '+998901112233', rating: 4.8, totalDeliveries: 312 },
-      seller: { id: 20, name: 'Otabek', phone: '+998903334455', rating: 4.9, totalOrders: 1245 },
-      admin: { id: 30, name: 'Admin', phone: '+998900000000' },
-    };
-    set({
-      user: userData || defaults[role] || { id: 1, name: 'Bekzod', phone: '+998901234567' },
-      isAuthenticated: true,
-      role,
+      role: mapped,
     });
   },
   logout: () => set({ user: null, isAuthenticated: false, role: null, cart: [], orders: mockOrders, currentOrder: null }),
