@@ -136,6 +136,7 @@ export default function SellerLayout({ children }) {
           .admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
           .admin-overlay.open{opacity:1;pointer-events:all}
           .admin-content{margin-left:0!important}
+          .admin-close-btn{display:flex!important}
         }
         @media(min-width:1029px){
           .admin-mobile-topbar{display:none!important}
@@ -206,14 +207,14 @@ export default function SellerLayout({ children }) {
             <button
               onClick={() => setSidebarOpen(false)}
               style={{ marginLeft: 'auto', display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: 'var(--text-muted)' }}
-              className="lg-hide-close"
+              className="admin-close-btn"
             >
               <X size={18} />
             </button>
           </div>
         </div>
 
-        <nav className="admin-sidebar" style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+        <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;

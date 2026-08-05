@@ -50,19 +50,20 @@ export default function AdminLayout({ children }) {
       fontFamily: 'var(--font-sans)',
     }}>
       <style>{`
-        .admin-sidebar::-webkit-scrollbar{width:0}
+        .admin-aside::-webkit-scrollbar{width:0}
         .admin-nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s var(--ease);white-space:nowrap}
         .admin-nav-item:hover{background:var(--surface-active);color:var(--text)}
         .admin-nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:600}
         .admin-nav-item.active svg{color:var(--primary)}
         @media(max-width:1024px){
-          .admin-sidebar{position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:transform .3s var(--ease)}
-          .admin-sidebar.open{transform:translateX(0)}
+          .admin-aside{position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:transform .3s var(--ease)}
+          .admin-aside.open{transform:translateX(0)}
           .admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
           .admin-overlay.open{opacity:1;pointer-events:all}
           .admin-content{margin-left:0!important}
+          .admin-close-btn{display:flex!important}
         }
-        @media(min-width:1029px){
+        @media(min-width:1025px){
           .admin-mobile-topbar{display:none!important}
         }
       `}</style>
@@ -75,7 +76,7 @@ export default function AdminLayout({ children }) {
 
       {/* Sidebar */}
       <aside
-        className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}
+        className={`admin-aside ${sidebarOpen ? 'open' : ''}`}
         style={{
           width: 256,
           minWidth: 256,
@@ -99,19 +100,19 @@ export default function AdminLayout({ children }) {
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
+              className="admin-close-btn"
               style={{
                 marginLeft: 'auto', display: 'none', background: 'none', border: 'none',
                 cursor: 'pointer', padding: 4, color: 'var(--text-muted)',
               }}
-              className="lg-hide-close"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
           </div>
         </div>
 
         {/* Nav */}
-        <nav className="admin-sidebar" style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+        <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
