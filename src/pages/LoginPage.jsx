@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Shield, Store } from 'lucide-react';
 import useStore from '../store/useStore';
 import api from '../api/client';
 import GoogleLoginButton from '../components/GoogleLoginButton';
@@ -44,6 +45,14 @@ export default function LoginPage() {
       setError(err.message || 'Xatolik');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const quickLogin = (role) => {
+    const employee = employees.find((emp) => emp.role === role);
+    if (employee) {
+      login({ ...employee, role: employee.role });
+      navigate(role === 'admin' ? '/admin' : '/seller', { replace: true });
     }
   };
 
@@ -100,6 +109,34 @@ export default function LoginPage() {
         </div>
 
         <GoogleLoginButton />
+
+        <div style={{ marginTop: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+            <span style={{ color: 'var(--text-dim)', fontSize: 12, fontWeight: 500, flexShrink: 0 }}>Tezkor kirish</span>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          </div>
+          <div className="flex" style={{ gap: 8 }}>
+            <button onClick={() => quickLogin('admin')} className="flex-1 flex flex-col items-center" style={{
+              padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
+              background: 'var(--surface)', border: '1px solid var(--border)',
+            }}>
+              <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Shield size={18} color="var(--primary)" />
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>Admin</span>
+            </button>
+            <button onClick={() => quickLogin('seller')} className="flex-1 flex flex-col items-center" style={{
+              padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
+              background: 'var(--surface)', border: '1px solid var(--border)',
+            }}>
+              <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', background: 'var(--success-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Store size={18} color="var(--success)" />
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>Sotuvchi</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
