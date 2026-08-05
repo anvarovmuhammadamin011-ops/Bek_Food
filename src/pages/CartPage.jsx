@@ -79,12 +79,12 @@ export default function CartPage() {
                 transition: 'all .3s var(--ease)',
               }}
             >
-              <div style={{ width: 52, height: 52, borderRadius: 'var(--radius-sm)', overflow: 'hidden', flexShrink: 0, background: 'var(--surface-active)' }}>
+              <div style={{ width: 'clamp(44px, 10vw, 52px)', height: 'clamp(44px, 10vw, 52px)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', flexShrink: 0, background: 'var(--surface-active)' }}>
                 <img src={item.food.image} alt={item.food.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.src = '/food/placeholder.svg'; }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ color: 'var(--text)', fontSize: 14, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.food.name}</div>
-                <div className="price-sm" style={{ marginTop: 3 }}>{(item.price * item.quantity).toLocaleString()} so'm</div>
+                <div style={{ color: 'var(--text)', fontSize: 'clamp(13px, 3vw, 14px)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.food.name}</div>
+                <div className="price-sm" style={{ marginTop: 3, fontSize: 'clamp(12px, 2.8vw, 14px)' }}>{(item.price * item.quantity).toLocaleString()} so'm</div>
               </div>
               <div className="flex items-center" style={{ gap: 0, background: 'var(--surface-active)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>
                 <button onClick={() => updateCartItemQuantity(item.id, -1)} style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
@@ -107,7 +107,7 @@ export default function CartPage() {
           <div className="flex p-1" style={{ background: 'var(--surface-active)', borderRadius: 'var(--radius)', gap: 4 }}>
             {[{ key: 'delivery', label: 'Yetkazib berish', icon: Truck }, { key: 'pickup', label: "O'zim olib ketaman", icon: Store }].map((m) => (
               <button key={m.key} onClick={() => setDelivery(m.key)} className="flex-1 flex items-center justify-center" style={{
-                gap: 6, padding: '10px 0', borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: 'all .25s', fontWeight: 600, fontSize: 13,
+                gap: 4, padding: 'clamp(8px, 2vw, 10px) 0', borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: 'all .25s', fontWeight: 600, fontSize: 'clamp(11px, 2.8vw, 13px)',
                 background: delivery === m.key ? 'var(--primary)' : 'transparent',
                 color: delivery === m.key ? '#fff' : 'var(--text-muted)',
                 boxShadow: delivery === m.key ? 'var(--shadow-primary)' : 'none', border: 'none',

@@ -50,18 +50,23 @@ export default function HomePage() {
   const showSearch = query.trim().length > 0;
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+    <div className="h-full overflow-y-auto scrollbar-hide pb-36 home-page-shell">
+      <style>{`
+        @media (max-width: 360px) {
+          .food-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
       <div className="px-4">
         {/* ===== Header: salomlashish + joylashuv + qidiruv ===== */}
         <div className="animate-fade-in" style={{ paddingTop: 20 }}>
           {/* Top row: logo + bell + profile */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center" style={{ gap: 10 }}>
+          <div className="home-top-row flex items-center justify-between">
+            <div className="home-brand flex items-center" style={{ gap: 10 }}>
               <img src="/logo.png" alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 2px 8px rgba(0,0,0,.1)' }} />
-              <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 22, letterSpacing: '-.03em', lineHeight: 1.2 }}>Bek Food</div>
+              <div className="home-title" style={{ fontWeight: 700, color: 'var(--text)', fontSize: 22, letterSpacing: '-.03em', lineHeight: 1.2 }}>Bek Food</div>
             </div>
             <div className="flex items-center" style={{ gap: 10 }}>
-              <button onClick={() => navigate('/notifications')} className="card card-interactive" style={{ width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+              <button onClick={() => navigate('/notifications')} className="home-icon-btn card card-interactive" style={{ width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                 <Bell size={18} color="var(--text-muted)" />
                 {unread > 0 && (
                   <span style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, borderRadius: 'var(--radius-full)', background: 'var(--danger)', color: '#fff', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', boxShadow: '0 2px 6px rgba(239,68,68,.4)' }}>
@@ -69,7 +74,7 @@ export default function HomePage() {
                   </span>
                 )}
               </button>
-              <button onClick={() => navigate('/profile')} className="card card-interactive" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              <button onClick={() => navigate('/profile')} className="home-profile-pill card card-interactive" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                 <span style={{ width: 42, height: 42, borderRadius: 'var(--radius-full)', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 16 }}>
                   {firstName[0]?.toUpperCase()}
                 </span>
@@ -79,27 +84,27 @@ export default function HomePage() {
 
           {/* Greeting */}
           <div style={{ marginTop: 18 }}>
-            <div style={{ color: 'var(--text)', fontSize: 24, fontWeight: 800, letterSpacing: '-.03em', lineHeight: 1.25 }}>
+            <div className="home-greeting-title" style={{ color: 'var(--text)', fontSize: 24, fontWeight: 800, letterSpacing: '-.03em', lineHeight: 1.25 }}>
               Salom, {firstName}! 👋
             </div>
-            <div style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 2 }}>Bugun nimadan tozalab buyurtma beramiz?</div>
+            <div className="home-greeting-subtitle" style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 2 }}>Bugun nimadan tozalab buyurtma beramiz?</div>
           </div>
 
           {/* Location dropdown */}
           <div style={{ position: 'relative', marginTop: 14 }}>
             <button
               onClick={() => setLocOpen(!locOpen)}
-              className="card card-interactive"
+              className="home-location-btn card card-interactive"
               style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', width: '100%', cursor: 'pointer', borderRadius: 'var(--radius)' }}
             >
               <span style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <MapPin size={14} />
               </span>
               <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
-                <div style={{ color: 'var(--text)', fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div className="home-location-label" style={{ color: 'var(--text)', fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {currentAddress ? currentAddress.label : "Manzil tanlang"}
                 </div>
-                <div style={{ color: 'var(--text-muted)', fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 1 }}>
+                <div className="home-location-sub" style={{ color: 'var(--text-muted)', fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 1 }}>
                   {currentAddress ? currentAddress.fullAddress : "Chinobod, O'zbekiston"}
                 </div>
               </div>
@@ -141,7 +146,7 @@ export default function HomePage() {
           </div>
 
           {/* Search integrated in header */}
-          <div ref={searchRef} style={{ position: 'relative', marginTop: 12 }}>
+          <div ref={searchRef} className="home-search-wrap" style={{ position: 'relative', marginTop: 12 }}>
             <div className="input-group">
               <Search size={16} style={{ color: 'var(--text-dim)' }} className="input-group-icon" />
               <input
@@ -198,12 +203,12 @@ export default function HomePage() {
           <div style={{ marginBottom: 16, marginTop: 16 }}><SkeletonCategory /></div>
         ) : (
           <div className="animate-fade-in-up" style={{ marginTop: 18 }}>
-            <div className="flex overflow-x-auto scrollbar-hide" style={{ gap: 8, paddingBottom: 4 }}>
+            <div className="home-category-row flex overflow-x-auto scrollbar-hide relative" style={{ gap: 8, paddingBottom: 4 }}>
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
-                  className="whitespace-nowrap"
+                  className="home-category-chip whitespace-nowrap"
                   style={{
                     fontSize: 13, padding: '8px 18px', borderRadius: 'var(--radius-full)', fontWeight: 500,
                     background: selectedCategory === cat.id ? 'var(--primary)' : 'var(--surface)',
@@ -217,6 +222,13 @@ export default function HomePage() {
                   {cat.name}
                 </button>
               ))}
+              <div
+                className="pointer-events-none"
+                style={{
+                  position: 'absolute', right: 0, top: 0, bottom: 0, width: 40,
+                  background: 'linear-gradient(90deg, transparent, var(--bg))',
+                }}
+              />
             </div>
           </div>
         )}
@@ -228,7 +240,7 @@ export default function HomePage() {
               <h2 className="heading">{categories.find((c) => c.id === selectedCategory)?.name}</h2>
               <button onClick={() => setSelectedCategory(null)} style={{ color: 'var(--primary)', fontSize: 13, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>Barchasi</button>
             </div>
-            <div className="grid grid-cols-2 stagger" style={{ gap: 12 }}>
+            <div className="grid food-grid stagger" style={{ gap: 12 }}>
               {filtered.map((food) => <FoodCard key={food.id} food={food} />)}
             </div>
             {filtered.length === 0 && (
@@ -250,7 +262,7 @@ export default function HomePage() {
                   </div>
                   <h2 className="heading">Chegirmalar</h2>
                 </div>
-                <div className="grid grid-cols-2 stagger" style={{ gap: 12 }}>
+                <div className="grid food-grid stagger" style={{ gap: 12 }}>
                   {deals.map((food) => <FoodCard key={food.id} food={food} />)}
                 </div>
               </div>
@@ -265,7 +277,7 @@ export default function HomePage() {
                   </div>
                   <h2 className="heading">Mashhur taomlar</h2>
                 </div>
-                <div className="grid grid-cols-2 stagger" style={{ gap: 12 }}>
+                <div className="grid food-grid stagger" style={{ gap: 12 }}>
                   {popular.map((food) => <FoodCard key={food.id} food={food} />)}
                 </div>
               </div>
@@ -275,14 +287,14 @@ export default function HomePage() {
             {!loading && (
               <div className="animate-fade-in-up" style={{ marginTop: 26 }}>
                 <h2 className="heading" style={{ marginBottom: 14 }}>To'liq menyu</h2>
-                <div className="grid grid-cols-2 stagger" style={{ gap: 12 }}>
+                <div className="grid food-grid stagger" style={{ gap: 12 }}>
                   {foods.map((food) => <FoodCard key={food.id} food={food} />)}
                 </div>
               </div>
             )}
 
             {loading && (
-              <div className="grid grid-cols-2" style={{ gap: 12 }}>
+              <div className="grid food-grid" style={{ gap: 12 }}>
                 {[1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)}
               </div>
             )}

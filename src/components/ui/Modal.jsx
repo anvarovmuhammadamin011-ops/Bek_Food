@@ -22,14 +22,14 @@ export const Modal = memo(function Modal({
 
   return createPortal(
     <AnimatePresence>
-      <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
       >
         <motion.div className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           onClick={closeOnOverlayClick ? onClose : undefined}
         />
-        <motion.div className={cn('relative w-full bg-surface rounded-[24px] shadow-[0_25px_80px_rgba(0,0,0,0.15)] border border-divider overflow-hidden', sizeClasses[size], className)}
+        <motion.div className={cn('relative w-full max-w-[calc(100vw-16px)] bg-surface rounded-[24px] shadow-[0_25px_80px_rgba(0,0,0,0.15)] border border-divider overflow-hidden max-h-[90vh] overflow-y-auto', sizeClasses[size], className)}
           initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         >
@@ -84,7 +84,7 @@ export const BottomSheet = memo(function BottomSheet({
         <motion.div className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
         />
-        <motion.div className={cn('w-full bg-surface rounded-t-[24px] border-t border-divider shadow-[0_-10px_40px_rgba(0,0,0,0.1)]', className)}
+        <motion.div className={cn('w-full max-w-[100vw] bg-surface rounded-t-[24px] border-t border-divider shadow-[0_-10px_40px_rgba(0,0,0,0.1)]', className)}
           style={{ maxHeight: heightStyle === 'auto' ? '90vh' : heightStyle }}
           initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
@@ -133,7 +133,7 @@ export const Toast = memo(function Toast({ id, title, description, type = 'defau
 
   return (
     <AnimatePresence>
-      <motion.div className={cn('flex items-start gap-3 p-4 rounded-[16px] border shadow-lg min-w-[300px] max-w-md', typeStyles[type])}
+      <motion.div className={cn('flex items-start gap-3 p-4 rounded-[16px] border shadow-lg w-full sm:min-w-[300px] sm:max-w-md', typeStyles[type])}
         initial={{ opacity: 0, x: 100, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} exit={{ opacity: 0, x: 100, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
       >
@@ -165,7 +165,7 @@ const positionClasses = {
 export const Toaster = memo(function Toaster({ toasts, onClose, position = 'top-right' }) {
   return (
     <AnimatePresence>
-      <div className={cn('fixed z-[1700] flex flex-col gap-3 pointer-events-none p-2', positionClasses[position])} aria-live="polite" aria-atomic="true">
+      <div className={cn('fixed z-[1700] flex flex-col gap-3 pointer-events-none p-2 w-[calc(100vw-16px)] sm:w-auto', positionClasses[position])} aria-live="polite" aria-atomic="true">
         {toasts.map((toast) => (
           <div key={toast.id} className="pointer-events-auto w-full">
             <Toast {...toast} onClose={onClose} />

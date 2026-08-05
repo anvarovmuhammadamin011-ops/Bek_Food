@@ -179,16 +179,19 @@ const AdminDashboard = () => {
   return (
     <div className="page-enter" style={{ padding: '0 0 48px', maxWidth: 1400, margin: '0 auto' }}>
       <style>{`
+        .dash-page-header{padding:24px 16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%;overflow-x:hidden}
         .dash-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
         .dash-two-col { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
         .dash-revenue-bar { height: 5px; border-radius: 999px; background: var(--surface-active); overflow: hidden; }
         .dash-revenue-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), #FB923C); }
+        .dash-chart-shell { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+        .dash-chart-shell > div { min-width: 320px; }
         @media (max-width: 1100px) { .dash-two-col { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px) { .dash-kpi-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .dash-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .dash-quick-actions{flex-direction:column;align-items:stretch} .dash-quick-actions .card{width:100%;justify-content:flex-start;padding:12px 14px;min-width:0} .dash-kpi-grid .card{padding:14px 12px;gap:10px} .dash-kpi-grid .card .price-lg{font-size:16px;white-space:normal;line-height:1.2;overflow:visible} .dash-kpi-grid .card .caption{font-size:11px} .dash-recent-list button{flex-wrap:wrap;gap:8px;padding:12px 2px} .dash-recent-list .recent-amount{margin-left:auto} }
+        @media (max-width: 480px) { .dash-page-header{padding:20px 12px 16px!important} .dash-kpi-grid { grid-template-columns: 1fr; } .dash-delivery{grid-template-columns:1fr!important} .dash-two-col .card{padding:16px!important} .dash-recent-list .recent-status{margin-left:auto} .dash-recent-list .recent-name{width:100%} .dash-quick-actions .card{padding:12px 12px} }
       `}</style>
 
-      <div style={{ padding: '32px 0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      <div className="dash-page-header">
         <div>
           <h1 className="display-2" style={{ marginBottom: 4 }}>Dashboard</h1>
           <p className="body">Xush kelibsiz, <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user.name || 'Admin'}</span></p>
@@ -251,9 +254,9 @@ const AdminDashboard = () => {
               >
                 <Icon size={19} style={{ color: `var(${kpi.colorVar})` }} />
               </div>
-              <div style={{ minWidth: 0 }}>
+              <div style={{ minWidth: 0, width: '100%' }}>
                 <p className="caption" style={{ marginBottom: 2 }}>{kpi.label}</p>
-                <p className="price-lg" style={{ fontSize: 18, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <p className="price-lg" style={{ fontSize: 18, whiteSpace: 'normal', overflow: 'visible', lineHeight: 1.2, wordBreak: 'break-word' }}>
                   {typeof kpi.value === 'number' ? formatCurrency(kpi.value) : kpi.value}
                 </p>
                 <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>{kpi.prefix}</span>
@@ -319,7 +322,9 @@ const AdminDashboard = () => {
                 <BarChart3 size={16} style={{ color: 'var(--primary)' }} />
               </div>
             </div>
-            <BarChart data={weekStats.map((d) => d.revenue)} labels={weekStats.map((d) => d.label)} height={180} />
+            <div className="dash-chart-shell">
+              <BarChart data={weekStats.map((d) => d.revenue)} labels={weekStats.map((d) => d.label)} height={180} />
+            </div>
           </div>
 
           <div className="card card-elevated animate-fade-in-up" style={{ padding: 24 }}>
@@ -335,7 +340,7 @@ const AdminDashboard = () => {
             {recentOrders.length === 0 ? (
               <p className="caption" style={{ padding: '20px 0', textAlign: 'center' }}>Hali buyurtmalar yo'q</p>
             ) : (
-              <div>
+              <div className="dash-recent-list">
                 {recentOrders.map((o, i) => {
                   const st = statusMeta[o.status] || { label: o.status, color: 'var(--text-muted)' };
                   return (
@@ -357,13 +362,14 @@ const AdminDashboard = () => {
                       >
                         #{o.id}
                       </span>
-                      <span className="text-sm font-semibold truncate" style={{ color: 'var(--text)', flex: 1, minWidth: 0 }}>
+                      <span className="text-sm font-semibold truncate recent-name" style={{ color: 'var(--text)', flex: 1, minWidth: 0 }}>
                         {o.customerName || 'Mijoz'}
                       </span>
-                      <span className="text-sm font-semibold" style={{ color: 'var(--text)', flexShrink: 0 }}>
+                      <span className="text-sm font-semibold recent-amount" style={{ color: 'var(--text)', flexShrink: 0 }}>
                         {formatCurrency(o.total)} so'm
                       </span>
                       <span
+                        className="recent-status"
                         style={{
                           fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
                           background: st.color + '14', color: st.color, flexShrink: 0,

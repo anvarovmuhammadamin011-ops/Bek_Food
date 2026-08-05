@@ -50,7 +50,7 @@ export default function TrackingPage() {
     };
 
     return (
-      <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+      <div className="h-full overflow-y-auto scrollbar-hide pb-36">
         <div className="flex flex-col items-center text-center" style={{ padding: '40px 24px 8px' }}>
           <div className="animate-float"><OrdersIllustration size={170} /></div>
           <h2 className="display-3" style={{ marginBottom: 6 }}>Faol buyurtma yo'q</h2>
@@ -106,7 +106,7 @@ export default function TrackingPage() {
   const secs = elapsed % 60;
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-20">
+    <div className="h-full overflow-y-auto scrollbar-hide pb-32">
       <div className="p-4" style={{ paddingTop: 16 }}>
         <div className="flex items-center justify-between animate-fade-in" style={{ marginBottom: 20 }}>
           <div className="flex items-center" style={{ gap: 12 }}>

@@ -14,6 +14,8 @@ import {
   ChevronRight,
   Check,
   ShoppingCart,
+  Search,
+  UserCircle2,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -126,17 +128,22 @@ export default function SellerLayout({ children }) {
         .admin-nav-item:hover{background:var(--surface-active);color:var(--text)}
         .admin-nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:600}
         .admin-nav-item.active svg{color:var(--primary)}
+        .admin-mobile-topbar button{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px}
         .quick-accept{position:fixed;top:16px;right:16px;z-index:200;width:340px;max-width:calc(100vw - 32px);animation:quickIn .35s var(--ease)}
         @keyframes quickIn{from{opacity:0;transform:translateY(-16px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
         .quick-pulse{animation:quickPulse 1s ease-in-out 3}
         @keyframes quickPulse{0%,100%{box-shadow:0 8px 30px rgba(239,68,68,.25)}50%{box-shadow:0 8px 30px rgba(239,68,68,.5)}}
         @media(max-width:1024px){
-          .admin-sidebar{position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:transform .3s var(--ease)}
+          .admin-sidebar{position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:transform .3s var(--ease);width:min(84vw,280px)!important;min-width:min(84vw,280px)!important}
           .admin-sidebar.open{transform:translateX(0)}
           .admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
           .admin-overlay.open{opacity:1;pointer-events:all}
           .admin-content{margin-left:0!important}
           .admin-close-btn{display:flex!important}
+        }
+        @media(max-width:768px){
+          .admin-mobile-topbar{padding:12px 14px!important}
+          .admin-nav-item{padding:12px 12px;font-size:14px}
         }
         @media(min-width:1029px){
           .admin-mobile-topbar{display:none!important}

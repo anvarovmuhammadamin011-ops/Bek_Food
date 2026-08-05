@@ -40,7 +40,7 @@ export default function FoodDetailPage() {
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-32">
       {/* 1. Realistic product photo */}
-      <div className="relative" style={{ height: '48vh', minHeight: 300, background: 'var(--surface-active)' }}>
+      <div className="relative" style={{ height: 'clamp(250px, 44vh, 400px)', background: 'var(--surface-active)' }}>
         <img src={food.image} alt={food.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.src = '/food/hotdog.svg'; }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.45) 0%, transparent 42%)' }} />
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserCircle, Phone, ShieldCheck, LogOut, Store } from 'lucide-react';
 
 const s = {
-  page: { padding: '32px', background: 'var(--bg)', minHeight: '100vh' },
+  page: { padding: '24px 16px 32px', background: 'var(--bg)', minHeight: '100vh' },
   container: { maxWidth: '560px', margin: '0 auto' },
   title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },
   subtitle: { fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' },

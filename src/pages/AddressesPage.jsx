@@ -9,7 +9,7 @@ export default function AddressesPage() {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+    <div className="h-full overflow-y-auto scrollbar-hide pb-36">
       <div className="p-4 flex items-center justify-between">
         <h1 className="heading">Manzillarim</h1>
         <button onClick={() => setShowForm(!showForm)} className="flex items-center" style={{ gap: 4, color: 'var(--primary)', fontSize: 13, fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer' }}>

@@ -3,7 +3,7 @@ import useStore from '../../store/useStore';
 import { Bike, Phone, CheckCheck, PackageCheck, Clock } from 'lucide-react';
 
 const s = {
-  page: { padding: '32px', background: 'var(--bg)', minHeight: '100vh' },
+  page: { padding: '24px 16px 32px', background: 'var(--bg)', minHeight: '100vh' },
   container: { maxWidth: '900px', margin: '0 auto' },
   header: { marginBottom: '24px' },
   title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },

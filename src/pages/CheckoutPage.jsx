@@ -204,26 +204,26 @@ export default function CheckoutPage() {
                 <Wallet size={18} color="var(--primary)" />
                 <h3 className="subheading">To'lov turi</h3>
               </div>
-              <div className="flex" style={{ gap: 12 }}>
+              <div className="flex" style={{ gap: 10 }}>
                 <button onClick={() => setPaymentMethod('cash')} className="flex-1 flex flex-col items-center" style={{
-                  padding: '18px 12px', gap: 8, borderRadius: 'var(--radius-lg)', cursor: 'pointer', transition: 'all .25s',
+                  padding: 'clamp(14px, 3vw, 18px) clamp(8px, 2vw, 12px)', gap: 8, borderRadius: 'var(--radius-lg)', cursor: 'pointer', transition: 'all .25s',
                   background: selectedPaymentMethod === 'cash' ? 'var(--primary-light)' : 'var(--surface)',
                   border: `1.5px solid ${selectedPaymentMethod === 'cash' ? 'rgba(249,115,22,.3)' : 'var(--border)'}`,
                 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 'var(--radius)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 'var(--radius)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Wallet size={20} color="var(--primary)" />
                   </div>
-                  <span style={{ color: 'var(--text)', fontSize: 14, fontWeight: 500 }}>Naqd pul</span>
+                  <span style={{ color: 'var(--text)', fontSize: 'clamp(13px, 3vw, 14px)', fontWeight: 500 }}>Naqd pul</span>
                   {selectedPaymentMethod === 'cash' && <Check size={16} color="var(--primary)" />}
                 </button>
                 <button className="flex-1 flex flex-col items-center" style={{
-                  padding: '18px 12px', gap: 8, borderRadius: 'var(--radius-lg)', cursor: 'pointer', opacity: .4,
+                  padding: 'clamp(14px, 3vw, 18px) clamp(8px, 2vw, 12px)', gap: 8, borderRadius: 'var(--radius-lg)', cursor: 'pointer', opacity: .4,
                   background: 'var(--surface)', border: '1px solid var(--border)',
                 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 'var(--radius)', background: 'var(--surface-active)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 'var(--radius)', background: 'var(--surface-active)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Wallet size={20} color="var(--text-dim)" />
                   </div>
-                  <span style={{ color: 'var(--text)', fontSize: 14, fontWeight: 500 }}>Karta</span>
+                  <span style={{ color: 'var(--text)', fontSize: 'clamp(13px, 3vw, 14px)', fontWeight: 500 }}>Karta</span>
                   <span style={{ color: 'var(--text-dim)', fontSize: 11 }}>Tez orada</span>
                 </button>
               </div>

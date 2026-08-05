@@ -90,7 +90,7 @@ export default function SearchPage() {
             border: `1.5px solid ${cat === null ? 'var(--primary)' : 'var(--border)'}`,
             color: cat === null ? '#fff' : 'var(--text-muted)', cursor: 'pointer', flexShrink: 0,
           }}>Barchasi</button>
-          <div className="flex overflow-x-auto scrollbar-hide" style={{ gap: 8 }}>
+          <div className="flex overflow-x-auto scrollbar-hide relative" style={{ gap: 8 }}>
             {categories.map((c) => (
               <button key={c.id} onClick={() => setCat(cat === c.id ? null : c.id)} className="whitespace-nowrap" style={{
                 fontSize: 12, padding: '7px 14px', borderRadius: 'var(--radius-full)', fontWeight: 500,
@@ -99,6 +99,13 @@ export default function SearchPage() {
                 color: cat === c.id ? '#fff' : 'var(--text-muted)', cursor: 'pointer', flexShrink: 0,
               }}>{c.icon} {c.name}</button>
             ))}
+            <div
+              className="pointer-events-none"
+              style={{
+                position: 'absolute', right: 0, top: 0, bottom: 0, width: 40,
+                background: 'linear-gradient(90deg, transparent, var(--bg))',
+              }}
+            />
           </div>
         </div>
 

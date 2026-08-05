@@ -226,7 +226,7 @@ select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
 .py-1{padding-top:4px;padding-bottom:4px}.py-2{padding-top:8px;padding-bottom:8px}.py-2\.5{padding-top:10px;padding-bottom:10px}
 .py-3{padding-top:12px;padding-bottom:12px}.py-4{padding-top:16px;padding-bottom:16px}.py-6{padding-top:24px;padding-bottom:24px}.py-8{padding-top:32px;padding-bottom:32px}
 .pt-4{padding-top:16px}.pt-16{padding-top:64px}
-.pb-4{padding-bottom:16px}.pb-20{padding-bottom:80px}.pb-24{padding-bottom:96px}.pb-28{padding-bottom:112px}.pb-32{padding-bottom:128px}
+.pb-4{padding-bottom:16px}.pb-20{padding-bottom:80px}.pb-24{padding-bottom:96px}.pb-28{padding-bottom:112px}.pb-32{padding-bottom:128px}.pb-36{padding-bottom:144px}
 .m-0{margin:0}.mx-auto{margin-left:auto;margin-right:auto}
 .mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-5{margin-top:20px}.mt-6{margin-top:24px}.mt-8{margin-top:32px}
 .mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-5{margin-bottom:20px}.mb-6{margin-bottom:24px}.mb-8{margin-bottom:32px}
@@ -252,10 +252,41 @@ select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
 .leading-tight{line-height:1.25}.leading-relaxed{line-height:1.6}
 .tracking-tight{letter-spacing:-.02em}.tracking-wider{letter-spacing:.05em}
 
-@media(max-width:374px){
+@media(max-width:480px){
   .app-shell,.app-shell-wide{font-size:14px}
-  .display-1{font-size:28px}.display-2{font-size:24px}
+  .display-1{font-size:28px}.display-2{font-size:24px}.display-3{font-size:18px}
+  .heading{font-size:16px}.subheading{font-size:13px}.body{font-size:13px}
+  .price{font-size:14px}.price-sm{font-size:12px}.price-hero{font-size:26px}
   .code-digit{width:40px;height:48px;font-size:18px}
+  .food-grid{grid-template-columns:1fr!important}
+  .food-grid .card .price{font-size:13px}
+  .food-grid .card .price-hero{font-size:22px}
+  .home-page-shell{padding-bottom:8rem}
+  .home-top-row{flex-wrap:wrap;gap:8px;align-items:center}
+  .home-brand{gap:8px!important;min-width:0;flex:1}
+  .home-brand img{width:34px!important;height:34px!important;flex-shrink:0}
+  .home-title{font-size:18px!important}
+  .home-icon-btn{width:38px!important;height:38px!important}
+  .home-profile-pill{width:38px!important;height:38px!important}
+  .home-profile-pill span{width:38px!important;height:38px!important;font-size:14px!important}
+  .home-greeting-title{font-size:20px!important;line-height:1.2!important}
+  .home-greeting-subtitle{font-size:12px!important}
+  .home-location-btn{padding:8px 10px!important;gap:6px!important}
+  .home-location-label{font-size:12px!important}
+  .home-location-sub{font-size:10px!important}
+  .home-search-wrap{margin-top:10px!important}
+  .home-search-wrap .input{min-height:44px;padding-left:44px;padding-right:36px;font-size:14px}
+  .home-category-row{flex-wrap:wrap;overflow-x:visible;padding-bottom:6px}
+  .home-category-row::after{display:none}
+  .home-category-chip{padding:7px 14px!important;font-size:12px!important;margin-bottom:6px;white-space:normal;line-height:1.2;max-width:calc(50% - 4px);text-align:center}
+}
+@media(max-width:320px){
+  .home-page-shell{padding-bottom:9rem}
+  .home-title{font-size:16px!important}
+  .home-greeting-title{font-size:18px!important}
+  .home-location-btn{padding:7px 9px!important}
+  .home-search-wrap .input{font-size:13px}
+  .home-category-chip{padding:7px 12px!important;font-size:11px!important}
 }
 @media(min-width:768px){
   .app-shell{max-width:480px;border-left:1px solid var(--border);border-right:1px solid var(--border);margin:0 auto}
@@ -263,6 +294,11 @@ select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
   .grid-cols-md-2{grid-template-columns:repeat(2,1fr)}
   .grid-cols-md-3{grid-template-columns:repeat(3,1fr)}
   .grid-cols-md-4{grid-template-columns:repeat(4,1fr)}
+  .food-grid{grid-template-columns:repeat(3,1fr)!important}
+}
+@media(min-width:1025px){
+  .app-shell-wide{padding:0 40px}
+  .food-grid{grid-template-columns:repeat(4,1fr)!important}
 }
 @media(min-width:768px) and (max-width:1024px){.app-shell-wide{padding:0 24px}}
 @media(min-width:1025px){.app-shell-wide{padding:0 40px}}

@@ -5,7 +5,7 @@ export default function NotificationsPage() {
   const { notifications, markNotifRead, clearNotifs } = useStore();
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+    <div className="h-full overflow-y-auto scrollbar-hide pb-36">
       <div className="p-4 flex items-center justify-between">
         <h1 className="heading">Bildirishnomalar</h1>
         {notifications.length > 0 && (

@@ -6,13 +6,13 @@ import useStore from '../../store/useStore';
 const ICON_OPTIONS = ['🌭', '🌯', '🍔', '🥙', '🍟', '🍕', '🥗', '🍗', '🍛', '🍜', '🍝', '🥪', '🍞', '🥩', '🍦', '🥤', '🍹', '☕'];
 
 const s = {
-  page: { padding: '32px', background: 'var(--bg)', minHeight: '100vh' },
+  page: { padding: '24px 16px 32px', background: 'var(--bg)', minHeight: '100vh' },
   container: { maxWidth: '900px', margin: '0 auto' },
   header: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' },
   title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },
   subtitle: { fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' },
   headerActions: { display: 'flex', gap: '10px', alignItems: 'center' },
-  btn: { display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', transition: 'all 0.2s', fontFamily: 'inherit' },
+  btn: { display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', transition: 'all 0.2s', fontFamily: 'inherit', minHeight: '44px' },
   btnPrimary: { background: 'var(--primary)', color: '#fff', boxShadow: '0 2px 8px rgba(249,115,22,0.3)' },
   btnSecondary: { background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--border-strong)' },
   btnDanger: { background: 'var(--danger)', color: '#fff' },
@@ -24,9 +24,9 @@ const s = {
   cardTitle: { fontSize: '15px', fontWeight: '700', color: 'var(--text)', margin: 0 },
   cardSub: { fontSize: '12px', color: 'var(--text-muted)', marginTop: 2 },
   actions: { display: 'flex', alignItems: 'center', gap: '6px' },
-  iconBtn: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px', borderRadius: '10px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.2s', padding: 0 },
+  iconBtn: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px', minWidth: '44px', minHeight: '44px', borderRadius: '10px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.2s', padding: 0 },
   overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' },
-  modal: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '28px', width: '100%', maxWidth: '460px', boxShadow: 'var(--shadow-lg)' },
+  modal: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '28px', width: '100%', maxWidth: '460px', maxHeight: '90vh', overflowY: 'auto', boxShadow: 'var(--shadow-lg)' },
   modalHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' },
   modalTitle: { fontSize: '20px', fontWeight: '800', color: 'var(--text)', margin: 0 },
   closeBtn: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 },
@@ -88,14 +88,25 @@ export default function AdminCategories() {
 
   return (
     <div style={s.page}>
+      <style>{`
+        .admin-categories-card{width:100%;max-width:100%}
+        @media (max-width: 768px) {
+          .admin-categories-header{flex-direction:column;align-items:stretch!important}
+          .admin-categories-actions{width:100%}
+          .admin-categories-btn{width:100%;justify-content:center}
+          .admin-categories-card{flex-direction:column;align-items:flex-start!important}
+          .admin-categories-actions{flex-wrap:wrap;justify-content:flex-start}
+          .admin-categories-actions button{min-height:44px}
+        }
+      `}</style>
       <div style={s.container}>
-        <div style={s.header}>
+        <div className="admin-categories-header" style={s.header}>
           <div>
             <h1 style={s.title}>Kategoriyalar</h1>
             <p style={s.subtitle}>Menyu bo'limlarini boshqaring va tartiblang</p>
           </div>
-          <div style={s.headerActions}>
-            <button style={{ ...s.btn, ...s.btnPrimary }} onClick={openAdd}>
+          <div className="admin-categories-actions" style={s.headerActions}>
+            <button className="admin-categories-btn" style={{ ...s.btn, ...s.btnPrimary }} onClick={openAdd}>
               <Plus size={16} /> Yangi kategoriya
             </button>
           </div>
@@ -110,7 +121,7 @@ export default function AdminCategories() {
             </div>
           ) : (
             categories.map((cat, idx) => (
-              <div key={cat.id} style={{ ...s.card, opacity: cat.isActive === false ? 0.55 : 1 }}>
+              <div key={cat.id} className="admin-categories-card" style={{ ...s.card, opacity: cat.isActive === false ? 0.55 : 1 }}>
                 <div style={s.cardLeft}>
                   <div style={s.iconBox}>
                     {cat.image ? (

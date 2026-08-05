@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 const s = {
-  page: { padding: '32px', background: 'var(--bg)', minHeight: '100vh' },
+  page: { padding: '24px 16px 32px', background: 'var(--bg)', minHeight: '100vh' },
   container: { maxWidth: '900px', margin: '0 auto' },
   header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' },
   title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },
@@ -65,6 +65,7 @@ export default function SellerDashboard() {
           }
           @media(max-width:480px){
             .dash-grid-responsive { grid-template-columns: 1fr; }
+            .dash-grid-responsive > div { padding: 16px; }
           }
         `}</style>
 

@@ -4,13 +4,13 @@ import { useSearchParams } from 'react-router-dom';
 import useStore from '../../store/useStore';
 
 const s = {
-  page: { padding: '32px', background: 'var(--bg)', minHeight: '100vh' },
+  page: { padding: '24px 16px 32px', background: 'var(--bg)', minHeight: '100vh' },
   container: { maxWidth: '1200px', margin: '0 auto' },
   header: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' },
   title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },
   subtitle: { fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' },
   headerActions: { display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' },
-  btn: { display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', transition: 'all 0.2s', fontFamily: 'inherit' },
+  btn: { display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', transition: 'all 0.2s', fontFamily: 'inherit', minHeight: '44px' },
   btnPrimary: { background: 'var(--primary)', color: '#fff', boxShadow: '0 2px 8px rgba(249,115,22,0.3)' },
   btnSecondary: { background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--border-strong)' },
   btnDanger: { background: 'var(--danger)', color: '#fff' },
@@ -31,7 +31,7 @@ const s = {
   productCell: { display: 'flex', alignItems: 'center', gap: '12px' },
   thumb: { width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', background: 'var(--surface-active)', flexShrink: 0 },
   badge: (color) => ({ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: '700', background: color + '14', color, border: `1px solid ${color}30` }),
-  iconBtn: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.2s', padding: 0 },
+  iconBtn: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', minWidth: '44px', minHeight: '44px', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.2s', padding: 0 },
   empty: { textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' },
   emptyIcon: { width: '64px', height: '64px', borderRadius: '16px', background: 'var(--surface-active)', border: '1px dashed var(--border-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--text-muted)' },
   emptyTitle: { fontSize: '16px', fontWeight: '600', color: 'var(--text-secondary)', margin: '0 0 4px 0' },
@@ -136,27 +136,47 @@ export default function AdminProducts() {
 
   return (
     <div style={s.page}>
+      <style>{`
+        .admin-products-table-wrap{overflow-x:auto;max-width:100%}
+        .admin-products-table-wrap table{min-width:720px}
+        .admin-products-form-row{display:flex;gap:14px}
+        @media (max-width: 768px) {
+          .admin-products-header{flex-direction:column;align-items:stretch!important}
+          .admin-products-actions{width:100%;display:flex;flex-direction:column}
+          .admin-products-search{max-width:none!important;min-width:0!important}
+          .admin-products-btn{width:100%;justify-content:center}
+          .admin-products-stats{grid-template-columns:repeat(2,1fr)!important}
+          .admin-products-tabs{flex-wrap:wrap}
+          .admin-products-form-row{flex-direction:column;gap:10px}
+          .admin-products-modal-actions{flex-direction:column}
+          .admin-products-modal-actions button{width:100%}
+        }
+        @media (max-width: 480px) {
+          .admin-products-stats{grid-template-columns:1fr!important}
+          .admin-products-table-wrap{overflow-x:auto}
+        }
+      `}</style>
       <div style={s.container}>
-        <div style={s.header}>
+        <div className="admin-products-header" style={s.header}>
           <div>
             <h1 style={s.title}>Mahsulotlar</h1>
             <p style={s.subtitle}>Menyudagi mahsulotlarni boshqaring</p>
           </div>
-          <div style={s.headerActions}>
-            <div style={s.searchWrap}>
+          <div className="admin-products-actions" style={s.headerActions}>
+            <div className="admin-products-search" style={s.searchWrap}>
               <Search size={16} style={s.searchIcon} />
               <input style={s.searchInput} placeholder="Mahsulot qidirish..." value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; }}
                 onBlur={(e) => { e.target.style.borderColor = 'var(--border-strong)'; }} />
             </div>
-            <button style={{ ...s.btn, ...s.btnPrimary }} onClick={openAdd}>
+            <button className="admin-products-btn" style={{ ...s.btn, ...s.btnPrimary }} onClick={openAdd}>
               <Plus size={16} /> Yangi mahsulot
             </button>
           </div>
         </div>
 
-        <div style={s.statsGrid}>
+        <div className="admin-products-stats" style={s.statsGrid}>
           {[
             { label: 'Jami mahsulotlar', value: foods.length, icon: UtensilsCrossed, bg: 'var(--primary-light)', color: 'var(--primary)' },
             { label: 'Faol', value: activeCount, icon: Eye, bg: '#F0FDF4', color: 'var(--success)' },
@@ -178,7 +198,7 @@ export default function AdminProducts() {
           })}
         </div>
 
-        <div style={s.tabs}>
+        <div className="admin-products-tabs" style={s.tabs}>
           <button style={s.tab(activeCategory === 'all')} onClick={() => setActiveCategory('all')}>Hammasi</button>
           {categories.map((c) => (
             <button key={c.id} style={s.tab(String(activeCategory) === String(c.id))} onClick={() => setActiveCategory(c.id)}>
@@ -195,7 +215,7 @@ export default function AdminProducts() {
             <p style={s.emptySub}>Yangi mahsulot qo'shish uchun yuqoridagi tugmani bosing</p>
           </div>
         ) : (
-          <div style={{ ...s.table, overflowX: 'auto' }}>
+          <div className="admin-products-table-wrap" style={{ ...s.table, overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 760 }}>
               <thead>
                 <tr>
@@ -317,7 +337,7 @@ export default function AdminProducts() {
               </select>
             </div>
 
-            <div style={{ ...s.row, marginBottom: '16px' }}>
+            <div className="admin-products-form-row" style={{ ...s.row, marginBottom: '16px' }}>
               <div style={s.rowField}>
                 <label style={s.label}>Narx (so'm) *</label>
                 <input style={s.input} type="number" min="0" value={form.price}
@@ -351,7 +371,7 @@ export default function AdminProducts() {
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="admin-products-modal-actions" style={{ display: 'flex', gap: '10px' }}>
               <button style={{ ...s.btn, ...s.btnSecondary, flex: 1, justifyContent: 'center' }} onClick={() => setModalOpen(false)}>
                 Bekor qilish
               </button>

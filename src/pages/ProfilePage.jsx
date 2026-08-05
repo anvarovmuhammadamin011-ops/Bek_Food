@@ -86,7 +86,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+    <div className="h-full overflow-y-auto scrollbar-hide pb-36">
       <div className="p-4 space-y-4 mt-4">
 
         {/* 1. Profile header */}
@@ -164,10 +164,10 @@ export default function ProfilePage() {
                 <div style={{ color: 'var(--text-dim)', fontSize: 11 }}>{LANGUAGES.find((l) => l.key === lang)?.label}</div>
               </div>
             </div>
-            <div className="flex p-1" style={{ background: 'var(--surface-active)', borderRadius: 'var(--radius-full)' }}>
+            <div className="flex p-1" style={{ background: 'var(--surface-active)', borderRadius: 'var(--radius-full)', flexShrink: 0 }}>
               {LANGUAGES.map((l) => (
                 <button key={l.key} onClick={() => setLang(l.key)} style={{
-                  padding: '5px 10px', borderRadius: 'var(--radius-full)', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
+                  padding: 'clamp(4px, 1.5vw, 5px) clamp(6px, 2vw, 10px)', borderRadius: 'var(--radius-full)', border: 'none', cursor: 'pointer', fontSize: 'clamp(10px, 2.5vw, 12px)', fontWeight: 600,
                   background: lang === l.key ? 'var(--primary)' : 'none', color: lang === l.key ? '#fff' : 'var(--text-muted)', transition: 'all .2s',
                 }}>{l.flag} {l.key.toUpperCase()}</button>
               ))}

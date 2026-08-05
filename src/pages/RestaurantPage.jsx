@@ -19,8 +19,8 @@ export default function RestaurantPage() {
   const fav = isFavorite('restaurant', restaurant.id);
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
-      <div className="relative" style={{ height: 260 }}>
+    <div className="h-full overflow-y-auto scrollbar-hide pb-36">
+      <div className="relative" style={{ height: 'clamp(180px, 40vw, 260px)' }}>
         <img src={restaurant.coverImage} alt="" onError={(e) => { e.currentTarget.src = '/food/restaurant-cover.svg'; }} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 50%)' }} />
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
@@ -57,7 +57,7 @@ export default function RestaurantPage() {
           </div>
         </div>
 
-        <div className="flex overflow-x-auto scrollbar-hide" style={{ gap: 8, marginTop: 16, marginBottom: 14, paddingBottom: 2 }}>
+        <div className="flex overflow-x-auto scrollbar-hide relative" style={{ gap: 8, marginTop: 16, marginBottom: 14, paddingBottom: 2 }}>
           <button onClick={() => setActiveCategory(null)} className="whitespace-nowrap" style={{
             padding: '8px 16px', borderRadius: 'var(--radius-full)', fontSize: 12, fontWeight: 500,
             background: !activeCategory ? 'var(--primary)' : 'var(--surface)',
@@ -81,9 +81,16 @@ export default function RestaurantPage() {
               </button>
             );
           })}
+          <div
+            className="pointer-events-none"
+            style={{
+              position: 'absolute', right: 0, top: 0, bottom: 0, width: 40,
+              background: 'linear-gradient(90deg, transparent, var(--bg))',
+            }}
+          />
         </div>
 
-        <div className="grid grid-cols-2" style={{ gap: 12, paddingBottom: 32 }}>
+        <div className="grid food-grid" style={{ gap: 12, paddingBottom: 32 }}>
           {filtered.map((food) => <FoodCard key={food.id} food={food} />)}
           {filtered.length === 0 && (
             <div className="empty-state" style={{ gridColumn: '1 / -1' }}>

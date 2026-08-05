@@ -85,8 +85,10 @@ const styles = {
     letterSpacing: '-0.01em',
   },
   exportBtn: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
+    minWidth: 44,
+    minHeight: 44,
     borderRadius: 'var(--radius-sm)',
     background: 'var(--primary)',
     border: 'none',
@@ -101,6 +103,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
+    minHeight: 44,
     padding: '10px 16px',
     margin: '0 24px 12px',
     background: 'var(--surface)',
@@ -131,6 +134,8 @@ const styles = {
   },
   filterPanel: {
     margin: '0 24px 16px',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
     padding: 16,
     background: 'var(--surface)',
     border: '1px solid var(--border)',
@@ -140,7 +145,7 @@ const styles = {
   },
   filterRow: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: 10,
   },
   label: {
@@ -220,6 +225,7 @@ const styles = {
   }),
   clearBtn: {
     marginLeft: 'auto',
+    minHeight: 44,
     display: 'flex',
     alignItems: 'center',
     gap: 5,
@@ -249,6 +255,7 @@ const styles = {
     flexWrap: 'wrap',
   },
   bulkActionBtn: (color) => ({
+    minHeight: 44,
     padding: '6px 12px',
     borderRadius: 8,
     fontSize: 11,
@@ -264,6 +271,7 @@ const styles = {
   }),
   content: {
     padding: '0 24px',
+    overflowX: 'hidden',
   },
   emptyState: {
     padding: 60,
@@ -311,6 +319,28 @@ const styles = {
     gridTemplateColumns: '40px 70px 60px 1fr 90px 110px 80px 40px',
     alignItems: 'center',
     gap: 8,
+  },
+  mobileCard: {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '14px',
+    marginBottom: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+  },
+  mobileTop: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  mobileMeta: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 8,
+    alignItems: 'center',
   },
   checkbox: (active) => ({
     width: 20,
@@ -367,8 +397,10 @@ const styles = {
     lineHeight: 1,
   }),
   viewBtn: {
-    width: 34,
-    height: 34,
+    width: 44,
+    height: 44,
+    minWidth: 44,
+    minHeight: 44,
     padding: 0,
     borderRadius: 10,
     background: 'var(--primary)',
@@ -568,6 +600,7 @@ const styles = {
   },
   actionBtn: (variant) => ({
     flex: variant === 'primary' ? 1 : 'none',
+    minHeight: 44,
     height: 44,
     padding: variant === 'primary' ? 0 : '0 20px',
     borderRadius: 'var(--radius-sm)',
@@ -597,6 +630,13 @@ const styles = {
 export default function AdminOrders() {
   const { orders, updateOrderStatus, cancelOrder } = useStore();
   const [searchParams] = useSearchParams();
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -712,8 +752,28 @@ export default function AdminOrders() {
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.header}>
+    <div style={{ ...styles.page, overflowX: 'hidden' }}>
+      <style>{`
+        .admin-orders-filter-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+        .admin-orders-filter-row > div{min-width:0}
+        .admin-orders-bulk-bar{flex-wrap:wrap}
+        .admin-orders-bulk-actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+        @media (max-width:768px){
+          .admin-orders-filter-row{grid-template-columns:1fr!important}
+          .admin-orders-bulk-bar{align-items:flex-start}
+          .admin-orders-bulk-actions{width:100%;margin-left:0;margin-top:8px}
+          .admin-orders-bulk-actions button{flex:1 1 calc(50% - 6px);justify-content:center}
+          .admin-orders-pagination{flex-wrap:wrap;padding:16px 12px!important}
+        }
+        @media (max-width:480px){
+          .admin-orders-bulk-actions button{flex-basis:100%}
+          .admin-orders-filter-toggle{margin:0 12px 12px!important}
+          .admin-orders-filter-panel{margin:0 12px 16px!important;padding:12px!important}
+          .admin-orders-header{padding:16px 12px 12px!important}
+          .admin-orders-content{padding:0 12px 12px!important}
+        }
+      `}</style>
+      <div className="admin-orders-header" style={{ ...styles.header, padding: isMobile ? '16px 12px 12px' : styles.header.padding }}>
         <div style={styles.headerLeft}>
           <h1 style={styles.title}>Buyurtmalar</h1>
         </div>
@@ -723,6 +783,7 @@ export default function AdminOrders() {
       </div>
 
       <button
+        className="admin-orders-filter-toggle"
         onClick={() => setFiltersOpen(!filtersOpen)}
         style={{
           ...styles.filterToggle,
@@ -740,8 +801,8 @@ export default function AdminOrders() {
       </button>
 
       {filtersOpen && (
-        <div style={styles.filterPanel}>
-          <div style={styles.filterRow}>
+        <div className="admin-orders-filter-panel" style={styles.filterPanel}>
+          <div className="admin-orders-filter-row" style={styles.filterRow}>
             <div>
               <label style={styles.label}>Sana</label>
               <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} style={styles.input} />
@@ -823,7 +884,7 @@ export default function AdminOrders() {
       )}
 
       {selectedIds.length > 0 && (
-        <div style={styles.bulkBar}>
+        <div className="admin-orders-bulk-bar" style={styles.bulkBar}>
           <div style={{ flexShrink: 0 }}>
             <div onClick={toggleAll} style={styles.checkbox(selectedIds.length === paginated.length)}>
               {selectedIds.length === paginated.length && <Check size={11} color="#fff" strokeWidth={3} />}
@@ -832,7 +893,7 @@ export default function AdminOrders() {
           <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', whiteSpace: 'nowrap' }}>
             {selectedIds.length} ta tanlangan
           </span>
-          <div style={styles.bulkActions}>
+          <div className="admin-orders-bulk-actions" style={styles.bulkActions}>
             <button onClick={handleExport} style={styles.bulkActionBtn('#3b82f6')}>
               <Download size={12} /> Eksport
             </button>
@@ -849,7 +910,7 @@ export default function AdminOrders() {
         </div>
       )}
 
-      <div style={styles.content}>
+      <div className="admin-orders-content" style={styles.content}>
         {paginated.length === 0 ? (
           <div style={styles.emptyState}>
             <div style={styles.emptyIcon}>
@@ -860,71 +921,110 @@ export default function AdminOrders() {
           </div>
         ) : (
           <>
-            <div style={styles.tableHeader}>
-              <div onClick={toggleAll} style={styles.checkbox(selectedIds.length === paginated.length && paginated.length > 0)}>
-                {selectedIds.length === paginated.length && paginated.length > 0 && <Check size={11} color="#fff" strokeWidth={3} />}
-              </div>
-              <span style={styles.thText}>ID</span>
-              <span style={styles.thText}>Vaqt</span>
-              <span style={styles.thText}>Mijoz</span>
-              <span style={{ ...styles.thText, textAlign: 'right' }}>Summa</span>
-              <span style={styles.thText}>Holat</span>
-              <span style={styles.thText}>To'lov</span>
-              <span style={styles.thText}></span>
-            </div>
-
-            {paginated.map(o => {
-              const sc = statusConfig[o.status] || statusConfig.pending;
-              const isSelected = selectedIds.includes(o.id);
-              return (
-                <div
-                  key={o.id}
-                  style={{
-                    ...styles.orderCard,
-                    borderColor: isSelected ? 'var(--primary)' : undefined,
-                    background: isSelected ? 'var(--primary-light)' : undefined,
-                  }}
-                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--border-strong)'; }}
-                  onMouseLeave={e => { if (!isSelected) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; } }}
-                >
-                  <div style={styles.orderRow}>
-                    <div onClick={() => toggleSelect(o.id)} style={styles.checkbox(isSelected)}>
-                      {isSelected && <Check size={11} color="#fff" strokeWidth={3} />}
-                    </div>
-                    <span style={styles.orderId}>#{o.id}</span>
-                    <div style={styles.timeCell}>
-                      <Clock size={12} color="var(--text-muted)" />
-                      <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{formatTime(o.createdAt)}</span>
-                    </div>
-                    <div>
-                      <p style={styles.customerName}>{o.customerName}</p>
-                      <p style={styles.customerPhone}>{o.customerPhone}</p>
-                    </div>
-                    <span style={styles.sumCell}>{o.total.toLocaleString()}</span>
-                    <span style={styles.badge(sc.color, sc.bg)}>{sc.label}</span>
-                    <span style={styles.badge(
-                      o.paymentMethod === 'card' ? 'var(--success)' : 'var(--warning)',
-                      o.paymentMethod === 'card' ? 'rgba(34,197,94,.1)' : 'rgba(245,158,11,.1)'
-                    )}>
-                      {o.paymentMethod === 'cash' ? (
-                        <><Banknote size={11} /> Naqd</>
-                      ) : (
-                        <><CreditCard size={11} /> Karta</>
-                      )}
-                    </span>
-                    <button onClick={() => setDetailOrder(o)} style={styles.viewBtn}>
-                      <Eye size={15} color="#fff" />
-                    </button>
+            {!isMobile ? (
+              <>
+                <div style={styles.tableHeader}>
+                  <div onClick={toggleAll} style={styles.checkbox(selectedIds.length === paginated.length && paginated.length > 0)}>
+                    {selectedIds.length === paginated.length && paginated.length > 0 && <Check size={11} color="#fff" strokeWidth={3} />}
                   </div>
+                  <span style={styles.thText}>ID</span>
+                  <span style={styles.thText}>Vaqt</span>
+                  <span style={styles.thText}>Mijoz</span>
+                  <span style={{ ...styles.thText, textAlign: 'right' }}>Summa</span>
+                  <span style={styles.thText}>Holat</span>
+                  <span style={styles.thText}>To'lov</span>
+                  <span style={styles.thText}></span>
                 </div>
-              );
-            })}
+
+                {paginated.map(o => {
+                  const sc = statusConfig[o.status] || statusConfig.pending;
+                  const isSelected = selectedIds.includes(o.id);
+                  return (
+                    <div
+                      key={o.id}
+                      style={{
+                        ...styles.orderCard,
+                        borderColor: isSelected ? 'var(--primary)' : undefined,
+                        background: isSelected ? 'var(--primary-light)' : undefined,
+                      }}
+                      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--border-strong)'; }}
+                      onMouseLeave={e => { if (!isSelected) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; } }}
+                    >
+                      <div style={styles.orderRow}>
+                        <div onClick={() => toggleSelect(o.id)} style={styles.checkbox(isSelected)}>
+                          {isSelected && <Check size={11} color="#fff" strokeWidth={3} />}
+                        </div>
+                        <span style={styles.orderId}>#{o.id}</span>
+                        <div style={styles.timeCell}>
+                          <Clock size={12} color="var(--text-muted)" />
+                          <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{formatTime(o.createdAt)}</span>
+                        </div>
+                        <div>
+                          <p style={styles.customerName}>{o.customerName}</p>
+                          <p style={styles.customerPhone}>{o.customerPhone}</p>
+                        </div>
+                        <span style={styles.sumCell}>{o.total.toLocaleString()}</span>
+                        <span style={styles.badge(sc.color, sc.bg)}>{sc.label}</span>
+                        <span style={styles.badge(
+                          o.paymentMethod === 'card' ? 'var(--success)' : 'var(--warning)',
+                          o.paymentMethod === 'card' ? 'rgba(34,197,94,.1)' : 'rgba(245,158,11,.1)'
+                        )}>
+                          {o.paymentMethod === 'cash' ? (
+                            <><Banknote size={11} /> Naqd</>
+                          ) : (
+                            <><CreditCard size={11} /> Karta</>
+                          )}
+                        </span>
+                        <button onClick={() => setDetailOrder(o)} style={styles.viewBtn}>
+                          <Eye size={15} color="#fff" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            ) : (
+              paginated.map(o => {
+                const sc = statusConfig[o.status] || statusConfig.pending;
+                const isSelected = selectedIds.includes(o.id);
+                return (
+                  <div key={o.id} style={{ ...styles.mobileCard, borderColor: isSelected ? 'var(--primary)' : undefined, background: isSelected ? 'var(--primary-light)' : undefined }}>
+                    <div style={styles.mobileTop}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div onClick={() => toggleSelect(o.id)} style={styles.checkbox(isSelected)}>
+                          {isSelected && <Check size={11} color="#fff" strokeWidth={3} />}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>#{o.id}</div>
+                          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{formatTime(o.createdAt)}</div>
+                        </div>
+                      </div>
+                      <button onClick={() => setDetailOrder(o)} style={styles.viewBtn}>
+                        <Eye size={15} color="#fff" />
+                      </button>
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>{o.customerName}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{o.customerPhone}</div>
+                    <div style={styles.mobileMeta}>
+                      <span style={styles.badge(sc.color, sc.bg)}>{sc.label}</span>
+                      <span style={styles.badge(o.paymentMethod === 'card' ? 'var(--success)' : 'var(--warning)', o.paymentMethod === 'card' ? 'rgba(34,197,94,.1)' : 'rgba(245,158,11,.1)')}>
+                        {o.paymentMethod === 'cash' ? <><Banknote size={11} /> Naqd</> : <><CreditCard size={11} /> Karta</>}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Jami summa</span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{o.total.toLocaleString()} so'm</span>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </>
         )}
       </div>
 
       {totalPages > 1 && (
-        <div style={styles.pagination}>
+        <div className="admin-orders-pagination" style={styles.pagination}>
           <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} style={styles.navBtn(currentPage === 1)}>
             <ChevronLeft size={16} />
           </button>

@@ -27,7 +27,7 @@ export default function OrdersPage() {
   const displayed = tab === 'active' ? active : tab === 'completed' ? completed : cancelled;
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide pb-28">
+    <div className="h-full overflow-y-auto scrollbar-hide pb-36">
       <div className="p-4">
         <h1 className="heading text-center" style={{ marginBottom: 14 }}>Buyurtmalar</h1>
         <div className="flex" style={{ gap: 8 }}>
