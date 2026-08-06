@@ -33,23 +33,6 @@ import CourierHistory from './pages/courier/CourierHistory';
 import CourierProfile from './pages/courier/CourierProfile';
 import CourierLayout from './components/CourierLayout';
 
-// Admin pages
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminOrders from './pages/admin/AdminOrders';
-import AdminProducts from './pages/admin/AdminProducts';
-import AdminCategories from './pages/admin/AdminCategories';
-import AdminPromotions from './pages/admin/AdminPromotions';
-import AdminAnalytics from './pages/admin/AdminAnalytics';
-import AdminSettings from './pages/admin/AdminSettings';
-import AdminInventory from './pages/admin/AdminInventory';
-import AdminExpenses from './pages/admin/AdminExpenses';
-import AdminSuppliers from './pages/admin/AdminSuppliers';
-import AdminPurchases from './pages/admin/AdminPurchases';
-import AdminEmployees from './pages/admin/AdminEmployees';
-import AdminProfit from './pages/admin/AdminProfit';
-import AdminNotifications from './pages/admin/AdminNotifications';
-import AdminLayout from './components/AdminLayout';
-
 function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, role } = useStore();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
@@ -103,22 +86,6 @@ export default function App() {
         <Route path="/courier/delivery" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierDelivery /></CourierLayout></ProtectedRoute>} />
         <Route path="/courier/history" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierHistory /></CourierLayout></ProtectedRoute>} />
         <Route path="/courier/profile" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierProfile /></CourierLayout></ProtectedRoute>} />
-
-        {/* Admin routes */}
-        <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminOrders /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/products" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminProducts /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/categories" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminCategories /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/promotions" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminPromotions /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminAnalytics /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminInventory /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/expenses" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminExpenses /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/suppliers" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminSuppliers /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/purchases" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminPurchases /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminEmployees /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/profit" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminProfit /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/notifications" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminNotifications /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

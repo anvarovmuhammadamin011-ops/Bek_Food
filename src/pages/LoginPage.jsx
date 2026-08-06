@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Store } from 'lucide-react';
+import { Store } from 'lucide-react';
 import useStore from '../store/useStore';
 import api from '../api/client';
 import GoogleLoginButton from '../components/GoogleLoginButton';
@@ -40,7 +40,7 @@ export default function LoginPage() {
         };
       }
       login(userData);
-      navigate(employee ? (employee.role === 'admin' ? '/admin' : employee.role === 'seller' ? '/seller' : '/courier') : '/', { replace: true });
+      navigate(employee ? (employee.role === 'seller' ? '/seller' : '/courier') : '/', { replace: true });
     } catch (err) {
       setError(err.message || 'Xatolik');
     } finally {
@@ -52,7 +52,7 @@ export default function LoginPage() {
     const employee = employees.find((emp) => emp.role === role);
     if (employee) {
       login({ ...employee, role: employee.role });
-      navigate(role === 'admin' ? '/admin' : '/seller', { replace: true });
+      navigate('/seller', { replace: true });
     }
   };
 
@@ -117,15 +117,6 @@ export default function LoginPage() {
             <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           </div>
           <div className="flex" style={{ gap: 8 }}>
-            <button onClick={() => quickLogin('admin')} className="flex-1 flex flex-col items-center" style={{
-              padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
-              background: 'var(--surface)', border: '1px solid var(--border)',
-            }}>
-              <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Shield size={18} color="var(--primary)" />
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>Admin</span>
-            </button>
             <button onClick={() => quickLogin('seller')} className="flex-1 flex flex-col items-center" style={{
               padding: '14px 8px', gap: 8, borderRadius: 'var(--radius)', cursor: 'pointer', transition: 'all .2s',
               background: 'var(--surface)', border: '1px solid var(--border)',
