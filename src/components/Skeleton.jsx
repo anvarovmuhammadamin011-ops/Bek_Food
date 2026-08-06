@@ -1,13 +1,13 @@
 export function SkeletonCard() {
   return (
-    <div className="skeleton-card">
-      <div className="skeleton" style={{ height: 110, borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0', marginBottom: 12 }} />
-      <div style={{ padding: '0 14px 14px' }}>
+    <div className="skeleton-card" style={{ padding: 8 }}>
+      <div className="skeleton" style={{ aspectRatio: '4/3', borderRadius: 'var(--radius-sm)', marginBottom: 10 }} />
+      <div style={{ padding: '0 6px 6px' }}>
         <div className="skeleton skeleton-title" style={{ marginBottom: 6 }} />
-        <div className="skeleton skeleton-text" style={{ width: '80%', marginBottom: 10 }} />
+        <div className="skeleton skeleton-text" style={{ width: '70%', marginBottom: 12 }} />
         <div className="flex items-center justify-between">
-          <div className="skeleton skeleton-text" style={{ width: 70, height: 18 }} />
-          <div className="skeleton" style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)' }} />
+          <div className="skeleton skeleton-text" style={{ width: 64, height: 16 }} />
+          <div className="skeleton" style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)' }} />
         </div>
       </div>
     </div>

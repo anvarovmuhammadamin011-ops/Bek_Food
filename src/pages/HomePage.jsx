@@ -51,11 +51,6 @@ export default function HomePage() {
 
   return (
     <div className="h-full overflow-y-auto scrollbar-hide pb-36 home-page-shell">
-      <style>{`
-        @media (max-width: 360px) {
-          .food-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
       <div className="px-4">
         {/* ===== Header: salomlashish + joylashuv + qidiruv ===== */}
         <div className="animate-fade-in" style={{ paddingTop: 20 }}>
