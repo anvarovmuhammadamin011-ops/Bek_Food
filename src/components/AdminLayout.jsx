@@ -15,6 +15,13 @@ import {
   ChevronRight,
   Search,
   UserCircle2,
+  ShoppingBag,
+  Box,
+  TrendingDown,
+  Users,
+  ShoppingCart,
+  UserCheck,
+  DollarSign,
 } from 'lucide-react';
 
 const NAV_ITEMS = [

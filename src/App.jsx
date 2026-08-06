@@ -41,6 +41,13 @@ import AdminCategories from './pages/admin/AdminCategories';
 import AdminPromotions from './pages/admin/AdminPromotions';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminSettings from './pages/admin/AdminSettings';
+import AdminInventory from './pages/admin/AdminInventory';
+import AdminExpenses from './pages/admin/AdminExpenses';
+import AdminSuppliers from './pages/admin/AdminSuppliers';
+import AdminPurchases from './pages/admin/AdminPurchases';
+import AdminEmployees from './pages/admin/AdminEmployees';
+import AdminProfit from './pages/admin/AdminProfit';
+import AdminNotifications from './pages/admin/AdminNotifications';
 import AdminLayout from './components/AdminLayout';
 
 function ProtectedRoute({ children, allowedRoles }) {
@@ -104,6 +111,13 @@ export default function App() {
         <Route path="/admin/categories" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminCategories /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/promotions" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminPromotions /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminAnalytics /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminInventory /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/expenses" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminExpenses /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/suppliers" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminSuppliers /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/purchases" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminPurchases /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminEmployees /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/profit" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminProfit /></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin/notifications" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminNotifications /></AdminLayout></ProtectedRoute>} />
         <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout><AdminSettings /></AdminLayout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
