@@ -17,6 +17,7 @@ const s = {
     display: 'flex',
     alignItems: 'center',
     gap: '14px',
+    flexWrap: 'wrap',
     background: 'var(--surface)',
     border: '1px solid var(--border)',
     borderRadius: 'var(--radius-sm)',
@@ -26,7 +27,7 @@ const s = {
   rowInfo: { flex: 1, minWidth: 0 },
   rowTitle: { fontSize: '14px', fontWeight: '700', color: 'var(--text)', margin: 0 },
   rowSub: { fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' },
-  amount: { fontSize: '14px', fontWeight: '700', color: 'var(--text)', flexShrink: 0 },
+  amount: { fontSize: '14px', fontWeight: '700', color: 'var(--text)', flexShrink: 0, marginLeft: 'auto' },
   printBtn: {
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
     padding: '9px 16px', borderRadius: 10, border: 'none',

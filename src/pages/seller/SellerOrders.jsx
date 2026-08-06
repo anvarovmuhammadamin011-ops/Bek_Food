@@ -313,7 +313,8 @@ const s = {
     border: overdue ? '1px solid rgba(239,68,68,0.15)' : '1px solid rgba(249,115,22,0.15)',
   }),
   listWrap: {
-    overflow: 'hidden',
+    overflowX: 'auto',
+    WebkitOverflowScrolling: 'touch',
     background: 'var(--surface)',
     border: '1px solid var(--border)',
     borderRadius: 'var(--radius-sm)',
@@ -322,6 +323,7 @@ const s = {
   listHeader: {
     display: 'flex',
     alignItems: 'center',
+    minWidth: 860,
     padding: '10px 14px',
     background: 'var(--surface)',
     borderBottom: '1px solid var(--border-strong)',
@@ -332,7 +334,7 @@ const s = {
     letterSpacing: '0.05em',
     borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0',
   },
-  listRow: { display: 'flex', alignItems: 'center', padding: '12px 14px', borderBottom: '1px solid var(--border)', fontSize: 13, gap: 8 },
+  listRow: { display: 'flex', alignItems: 'center', minWidth: 860, padding: '12px 14px', borderBottom: '1px solid var(--border)', fontSize: 13, gap: 8 },
   statusBadge: (color, bg) => ({
     display: 'inline-flex',
     alignItems: 'center',

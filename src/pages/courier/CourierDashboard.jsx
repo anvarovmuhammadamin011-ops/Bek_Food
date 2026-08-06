@@ -76,7 +76,7 @@ export default function CourierDashboard() {
           </div>
         </div>
 
-        <div style={s.statsGrid}>
+        <div className="courier-stats-grid" style={s.statsGrid}>
           <div style={s.statCard}>
             <div style={s.statIcon('var(--success)', '#F0FDF4')}><Banknote size={19} style={{ color: 'var(--success)' }} /></div>
             <p style={s.statValue}>{todayEarnings.toLocaleString('uz-UZ')}</p>
