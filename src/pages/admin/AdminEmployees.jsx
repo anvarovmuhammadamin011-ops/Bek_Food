@@ -76,6 +76,7 @@ export default function AdminEmployees() {
 
   return (
     <div style={s.page}>
+      <style>{`@media(max-width:768px){.emp-modal-grid{grid-template-columns:1fr!important}}`}</style>
       <div style={s.container}>
         <div style={s.header}>
           <div>
@@ -142,7 +143,7 @@ export default function AdminEmployees() {
               <button onClick={() => setModal(false)} style={s.closeBtn}><Plus size={16} style={{ transform: 'rotate(45deg)' }} /></button>
             </div>
             <div style={s.field}><label style={s.label}>F.I.Sh *</label><input style={s.input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ism familiya" /></div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="emp-modal-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div style={s.field}>
                 <label style={s.label}>Lavozim</label>
                 <select style={s.input} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
@@ -154,11 +155,11 @@ export default function AdminEmployees() {
               </div>
               <div style={s.field}><label style={s.label}>Telefon</label><input style={s.input} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+998 90 000 00 00" /></div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="emp-modal-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div style={s.field}><label style={s.label}>Maosh</label><input style={s.input} type="number" value={form.salary} onChange={(e) => setForm({ ...form, salary: e.target.value })} placeholder="2500000" /></div>
               <div style={s.field}><label style={s.label}>Smena</label><input style={s.input} value={form.shift} onChange={(e) => setForm({ ...form, shift: e.target.value })} placeholder="Kunduzgi" /></div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="emp-modal-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div style={s.field}><label style={s.label}>Ishga qabul</label><input style={s.input} type="date" value={form.joined} onChange={(e) => setForm({ ...form, joined: e.target.value })} /></div>
               <div style={s.field}>
                 <label style={s.label}>Holati</label>

@@ -100,7 +100,7 @@ export default function AdminInventory() {
 
   return (
     <div style={s.page}>
-      <style>{`@media(max-width:768px){.inv-header{flex-direction:column!important}.inv-stats{grid-template-columns:repeat(2,1fr)!important}}`}</style>
+      <style>{`@media(max-width:768px){.inv-header{flex-direction:column!important}.inv-stats{grid-template-columns:repeat(2,1fr)!important}.inv-modal-row{flex-direction:column!important}.inv-modal-row>div{min-width:100%!important}}`}</style>
       <div style={s.container}>
         <div className="inv-header" style={s.header}>
           <div>
@@ -175,7 +175,7 @@ export default function AdminInventory() {
               <button onClick={() => setModal(false)} style={s.closeBtn}><Plus size={16} style={{ transform: 'rotate(45deg)' }} /></button>
             </div>
             <div style={s.field}><label style={s.label}>Mahsulot nomi</label><input style={s.input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Masalan: Burger Buns" /></div>
-            <div style={s.row}>
+            <div className="inv-modal-row" style={s.row}>
               <div style={s.rowField}><label style={s.label}>Miqdori</label><input style={s.input} type="number" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} placeholder="200" /></div>
               <div style={s.rowField}><label style={s.label}>O'lchov</label>
                 <select style={s.input} value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
@@ -183,11 +183,11 @@ export default function AdminInventory() {
                 </select>
               </div>
             </div>
-            <div style={s.row}>
+            <div className="inv-modal-row" style={s.row}>
               <div style={s.rowField}><label style={s.label}>Narxi (so'm)</label><input style={s.input} type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="120000" /></div>
               <div style={s.rowField}><label style={s.label}>Supplier</label><input style={s.input} value={form.supplier} onChange={(e) => setForm({ ...form, supplier: e.target.value })} placeholder="Bek Non" /></div>
             </div>
-            <div style={s.row}>
+            <div className="inv-modal-row" style={s.row}>
               <div style={s.rowField}><label style={s.label}>Kelgan sana</label><input style={s.input} type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
               <div style={s.rowField}><label style={s.label}>Expire date</label><input style={s.input} type="date" value={form.expire} onChange={(e) => setForm({ ...form, expire: e.target.value })} /></div>
             </div>

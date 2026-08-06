@@ -97,6 +97,10 @@ export default function AdminCategories() {
           .admin-categories-card{flex-direction:column;align-items:flex-start!important}
           .admin-categories-actions{flex-wrap:wrap;justify-content:flex-start}
           .admin-categories-actions button{min-height:44px}
+          .admin-categories-icon-grid{grid-template-columns:repeat(6,1fr)!important}
+        }
+        @media (max-width: 480px) {
+          .admin-categories-icon-grid{grid-template-columns:repeat(4,1fr)!important}
         }
       `}</style>
       <div style={s.container}>
@@ -184,7 +188,7 @@ export default function AdminCategories() {
 
             <div style={s.field}>
               <label style={s.label}>Ikona</label>
-              <div style={s.iconGrid}>
+              <div className="admin-categories-icon-grid" style={s.iconGrid}>
                 {ICON_OPTIONS.map((ic) => (
                   <button key={ic} style={s.iconOption(form.icon === ic)} onClick={() => setForm({ ...form, icon: ic })}>
                     {ic}

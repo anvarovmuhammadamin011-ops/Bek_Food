@@ -56,7 +56,8 @@ export default function SellerReceipts() {
   });
 
   return (
-    <div style={s.page}>
+    <div className="sr-page" style={s.page}>
+      <style>{`@media(max-width:480px){.sr-page{padding:16px!important}}`}</style>
       <div style={s.container}>
         <div style={s.header}>
           <div>

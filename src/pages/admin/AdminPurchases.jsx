@@ -16,7 +16,7 @@ const s = {
   statCard: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '16px 18px' },
   statValue: { fontSize: '20px', fontWeight: '700', color: 'var(--text)', lineHeight: 1.1 },
   statLabel: { fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' },
-  tableWrap: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' },
+  tableWrap: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'auto' },
   table: { width: '100%', borderCollapse: 'collapse', fontSize: '13px' },
   th: { textAlign: 'left', padding: '12px 14px', color: 'var(--text-muted)', fontWeight: '600', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap' },
   td: { padding: '12px 14px', color: 'var(--text)', borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap' },
@@ -102,6 +102,7 @@ export default function AdminPurchases() {
 
   return (
     <div style={s.page}>
+      <style>{`@media(max-width:768px){.pur-modal-grid{grid-template-columns:1fr!important}.pur-header{flex-direction:column!important;align-items:stretch!important}}`}</style>
       <div style={s.container}>
         <div style={s.header}>
           <div>
@@ -164,7 +165,7 @@ export default function AdminPurchases() {
             </div>
             <div style={s.field}><label style={s.label}>Mahsulot *</label><input style={s.input} value={form.product} onChange={(e) => setForm({ ...form, product: e.target.value })} placeholder="Masalan: Go'sht (mol)" /></div>
             <div style={s.field}><label style={s.label}>Ta'minotchi</label><input style={s.input} value={form.supplier} onChange={(e) => setForm({ ...form, supplier: e.target.value })} placeholder="Kompaniya nomi" /></div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+            <div className="pur-modal-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
               <div style={s.field}><label style={s.label}>Soni *</label><input style={s.input} type="number" value={form.qty} onChange={(e) => setForm({ ...form, qty: e.target.value })} /></div>
               <div style={s.field}><label style={s.label}>O'lchov</label><input style={s.input} value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} /></div>
               <div style={s.field}><label style={s.label}>Narx</label><input style={s.input} type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} /></div>

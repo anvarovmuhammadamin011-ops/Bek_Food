@@ -99,6 +99,9 @@ const animateKeyframes = `
 .stagger-6 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.3s; opacity: 0; }
 .stagger-7 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.35s; opacity: 0; }
 .stagger-8 { animation: fadeIn 0.4s ease forwards; animation-delay: 0.4s; opacity: 0; }
+@media(max-width:1100px){.analytics-metrics{grid-template-columns:repeat(2,1fr)!important}.analytics-grid3{grid-template-columns:1fr!important}}
+@media(max-width:768px){.analytics-metrics{grid-template-columns:1fr!important}.analytics-grid2{grid-template-columns:1fr!important}.analytics-page{padding:16px!important}}
+@media(max-width:480px){.analytics-heatmap{grid-template-columns:repeat(12,1fr)!important}.analytics-heatmap-labels{grid-template-columns:repeat(12,1fr)!important}}
 `;
 
 const S = {
@@ -384,7 +387,7 @@ export default function AdminAnalytics() {
   ];
 
   return (
-    <div style={S.page}>
+    <div className="analytics-page" style={S.page}>
       <style>{animateKeyframes}</style>
 
       <div style={S.topRow} className="animate-fade-in">
@@ -408,7 +411,7 @@ export default function AdminAnalytics() {
         </div>
       </div>
 
-      <div style={S.metricsGrid} className="animate-fade-in stagger-1">
+      <div className="analytics-metrics animate-fade-in stagger-1" style={S.metricsGrid}>
         {metrics.map((m, i) => {
           const Icon = m.icon;
           return (
@@ -446,7 +449,7 @@ export default function AdminAnalytics() {
         <MiniLineChart data={revenueData} />
       </div>
 
-      <div style={S.grid2}>
+      <div className="analytics-grid2" style={S.grid2}>
         <div style={S.card} className="animate-fade-in stagger-3">
           <div style={S.sectionHead}>
             <Star size={18} style={{ color: 'var(--warning)' }} />
@@ -494,7 +497,7 @@ export default function AdminAnalytics() {
         </div>
       </div>
 
-      <div style={S.grid2}>
+      <div className="analytics-grid2" style={S.grid2}>
         <div style={S.card} className="animate-fade-in stagger-5">
           <div style={S.sectionHead}>
             <Users size={18} style={{ color: '#6366F1' }} />
@@ -545,12 +548,12 @@ export default function AdminAnalytics() {
           Soatlik buyurtmalar
         </div>
         <div style={{ marginBottom: 8 }}>
-          <div style={S.heatmapGrid}>
+          <div className="analytics-heatmap" style={S.heatmapGrid}>
             {hourlyOrders.map((val, i) => (
               <div key={i} style={S.heatmapCell(val, maxHourly)} title={`${i}:00 — ${val} ta buyurtma`} />
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(24, 1fr)', gap: 3, marginTop: 6 }}>
+          <div className="analytics-heatmap-labels" style={{ display: 'grid', gridTemplateColumns: 'repeat(24, 1fr)', gap: 3, marginTop: 6 }}>
             {hourlyOrders.map((_, i) => (
               <div key={i} style={S.heatmapLabel}>
                 {i % 3 === 0 ? i : ''}
@@ -575,7 +578,7 @@ export default function AdminAnalytics() {
         </div>
       </div>
 
-      <div style={S.grid3}>
+      <div className="analytics-grid3" style={S.grid3}>
         <div style={S.card} className="animate-fade-in stagger-5">
           <div style={S.sectionHead}>
             <CreditCard size={18} style={{ color: '#6366F1' }} />

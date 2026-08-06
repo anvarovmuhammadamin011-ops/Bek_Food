@@ -147,7 +147,15 @@ export default function AdminPromotions() {
 
   return (
     <div style={s.page}>
-      <div style={s.container}>
+      <style>{`
+        @media(max-width:768px){
+          .promo-page{padding:16px!important}
+          .promo-row{flex-direction:column!important}
+          .promo-row>div{min-width:100%!important;flex-basis:100%!important}
+          .promo-modal-grid{grid-template-columns:1fr!important}
+        }
+      `}</style>
+      <div className="promo-page" style={s.container}>
         <div style={s.header}>
           <div>
             <h1 style={s.title}>Promotions</h1>
@@ -396,7 +404,7 @@ export default function AdminPromotions() {
                 placeholder="MASALAN: BEK20" />
             </div>
 
-            <div style={{ ...s.row, marginBottom: '16px' }}>
+            <div className="promo-row" style={{ ...s.row, marginBottom: '16px' }}>
               <div style={s.rowField}>
                 <label style={s.label}>Chegirma turi</label>
                 <div style={{ display: 'flex', gap: '6px' }}>
@@ -426,7 +434,7 @@ export default function AdminPromotions() {
               </div>
             </div>
 
-            <div style={{ ...s.row, marginBottom: '16px' }}>
+            <div className="promo-row" style={{ ...s.row, marginBottom: '16px' }}>
               <div style={s.rowField}>
                 <label style={s.label}>Minimal buyurtma (so'm)</label>
                 <input style={s.input} type="number" min="0" value={codeForm.minOrder}
@@ -441,7 +449,7 @@ export default function AdminPromotions() {
               </div>
             </div>
 
-            <div style={{ ...s.row, marginBottom: '20px' }}>
+            <div className="promo-row" style={{ ...s.row, marginBottom: '20px' }}>
               <div style={s.rowField}>
                 <label style={s.label}>Boshlanish</label>
                 <input style={s.input} type="date" value={codeForm.startDate}

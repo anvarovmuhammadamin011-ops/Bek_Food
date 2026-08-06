@@ -71,6 +71,7 @@ export default function AdminSuppliers() {
 
   return (
     <div style={s.page}>
+      <style>{`@media(max-width:768px){.sup-modal-grid{grid-template-columns:1fr!important}.sup-header{flex-direction:column!important;align-items:stretch!important}}`}</style>
       <div style={s.container}>
         <div style={s.header}>
           <div>
@@ -130,7 +131,7 @@ export default function AdminSuppliers() {
               <button onClick={() => setModal(false)} style={s.closeBtn}><Plus size={16} style={{ transform: 'rotate(45deg)' }} /></button>
             </div>
             <div style={s.field}><label style={s.label}>Nomi *</label><input style={s.input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Kompaniya nomi" /></div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="sup-modal-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div style={s.field}><label style={s.label}>Kategoriya</label><input style={s.input} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Masalan: Go'sht" /></div>
               <div style={s.field}><label style={s.label}>Telefon</label><input style={s.input} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+998 90 123 45 67" /></div>
             </div>
