@@ -116,9 +116,10 @@ const initialState = {
   sellerStats: mockSellerStats,
   activeOrderTimers: {},
   sellerNotifications: [
-    { id: 1, title: 'Yangi buyurtma', message: '#1001 - 50,000 so\'m', time: new Date(Date.now() - 300000).toISOString(), isRead: false, sound: true },
-    { id: 2, title: 'Yangi buyurtma', message: '#1006 - 60,000 so\'m', time: new Date(Date.now() - 120000).toISOString(), isRead: false, sound: true },
+    { id: 1, type: 'order', title: 'Yangi buyurtma', message: '#1001 - 50,000 so\'m', time: new Date(Date.now() - 300000).toISOString(), isRead: false, sound: true, orderId: 1001 },
+    { id: 2, type: 'order', title: 'Yangi buyurtma', message: '#1006 - 60,000 so\'m', time: new Date(Date.now() - 120000).toISOString(), isRead: false, sound: true, orderId: 1006 },
   ],
+  soundEnabled: true,
   courierNotifications: [
     { id: 1, title: 'Buyurtma tayyor', message: '#1003 - olishingiz mumkin', time: new Date(Date.now() - 60000).toISOString(), isRead: false },
   ],
@@ -252,14 +253,30 @@ export const useStore = create((set, get) => ({
   },
   cancelOrder: (id) => get().updateOrderStatus(id, 'cancelled'),
 
-  // Seller order actions
-  acceptOrder: (id) => get().updateOrderStatus(id, 'confirmed'),
-  startPreparing: (id) => get().updateOrderStatus(id, 'preparing'),
-  readyOrder: (id) => get().updateOrderStatus(id, 'ready'),
+  // Seller order actions (optimistic local + backend sync)
+  acceptOrder: (id) => {
+    get().updateOrderStatus(id, 'confirmed');
+    api.sellerAction(id, 'accept').catch(() => {});
+  },
+  rejectOrder: (id) => {
+    get().updateOrderStatus(id, 'cancelled');
+    api.sellerAction(id, 'reject').catch(() => {});
+  },
+  startPreparing: (id) => {
+    get().updateOrderStatus(id, 'preparing');
+    api.sellerAction(id, 'prepare').catch(() => {});
+  },
+  readyOrder: (id) => {
+    get().updateOrderStatus(id, 'ready');
+    api.sellerAction(id, 'ready').catch(() => {});
+  },
   assignCourier: (id, courierId) => {
-    set({
-      orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'assigned', courierId, assignedAt: new Date().toISOString() } : o)),
-    });
+    set({ orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'assigned', courierId, assignedAt: new Date().toISOString() } : o)) });
+    api.sellerAction(id, 'assign', courierId).catch(() => {});
+  },
+  markPickedUp: (id) => {
+    set({ orders: get().orders.map((o) => (o.id === id ? { ...o, status: 'pickedUp', pickedUpAt: new Date().toISOString() } : o)) });
+    api.sellerAction(id, 'pickedUp').catch(() => {});
   },
 
   // Courier order actions
@@ -319,6 +336,9 @@ export const useStore = create((set, get) => ({
   clearNotifs: () => set({ notifications: [] }),
   markSellerNotifRead: (id) =>
     set({ sellerNotifications: get().sellerNotifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)) }),
+  clearSellerNotifs: () => set({ sellerNotifications: [] }),
+  pushSellerNotif: (n) => set({ sellerNotifications: [{ ...n, id: n.id || Date.now(), time: n.time || new Date().toISOString(), isRead: false }, ...get().sellerNotifications].slice(0, 50) }),
+  toggleSound: () => set({ soundEnabled: !get().soundEnabled }),
   markCourierNotifRead: (id) =>
     set({ courierNotifications: get().courierNotifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)) }),
 

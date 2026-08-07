@@ -19,11 +19,11 @@ import ProfilePage from './pages/ProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import AddressesPage from './pages/AddressesPage';
 
-// Seller pages
+// Seller / Order Manager pages
 import SellerDashboard from './pages/seller/SellerDashboard';
 import SellerOrders from './pages/seller/SellerOrders';
 import SellerDelivery from './pages/seller/SellerDelivery';
-import SellerReceipts from './pages/seller/SellerReceipts';
+import SellerNotifications from './pages/seller/SellerNotifications';
 import SellerProfile from './pages/seller/SellerProfile';
 import SellerLayout from './components/SellerLayout';
 
@@ -91,11 +91,11 @@ export default function App() {
         <Route path="/notifications" element={<CustomerLayout><NotificationsPage /></CustomerLayout>} />
         <Route path="/addresses" element={<CustomerLayout><AddressesPage /></CustomerLayout>} />
 
-        {/* Seller routes */}
+        {/* Seller / Order Manager routes */}
         <Route path="/seller" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerDashboard /></SellerLayout></ProtectedRoute>} />
         <Route path="/seller/orders" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerOrders /></SellerLayout></ProtectedRoute>} />
         <Route path="/seller/delivery" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerDelivery /></SellerLayout></ProtectedRoute>} />
-        <Route path="/seller/receipts" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerReceipts /></SellerLayout></ProtectedRoute>} />
+        <Route path="/seller/notifications" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerNotifications /></SellerLayout></ProtectedRoute>} />
         <Route path="/seller/profile" element={<ProtectedRoute allowedRoles={['seller']}><SellerLayout><SellerProfile /></SellerLayout></ProtectedRoute>} />
 
         {/* Courier routes */}

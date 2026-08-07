@@ -55,6 +55,12 @@ export const api = {
   adminEmployees: () => request('/admin/employees'),
   adminDashboard: () => request('/admin/dashboard'),
   adminUpdateOrderStatus: (id, status) => request(`/admin/orders/${id}/status`, { method: 'POST', body: { status }, authed: true }),
+
+  // Seller / Order Manager
+  sellerOrders: () => request('/seller/orders'),
+  sellerDrivers: () => request('/seller/drivers'),
+  sellerAction: (id, action, courierId) =>
+    request(`/seller/orders/${id}/action`, { method: 'POST', body: { action, courierId } }),
 };
 
 export default api;

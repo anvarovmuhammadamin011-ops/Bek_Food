@@ -738,6 +738,60 @@ app.post('/api/admin/orders/:id/status', requireAdmin, (req, res) => {
   res.json({ ok: true, order: ordersList(db.snapshot, { status }).find((o) => o.id === order.id) });
 });
 
+// ---------- Seller / Order Manager actions ----------
+const SELLER_TRANSITIONS = {
+  accept: { from: 'pending', to: 'confirmed', field: 'acceptedAt' },
+  reject: { from: 'pending', to: 'cancelled', field: 'cancelledAt' },
+  prepare: { from: 'confirmed', to: 'preparing', field: 'preparingAt' },
+  ready: { from: 'preparing', to: 'ready', field: 'readyAt' },
+  assign: { from: 'ready', to: 'assigned', field: 'assignedAt', setCourier: true },
+  pickedUp: { from: 'ready', to: 'pickedUp', field: 'pickedUpAt' },
+  pickedUpAssign: { from: 'assigned', to: 'pickedUp', field: 'pickedUpAt' },
+  deliver: { from: 'onTheWay', to: 'delivered', field: 'deliveredAt' },
+  courierAccept: { from: 'assigned', to: 'onTheWay', field: 'courierAcceptedAt' },
+};
+
+app.post('/api/seller/orders/:id/action', (req, res) => {
+  const { id } = req.params;
+  const { action, courierId } = req.body || {};
+  const t = SELLER_TRANSITIONS[action];
+  if (!t) return res.status(400).json({ ok: false, error: 'Noto\'g\'ri amal' });
+  const db = readDb();
+  if (!db.snapshot || !Array.isArray(db.snapshot.orders)) {
+    return res.status(404).json({ ok: false, error: 'Buyurtma topilmadi' });
+  }
+  const order = db.snapshot.orders.find((o) => String(o.id) === String(id));
+  if (!order) return res.status(404).json({ ok: false, error: 'Buyurtma topilmadi' });
+  if (order.status !== t.from) {
+    return res.status(400).json({ ok: false, error: `Holat noto'g'ri: ${order.status}` });
+  }
+  const now = new Date().toISOString();
+  order.status = t.to;
+  order.updatedAt = now;
+  if (t.field) order[t.field] = now;
+  if (t.setCourier && courierId) order.courierId = Number(courierId);
+  writeDb(db);
+  io.emit('order:status', { orderId: order.id, status: order.status, action, courierId: order.courierId, updatedAt: now });
+  io.emit('dashboard:refresh', { updatedAt: now, changed: 'orders' });
+  io.emit('seller:notify', { id: Date.now(), type: 'order', title: `Buyurtma #${order.id}`, message: `Holat: ${t.to}`, time: now, isRead: false, orderId: order.id });
+  res.json({ ok: true, order: { id: order.id, status: order.status, courierId: order.courierId } });
+});
+
+app.get('/api/seller/orders', (_req, res) => {
+  const snap = readSnapshot();
+  const orders = (Array.isArray(snap.orders) ? [...snap.orders] : [])
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json({ ok: true, data: orders });
+});
+
+app.get('/api/seller/drivers', (_req, res) => {
+  const snap = readSnapshot();
+  const drivers = (Array.isArray(snap.employees) ? snap.employees : [])
+    .filter((e) => e.role === 'courier')
+    .map((d) => ({ id: d.id, name: d.name, phone: d.phone, rating: d.rating, isOnline: d.isOnline }));
+  res.json({ ok: true, data: drivers });
+});
+
 // ---------- Static (production build) ----------
 const DIST = path.join(__dirname, '..', 'dist');
 if (existsSync(DIST)) {

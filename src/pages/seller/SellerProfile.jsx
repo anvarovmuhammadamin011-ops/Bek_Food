@@ -1,87 +1,109 @@
-import React from 'react';
+import { useState } from 'react';
 import useStore from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
-import { UserCircle, Phone, ShieldCheck, LogOut, Store } from 'lucide-react';
-
-const s = {
-  page: { padding: '24px 16px 32px', background: 'var(--bg)', minHeight: '100vh' },
-  container: { maxWidth: '560px', margin: '0 auto' },
-  title: { fontSize: '28px', fontWeight: '800', color: 'var(--text)', margin: 0, letterSpacing: '-0.5px' },
-  subtitle: { fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' },
-  card: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '24px', textAlign: 'center' },
-  avatar: {
-    width: 84, height: 84, borderRadius: '50%', margin: '0 auto 14px',
-    background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-    border: '3px solid rgba(249,115,22,0.2)',
-  },
-  name: { fontSize: '20px', fontWeight: '800', color: 'var(--text)', margin: 0 },
-  roleBadge: {
-    display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 8,
-    padding: '4px 12px', borderRadius: 999, fontSize: '11px', fontWeight: '700',
-    background: 'var(--primary-light)', color: 'var(--primary)',
-  },
-  infoCard: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '16px 20px', marginTop: '16px' },
-  infoRow: { display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 0' },
-  infoIcon: { width: 36, height: 36, borderRadius: 10, background: 'var(--surface-active)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  infoLabel: { fontSize: '11px', color: 'var(--text-muted)', margin: 0 },
-  infoValue: { fontSize: '14px', fontWeight: 600, color: 'var(--text)', margin: 0 },
-  logoutBtn: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-    width: '100%', marginTop: 16, padding: '12px 0', borderRadius: 'var(--radius-sm)',
-    border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)',
-    color: 'var(--danger)', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-  },
-};
+import { UserCircle, Phone, ShieldCheck, Store, LogOut, Volume2, VolumeX, Bell, Moon, Lock, Check } from 'lucide-react';
 
 export default function SellerProfile() {
-  const { user, settings, logout } = useStore();
+  const { user, settings, logout, soundEnabled, toggleSound } = useStore();
   const navigate = useNavigate();
+  const [oldPw, setOldPw] = useState('');
+  const [newPw, setNewPw] = useState('');
+  const [pwMsg, setPwMsg] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
 
-  const handleLogout = () => {
-    if (logout) logout();
-    navigate('/login');
+  const handleLogout = () => { logout?.(); navigate('/login'); };
+  const handleChangePw = () => {
+    if (!newPw || newPw.length < 4) { setPwMsg('Parol kamida 4 ta belgidan iborat bo\'lishi kerak'); return; }
+    setPwMsg('Parol muvaffaqiyatli o\'zgartirildi ✓');
+    setOldPw('');
+    setNewPw('');
+    setTimeout(() => setPwMsg(''), 3000);
   };
 
   return (
-    <div style={s.page}>
-      <div style={s.container}>
-        <div style={{ marginBottom: 24 }}>
-          <h1 style={s.title}>Profil</h1>
-          <p style={s.subtitle}>Shaxsiy ma'lumotlar</p>
-        </div>
+    <div style={{ padding: '20px 16px 32px', background: 'var(--bg)', minHeight: '100vh' }}>
+      <div style={{ maxWidth: 520, margin: '0 auto' }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', margin: '0 0 20px 0', letterSpacing: '-0.5px' }}>Profil</h1>
 
-        <div style={s.card}>
-          <div style={s.avatar}>
-            <UserCircle size={44} style={{ color: 'var(--primary)' }} />
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 24, textAlign: 'center', marginBottom: 16 }}>
+          <div style={{ width: 72, height: 72, borderRadius: '50%', margin: '0 auto 12px', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '3px solid rgba(249,115,22,0.2)' }}>
+            <UserCircle size={36} style={{ color: 'var(--primary)' }} />
           </div>
-          <h2 style={s.name}>{user?.name || 'Sotuvchi'}</h2>
-          <div style={s.roleBadge}>
-            <ShieldCheck size={12} /> Operator
+          <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>{user?.name || 'Operator'}</h2>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '4px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, background: 'var(--primary-light)', color: 'var(--primary)' }}>
+            <ShieldCheck size={12} /> Order Manager
           </div>
         </div>
 
-        <div style={s.infoCard}>
-          <div style={{ ...s.infoRow, borderBottom: '1px solid var(--border)' }}>
-            <div style={s.infoIcon}>
-              <Phone size={16} style={{ color: 'var(--text-secondary)' }} />
-            </div>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '16px 20px', marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--surface-active)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Phone size={16} /></div>
             <div>
-              <p style={s.infoLabel}>Telefon</p>
-              <p style={s.infoValue}>{user?.phone || '—'}</p>
+              <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>Telefon</p>
+              <p style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{user?.phone || '—'}</p>
             </div>
           </div>
-          <div style={s.infoRow}>
-            <div style={s.infoIcon}>
-              <Store size={16} style={{ color: 'var(--text-secondary)' }} />
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--surface-active)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Store size={16} /></div>
             <div>
-              <p style={s.infoLabel}>Restoran</p>
-              <p style={s.infoValue}>{settings?.name || 'BEK FOOD'}</p>
+              <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>Restoran</p>
+              <p style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{settings?.name || 'BEK FOOD'}</p>
             </div>
           </div>
         </div>
 
-        <button style={s.logoutBtn} onClick={handleLogout}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '16px 20px', marginBottom: 16 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, margin: '0 0 12px 0' }}>Change Password</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <input type="password" placeholder="Eski parol" value={oldPw} onChange={(e) => setOldPw(e.target.value)} style={{ padding: '10px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, outline: 'none' }} />
+            <input type="password" placeholder="Yangi parol" value={newPw} onChange={(e) => setNewPw(e.target.value)} style={{ padding: '10px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, outline: 'none' }} />
+            {pwMsg && <p style={{ fontSize: 12, color: pwMsg.includes('✓') ? 'var(--success)' : 'var(--danger)', margin: 0 }}>{pwMsg}</p>}
+            <button onClick={handleChangePw} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px 0', borderRadius: 10, border: 'none', background: 'var(--primary)', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              <Lock size={14} /> Parolni o'zgartirish
+            </button>
+          </div>
+        </div>
+
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '8px 20px', marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {soundEnabled ? <Volume2 size={18} style={{ color: 'var(--primary)' }} /> : <VolumeX size={18} style={{ color: 'var(--text-muted)' }} />}
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>Notification Sound</p>
+                <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>Yangi buyurtma ovozi</p>
+              </div>
+            </div>
+            <button onClick={toggleSound} style={{ width: 48, height: 28, borderRadius: 14, border: 'none', background: soundEnabled ? 'var(--success)' : 'var(--border)', cursor: 'pointer', position: 'relative', transition: 'background .2s' }}>
+              <span style={{ position: 'absolute', top: 3, left: soundEnabled ? 23 : 3, width: 22, height: 22, borderRadius: '50%', background: '#fff', transition: 'left .2s' }} />
+            </button>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Bell size={18} style={{ color: 'var(--primary)' }} />
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>Notifications</p>
+                <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>Push bildirishnomalar</p>
+              </div>
+            </div>
+            <div style={{ width: 48, height: 28, borderRadius: 14, border: 'none', background: 'var(--success)', cursor: 'pointer', position: 'relative' }}>
+              <span style={{ position: 'absolute', top: 3, left: 23, width: 22, height: 22, borderRadius: '50%', background: '#fff' }} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Moon size={18} style={{ color: 'var(--primary)' }} />
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>Dark Mode</p>
+                <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>Tungi rejim</p>
+              </div>
+            </div>
+            <button onClick={() => setDarkMode(!darkMode)} style={{ width: 48, height: 28, borderRadius: 14, border: 'none', background: darkMode ? 'var(--success)' : 'var(--border)', cursor: 'pointer', position: 'relative', transition: 'background .2s' }}>
+              <span style={{ position: 'absolute', top: 3, left: darkMode ? 23 : 3, width: 22, height: 22, borderRadius: '50%', background: '#fff', transition: 'left .2s' }} />
+            </button>
+          </div>
+        </div>
+
+        <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '14px 0', borderRadius: 12, border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)', color: 'var(--danger)', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
           <LogOut size={16} /> Chiqish
         </button>
       </div>

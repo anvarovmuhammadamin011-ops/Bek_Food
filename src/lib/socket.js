@@ -26,6 +26,9 @@ function connect() {
   socket.on('order:status', (payload) => {
     (listeners.get('order') || []).forEach((fn) => fn(payload));
   });
+  socket.on('seller:notify', (payload) => {
+    (listeners.get('seller:notify') || []).forEach((fn) => fn(payload));
+  });
   return socket;
 }
 
