@@ -145,7 +145,10 @@ export const useStore = create((set, get) => ({
         const s = JSON.parse(saved);
         const patch = {};
         for (const k of SESSION_KEYS) if (s[k] !== undefined) patch[k] = s[k];
-        if (patch.user) patch.isAuthenticated = true;
+        if (patch.user) {
+          patch.isAuthenticated = true;
+          if (patch.user.role) patch.role = patch.user.role;
+        }
         set(patch);
         restored = true;
       }
