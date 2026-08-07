@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import useStore from './store/useStore';
 import BottomNav from './components/BottomNav';
+import AdminLayout from './components/admin/AdminLayout';
 
 // Customer pages
 import SplashScreen from './pages/SplashScreen';
@@ -32,6 +33,22 @@ import CourierDelivery from './pages/courier/CourierDelivery';
 import CourierHistory from './pages/courier/CourierHistory';
 import CourierProfile from './pages/courier/CourierProfile';
 import CourierLayout from './components/CourierLayout';
+
+// Admin pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminOrders from './pages/admin/AdminOrders';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminCategories from './pages/admin/AdminCategories';
+import AdminPromotions from './pages/admin/AdminPromotions';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminInventory from './pages/admin/AdminInventory';
+import AdminSuppliers from './pages/admin/AdminSuppliers';
+import AdminPurchases from './pages/admin/AdminPurchases';
+import AdminExpenses from './pages/admin/AdminExpenses';
+import AdminProfit from './pages/admin/AdminProfit';
+import AdminEmployees from './pages/admin/AdminEmployees';
+import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminSettings from './pages/admin/AdminSettings';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, role } = useStore();
@@ -86,6 +103,24 @@ export default function App() {
         <Route path="/courier/delivery" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierDelivery /></CourierLayout></ProtectedRoute>} />
         <Route path="/courier/history" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierHistory /></CourierLayout></ProtectedRoute>} />
         <Route path="/courier/profile" element={<ProtectedRoute allowedRoles={['courier']}><CourierLayout><CourierProfile /></CourierLayout></ProtectedRoute>} />
+
+        {/* Admin routes */}
+        <Route element={<ProtectedRoute allowedRoles={['admin']}><AdminLayout /></ProtectedRoute>}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/categories" element={<AdminCategories />} />
+          <Route path="/admin/promotions" element={<AdminPromotions />} />
+          <Route path="/admin/inventory" element={<AdminInventory />} />
+          <Route path="/admin/suppliers" element={<AdminSuppliers />} />
+          <Route path="/admin/purchases" element={<AdminPurchases />} />
+          <Route path="/admin/expenses" element={<AdminExpenses />} />
+          <Route path="/admin/profit" element={<AdminProfit />} />
+          <Route path="/admin/employees" element={<AdminEmployees />} />
+          <Route path="/admin/notifications" element={<AdminNotifications />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { foods, restaurants, categories, banners, addresses, notifications } from '../data/mockData';
-import api from '../api/client';
+import api, { setAdminToken } from '../api/client';
 
 const SERVER_KEYS = ['foods', 'categories', 'restaurants', 'banners', 'promoCodes', 'settings', 'inventory', 'employees', 'branches', 'orders', 'addresses', 'notifications'];
 const SESSION_KEYS = ['user', 'cart', 'favorites', 'addresses', 'appliedCoupon'];
@@ -165,16 +165,17 @@ export const useStore = create((set, get) => ({
       set({ isAppLoading: false });
     }
   },
-  login: (user) => {
+   login: (user) => {
     const role = (user.role || '').toLowerCase();
-    const mapped = role === 'courier' || role === 'driver' ? 'courier' : role === 'seller' || role === 'order_manager' ? 'seller' : 'customer';
+    const mapped = role === 'admin' ? 'admin' : role === 'courier' || role === 'driver' ? 'courier' : role === 'seller' || role === 'order_manager' ? 'seller' : 'customer';
+    if (user.token) setAdminToken(user.token);
     set({
       user: { id: user.id, name: user.name, phone: user.phone, email: user.email, role: mapped, avatar: user.avatar },
       isAuthenticated: true,
       role: mapped,
     });
   },
-  logout: () => set({ user: null, isAuthenticated: false, role: null, cart: [], orders: mockOrders, currentOrder: null }),
+  logout: () => { setAdminToken(null); set({ user: null, isAuthenticated: false, role: null, cart: [], orders: mockOrders, currentOrder: null }); },
 
   updateProfile: (patch) => set({ user: { ...get().user, ...patch } }),
 
