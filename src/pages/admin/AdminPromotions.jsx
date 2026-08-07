@@ -18,7 +18,7 @@ export default function AdminPromotions() {
     { key: 'code', label: 'Kod', render: (v) => <code style={{ background: 'var(--surface-active)', padding: '2px 8px', borderRadius: 4 }}>{v}</code> },
     { key: 'discount', label: 'Chegirma', render: discountRender },
     { key: 'active', label: 'Faol', render: (v, r) => (
-      <button type="button" onClick={(e) => { e.stopPropagation(); togglePromoCode && togglePromoCode(r.id); }} className="badge" style={{ fontSize: 10, cursor: 'pointer', background: v ? 'var(--success-light)' : 'var(--danger-light)', color: v ? 'var(--success)' : 'var(--danger)' }}>{v ? 'FAOL' : 'SXIR'}</button>
+      <button type="button"       onClick={(e) => { e.stopPropagation(); togglePromoCode?.(r.id); }} className="badge" style={{ fontSize: 10, cursor: 'pointer', background: v ? 'var(--success-light)' : 'var(--danger-light)', color: v ? 'var(--success)' : 'var(--danger)' }}>{v ? 'FAOL' : 'SXIR'}</button>
     ) },
     { key: 'usedCount', label: 'Ishlatilgan', render: usedRender },
     { key: '', label: '', render: (v, r) => (

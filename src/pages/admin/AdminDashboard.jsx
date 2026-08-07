@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useAdminData from '../../hooks/useAdminData';
 import { useAdminContext } from '../../components/admin/AdminContext';
 import KpiCard from '../../components/admin/KpiCard';
@@ -10,7 +10,7 @@ import AdminTable from '../../components/admin/AdminTable';
 import ExportButton from '../../components/admin/ExportButton';
 import { formatPrice, number, percent } from '../../lib/format';
 import { statusConfig, STATUS_COLOR } from '../../lib/statuses';
-import { TrendingUp, Clock, CheckCircle2, ShoppingBasket } from 'lucide-react';
+import { TrendingUp, Clock, CheckCircle2, ShoppingBasket, Database } from 'lucide-react';
 
 const STATUS_ORDER = ['pending', 'confirmed', 'preparing', 'ready', 'pickedUp', 'onTheWay', 'assigned', 'delivered', 'cancelled'];
 
@@ -29,10 +29,21 @@ function StatusCard({ status, count }) {
 export default function AdminDashboard() {
   const { days } = useAdminContext();
   const { kpi, revenue, trend, orders, statusCounts, peakHours, payments, delivery, products, inventory, refetch } = useAdminData();
+  const [seeding, setSeeding] = useState(false);
 
   useEffect(() => {
     refetch({ days });
   }, [days, refetch]);
+
+  const seedDemo = async () => {
+    setSeeding(true);
+    try {
+      const res = await fetch('/api/admin/seed-demo', { method: 'POST' });
+      const d = await res.json();
+      console.log(d.message);
+      refetch({ days });
+    } catch {  } finally { setSeeding(false); }
+  };
 
   const kpiLoading = !kpi;
   const summary = kpi || {};
@@ -51,6 +62,12 @@ export default function AdminDashboard() {
     <div className="admin-dashboard" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* KPI ROW */}
       <section>
+        <div className="flex items-center justify-between" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <div />
+          <button type="button" onClick={seedDemo} disabled={seeding} className="btn btn-sm btn-secondary" style={{ fontSize: 12 }}>
+            <Database size={14} /> {seeding ? 'Qo\'shilmoqda...' : 'Demo ma\'lumotlar'}
+          </button>
+        </div>
         <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
           <KpiCard title="Bugun daromad" value={formatPrice(summary.todayRevenue)} trend={summary.revenueChangePct} icon={TrendingUp} loading={kpiLoading} />
           <KpiCard title="Bugun buyurtma" value={summary.todayOrders} subtitle={`${summary.completedToday} yetkazildi`} icon={ShoppingBasket} loading={kpiLoading} color="var(--success)" />
